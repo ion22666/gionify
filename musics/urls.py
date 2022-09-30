@@ -1,4 +1,4 @@
-from musics.views import addMusic, homePage, musicList
+from musics.views import addMusic, homePage#, musicList
 from django.urls import path
 
 app_name='musics'
