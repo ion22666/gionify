@@ -1,0 +1,35 @@
+{% if messages %}  
+<ul>   
+    {% for message in messages %}  
+        <li>{{ message }}</li>  
+        {% endfor %}  
+        
+</ul>   
+<button onclick="window.location.href='{% url 'musics:home_page' %}';">
+    Go home
+  </button>
+{% endif %}  
+
+<form action="" method="post">
+    {% csrf_token %}
+
+    <p>{{ form.username.label }}
+    {{ form.username }}</p>
+
+    <p>{{ form.password1.label }}
+    {{ form.password1 }}
+    ({{ form.password1.help_text}} )</p>
+
+    <p>{{ form.password2.label }}
+    {{ form.password2 }}</p>
+
+    {{form.errors}}
+
+    <input type="submit" value="Register" />
+</form>
+
+<p>Alredy have an account?
+  <button onclick="window.location.href='{% url 'musics:login_user' %}';">
+      Login
+    </button>
+  </p>

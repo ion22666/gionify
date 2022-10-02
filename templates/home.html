@@ -1,3 +1,91 @@
+<style>
+  @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,600);
+
+  *, *:before, *:after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    background: #105469;
+    font-family: 'Open Sans', sans-serif;
+  }
+  table {
+    background: #012B39;
+    border-radius: 0.25em;
+    border-collapse: collapse;
+    margin: 1em;
+  }
+  th {
+    border-bottom: 1px solid #364043;
+    color: #E2B842;
+    font-size: 0.85em;
+    font-weight: 600;
+    padding: 0.5em 1em;
+    text-align: center;
+  }
+  td {
+    text-align: center;
+    color: #fff;
+    font-weight: 400;
+    padding: 0.65em 1em;
+  }
+  .disabled td {
+    color: #4F5F64;
+  }
+  tbody tr {
+    transition: background 0.25s ease;
+  }
+  tbody tr:hover {
+    background: #014055;
+  }
+  span{
+    color: orange;
+  }
+</style>
+
+<div>
+  <table>
+    <tr>
+      <th>ID</th> 
+      <th>TITLE</th>
+      <th>ARTISTE</th>
+      <th>ALBUM</th>
+      <th>TIME LENGHT</th>
+      <th>AUDIO FILE</th>
+      <th>EDIT</th>
+    </tr>
+    
 {% for music in musics_list %}
-  <p> {{music.title}} {{music.artiste}} {{music.album}} {{music.time_length}} {{music.audio_file}} {{bit_rate}}</p>
+<tr>
+  <td>{{music.id}}</td> 
+  <td>{{music.title}}</td>
+  <td>{{music.artiste}}</td>
+  <td>{{music.album.name}}</td>
+  <td>{{music.time_length}}</td>
+  <td>{{music.audio_file}}</td>
+  <td><button onclick="window.location.href='manage/{{music.id}}';">edit</button></td>
+</tr>
+
+
+
 {% endfor %}
+</table>
+</div>
+
+<button onclick="window.location.href='{% url 'musics:add_music' %}';">
+  Add Songs
+</button>
+
+
+<h4> You are logged in as <span>{{ request.user }}</span></h4>
+<button onclick="window.location.href='{% url 'musics:logout_user' %}';">
+  Logout
+</button>
+
+{% if is_staff %}
+<button onclick="window.location.href='{{'admin' }}';">
+  ADMIN INTERFACE
+</button>
+{% endif %}

@@ -1,7 +1,7 @@
 import os
 
 from django.core.exceptions import ValidationError
-from mutagen.mp3 import MP3
+from mutagen.mp3 import MPEGInfo
 
 
 
@@ -9,7 +9,7 @@ from mutagen.mp3 import MP3
 
 def validate_is_audio(file):
     try:
-        audio = MP3(file)
+        audio = MPEGInfo(file)
         if not audio :
             raise TypeError()
 

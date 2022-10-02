@@ -1,0 +1,15 @@
+{% if messages%}
+    {% for message in messages %}  
+            <h4>{{ message }}</h4>  
+    {% endfor %}  
+{% else %}
+    <h4>Are you sure you want to logout</h4>  
+{% endif %}
+
+
+<span>
+<form action="" method="post">
+    {% csrf_token %}
+    <input type="submit" value="DA" name="DA">
+    <input type="submit" value="NU" name="NU">
+</form>

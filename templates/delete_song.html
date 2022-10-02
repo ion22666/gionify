@@ -1,0 +1,6 @@
+do you want to delete {{song.title}}?
+<form action="" method="post">
+    {% csrf_token %}
+    <input type="submit" value="Yes"></input>
+    <a href="{% url 'musics:home_page' %}">Cancel</a>
+ </form>
