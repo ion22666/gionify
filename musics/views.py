@@ -3,22 +3,19 @@ from django.shortcuts import redirect, render, get_object_or_404
 from .form import AddMusicForm,ManageMusicForm,CreateUserForm
 from django.contrib import messages  
 from django.contrib.auth import authenticate, login, logout
+from .decorators import logged_not_allowed, allowed_goups, admin_only, only_logged
 
+
+@only_logged("You must be logged in to access the home page")
+@allowed_goups('full_admin')
 def homePage(request):
     
-    if not request.user.is_authenticated:
-        messages.info(request,'E musai sa fii logat ca sa poti intra in home page')
-        return redirect('musics:login_user')
-    is_staff = False
-
-    if request.user.is_staff:
-        is_staff = True
-    musics_list=list(Music.objects.select_related('album').all())
+    musics_list=list(Music.objects.select_related('album').all().values())
     return render(request,'home.html',{
         'musics_list':musics_list,
-        'is_staff':is_staff,
     })
 
+@only_logged("Only those logged in can logout")
 def logout_user(request):
     if request.POST:
         if request.POST.get('DA'):
@@ -28,12 +25,9 @@ def logout_user(request):
             return redirect('musics:home_page')
     return render(request,'logout_user.html')
 
+
+@logged_not_allowed("You're already logged in, you want to logout?")
 def login_user(request):
-
-    if request.user.is_authenticated:
-        messages.info(request,"You're already logged in, you want to logout")
-        return redirect('musics:logout_user')
-
     if request.POST:
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -46,11 +40,8 @@ def login_user(request):
             messages.info(request,'Ceva nu e bine')
     return render(request,'login_user.html')
 
+@logged_not_allowed("You're already registered and logged in, you want to logout?")
 def register_user(request):
-
-    if request.user.is_authenticated:
-        messages.info(request,"You're already registered and logged in, you want to logout")
-        return redirect('musics:logout_user')
 
     form = CreateUserForm()
     if request.POST:
