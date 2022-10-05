@@ -1,50 +1,8 @@
-<body>
-<style>
-  @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,600);
+{% load static %}
 
-  *, *:before, *:after {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  body {
-    background: #105469;
-    font-family: 'Open Sans', sans-serif;
-  }
-  table {
-    background: #012B39;
-    border-radius: 0.25em;
-    border-collapse: collapse;
-    margin: 1em;
-  }
-  th {
-    border-bottom: 1px solid #364043;
-    color: #E2B842;
-    font-size: 0.85em;
-    font-weight: 600;
-    padding: 0.5em 1em;
-    text-align: center;
-  }
-  td {
-    text-align: center;
-    color: #fff;
-    font-weight: 400;
-    padding: 0.65em 1em;
-  }
-  .disabled td {
-    color: #4F5F64;
-  }
-  tbody tr {
-    transition: background 0.25s ease;
-  }
-  tbody tr:hover {
-    background: #014055;
-  }
-  span{
-    color: orange;
-  }
-</style>
+<link rel="stylesheet" href="{% static 'musics/style.css' %}">
+
+<body>
 {% for message in messages %}  
         <li>{{ message }}</li>  
 {% endfor %} 
@@ -65,7 +23,7 @@
   <td>{{music.id}}</td> 
   <td>{{music.title}}</td>
   <td>{{music.artiste}}</td>
-  <td>{{music.album.name}}</td>
+  <td>{{music.album_name}}</td>
   <td>{{music.time_length}}</td>
   <td>{{music.audio_file}}</td>
   <td><button onclick="window.location.href='manage/{{music.id}}';">edit</button></td>
@@ -93,90 +51,48 @@
 </button>
 {% endif %}
 
+<div class="play_icon">
+  <svg xmlns="http://www.w3.org/2000/svg" width="fit-content" height="fit-content" fill="currentColor" class="bi bi-play-circle" viewBox="0 0 16 16">
+    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+    <path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z"/>
+    </svg>
+</div>
+<div class="pause_icon">
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pause-circle" viewBox="0 0 16 16">
+    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+    <path d="M5 6.25a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0v-3.5zm3.5 0a1.25 1.25 0 1 1 2.5 0v3.5a1.25 1.25 0 1 1-2.5 0v-3.5z"/>
+  </svg>
+</div>
 
-<button class="playing">PLAY</button>
 
-<audio class="audio-player" src="/media/musics/circulation_Gcj56uE.mp3" type="audio/mpeg"  >
-Your browser does not support the audio element.
-</audio>
-<div class="song-title"></div>
-<div class="artist"></div>
-<div class="music_img"></div>
-<div class="album"></div>
+
+<div class="audio_player_container">
+  <div class="currentTime">00:00</div>
+  <div class="duration">00:00</div>
+  <div class="progress_container"></div>
+
+  <button class="playing">
+    a
+  </button>
+  <audio class="audio-player" src="/media/musics/circulation_Gcj56uE.mp3" type="audio/mpeg">Your browser does not support the audio element.</audio>
+
+  <div class="song-title"></div>
+
+  <div class="artist"></div>
+
+  <div class="music_img"></div>
+
+  <div class="album"></div>
+
+</div>
+  <div class="space"></div>
 </body>
 
+
+
+
 {{musics_list|json_script:'musics_list'}}
-<script>
-  const player=document.querySelector('.audio-player')
-  const play=document.querySelector('.playing')
-  const prev=document.querySelector('.prev')
-  const next=document.querySelector('.next')
-  const currentTime=document.querySelector('.currentDuration')
-  const duration=document.querySelector('.Duration')
-  const progress=document.querySelector('.progress')
-  const progress_container=document.querySelector('.progress_container')
-  const audio_tracks=document.querySelector('.audio-tracks')
-  const song_title=document.querySelector('.song-title')
-  const artist=document.querySelector('.artist')
-  const album=document.querySelector('.album')
-  const music_img=document.querySelector('.music_img')
-
-  let musicIndex=0
-
-  const musics=JSON.parse(document.getElementById('musics_list').textContent)
-
-// functions
-// format time for music
-const formatTime=secs=>{
-  let min = Math.floor((secs % 3600) / 60); 
-  let sec = Math.floor(secs % 60)
-  if (sec<10){
-    sec=`0${sec}`
-  }
-
-  return `${min}:${sec}`
-}
-
-// loading a set detail of music in UI
-const setSRC=()=>{
-  player.src=`/media/${musics[musicIndex].audio_file}`
-  song_title.textContent=musics[musicIndex].title
-  artist.textContent=musics[musicIndex].artiste 
-  music_img.setAttribute('src',`media/${musics[musicIndex].cover_image}`)
-  if (musics[musicIndex].album_id !== null){
-    album.textContent=musics[musicIndex].album_id
-  }else{
-    album.textContent='Single'
-
-  }
-
-}
-
-//determine player should play or not 
-const playOrPause=()=>{
-  if (player.paused){
-      player.play()
-      
-    }
-
-    else{
-      player.pause()
-
-    }
-}
-
-// load first music
-setSRC()
-player.pause()
-
-// eventlisteners
-// when play btn is clicked
-play.addEventListener("click",e=>{
-
-  playOrPause()
-})
+<script src="{% static 'musics/script.js' %}"></script>
 
 
 
-
-</script>

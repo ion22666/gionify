@@ -1,3 +1,4 @@
+from ast import arg
 from musics.models import Album, Music
 from django.shortcuts import redirect, render, get_object_or_404
 from .form import AddMusicForm,ManageMusicForm,CreateUserForm
@@ -9,8 +10,14 @@ from .decorators import logged_not_allowed, allowed_goups, admin_only, only_logg
 @only_logged("You must be logged in to access the home page")
 @allowed_goups('full_admin')
 def homePage(request):
-    
-    musics_list=list(Music.objects.select_related('album').all().values())
+    musics_list = list(Music.objects.select_related('album').all().values())
+    for music in musics_list:
+        if music["album_id"]!=None:
+            music["album_name"]=Album.objects.get(id=music["album_id"]).name
+        else:
+            music["album_name"]='Single'
+    print(musics_list)
+
     return render(request,'home.html',{
         'musics_list':musics_list,
     })
