@@ -39,9 +39,7 @@ tbody tr {
 tbody tr:hover {
   background: #014055;
 }
-span{
-  color: orange;
-}
+
 .audio_player_container{
   position:fixed;
   bottom: 0;
@@ -54,8 +52,6 @@ span{
 .playing{
   border: none;
   background-color: transparent;
-  height: fit-content;
-  width: fit-content;
   position:absolute;
   align-self: center;
   left: 50%;
@@ -83,18 +79,10 @@ span{
   bottom: 0;
   padding-left: 0.5vw;
   font-size: 120%;
+  color:white;
 }
-.if_album{
 
 
-  
-}
-.progress_container{
-  background-color: black;
-  position: absolute;
-  width: 100%;
-  height: 0.5vh;
-}
 
 .play_icon{
   view: none;
@@ -111,4 +99,40 @@ span{
   right: 0;
   padding-top: 0.5vh;
   padding-right: 0.4vw;
+}
+.icons{
+  width: 100%;
+  height: 100%;
+}
+
+.pause_icon{
+  display:none;
+}
+
+.progress_container{
+  position: absolute;
+  width: 100%;
+  height: fit-content;
+  top: 0;
+
+}
+.progress{
+  position:absolute;
+  align-self: center;
+  background-color: black;
+  min-width: 1vh;
+  height: 0.5vh;
+  display:flex;
+  justify-content: end;
+}
+.progress_ball{
+  align-self:center;
+  height: 1vh;
+  color: white;
+}
+.progress_underbar{
+  align-self: center;
+  background-color:white;
+  width:100%;
+  height: 0.5vh;
 }

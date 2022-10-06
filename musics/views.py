@@ -8,7 +8,7 @@ from .decorators import logged_not_allowed, allowed_goups, admin_only, only_logg
 
 
 @only_logged("You must be logged in to access the home page")
-@allowed_goups('full_admin')
+@allowed_goups(['full_admin','db_staff'])
 def homePage(request):
     musics_list = list(Music.objects.select_related('album').all().values())
     for music in musics_list:
@@ -16,8 +16,6 @@ def homePage(request):
             music["album_name"]=Album.objects.get(id=music["album_id"]).name
         else:
             music["album_name"]='Single'
-    print(musics_list)
-
     return render(request,'home.html',{
         'musics_list':musics_list,
     })

@@ -2,10 +2,10 @@ const player=document.querySelector('.audio-player')
 const play=document.querySelector('.playing')
 const prev=document.querySelector('.prev')
 const next=document.querySelector('.next')
-const currentTime=document.querySelector('.currentDuration')
-const duration=document.querySelector('.Duration')
+const currentTime=document.querySelector('.currentTime')
+const duration=document.querySelector('.duration')
 const progress=document.querySelector('.progress')
-const progress_container=document.querySelector('.progress-container')
+const progress_container=document.querySelector('.progress_container')
 const audio_tracks=document.querySelector('.audio-tracks')
 const song_title=document.querySelector('.song-title')
 const artist=document.querySelector('.artist')
@@ -14,7 +14,7 @@ const music_img=document.querySelector('.music_img')
 const play_icon=document.querySelector('.play_icon')
 const pause_icon=document.querySelector('.pause_icon')
 
-let musicIndex=2
+let musicIndex=3
 
 const musics=JSON.parse(document.getElementById('musics_list').textContent)
 
@@ -41,7 +41,7 @@ if(musics[musicIndex].album_name=="Single"){
     album.innerHTML='<span class="if_album">Single</span>'
 }
 else{
-    album.innerHTML=musics[musicIndex].album_name + '<span class="if_album">album</span>'
+    album.innerHTML=musics[musicIndex].album_name + '<span>album</span>'
 }
 
 }
@@ -50,17 +50,21 @@ else{
 const playOrPause=()=>{
 if (player.paused){
     player.play()
-    player.innerHTML = pause_icon
+    play_icon.style.display = 'none'
+    pause_icon.style.display = 'block'
 
     
   }
 
   else{
     player.pause()
-    player.innerHTML = play_icon
+    play_icon.style.display = 'block'
+    pause_icon.style.display = 'none'
 
   }
 }
+
+
 
 // load first music
 setSRC()
@@ -68,10 +72,28 @@ player.pause()
 player.innerHTML = play_icon
 // eventlisteners
 // when play btn is clicked
-play.addEventListener("click",e=>{
+play.addEventListener("click",e=>{ playOrPause() } )
+player.addEventListener('loadedmetadata',()=>{duration.textContent=formatTime(player.duration)})
+player.addEventListener('timeupdate',()=>{
+  let sec = player.currentTime
+  let total = player.duration
+  
+  currentTime.textContent=formatTime(sec)
+  let total_width = progress_container.offsetWidth
+  let progress_width = progress.offsetWidth
+  let audio_played = (sec/total)
+  let new_width = total_width * audio_played
+  
+  progress.style.width = `${new_width}px`
+  
+  if (audio_played==1){       //and if is the last song in a playlist
+    progress.style.width = `fit-content`
+    play_icon.style.display = 'block'
+    pause_icon.style.display = 'none'
+  }
 
-playOrPause()
 })
+
 
 
 
