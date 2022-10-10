@@ -14,7 +14,6 @@
       <th>ARTISTE</th>
       <th>ALBUM</th>
       <th>TIME LENGHT</th>
-      <th>AUDIO FILE</th>
       <th>EDIT</th>
     </tr>
     
@@ -25,7 +24,6 @@
   <td>{{music.artiste}}</td>
   <td>{{music.album_name}}</td>
   <td>{{music.time_length}}</td>
-  <td>{{music.audio_file}}</td>
   <td><button onclick="window.location.href='manage/{{music.id}}';">edit</button></td>
 </tr>
 
@@ -56,18 +54,17 @@
 
 
 <div class="audio_player_container">
-  <audio class="audio-player" src="/media/musics/circulation_Gcj56uE.mp3" type="audio/mpeg">Your browser does not support the audio element.</audio>
+  <audio class="audio-player" src="" type="audio/mpeg">Your browser does not support the audio element.</audio>
   <div class="currentTime">00:00</div>
   <div class="duration">00:00</div>
 
   <div class="progress_container">
     
-    <input class="progress" type="range" min="0" max="1000" value="0">
-
-    <!-- <svg class="progress_ball" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-circle-fill" viewBox="0 0 16 16"><circle cx="8" cy="8" r="8"/></svg>
-    -->
-    <!-- <div class="progress_underbar"></div>
-    -->
+    <div class="progress" >
+      <svg class="progress_ball" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-circle-fill" viewBox="0 0 16 16"><circle cx="8" cy="8" r="8"/></svg>
+    </div>
+    <div class="progress_underbar"></div>
+    
   </div>
 
 

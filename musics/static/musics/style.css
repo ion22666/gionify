@@ -92,6 +92,7 @@ svg.repeat{
 svg.shuffle{
   width: 80%;
   height: 80%;
+
 }
 
 .pause_icon{
@@ -149,7 +150,9 @@ svg.shuffle{
 
 
 .progress_container{
-
+  padding: 0;
+  margin: 0;
+  border: 0;
   position: absolute;
   width: 100%;
   height: fit-content;
@@ -158,31 +161,34 @@ svg.shuffle{
 
 }
 .progress{
-  -webkit-appearance: none;  /* Override default CSS styles */
-  appearance: none;
-
-  width: 100%;
-  height: 0.5vh;
   position:absolute;
   align-self: center;
-  
 
+  margin: 0;
+  border: 0;
+  padding: 0;
 
-  
+  background-color: black;
+
+  height: 0.7vh;
+  border-bottom-right-radius: 100vh;
+  border-top-right-radius: 100vh;
+  transition: 0.27s;
+  display:flex;
+  justify-content: end;
 }
 .progress_ball{
   position:absolute;
   align-self:center;
   height: 1vh;
   transform: translateX(50%);
-  color: white;
+  color: transparent;
+  transition: 0.5s;
 }
-.progress_ball:hover{
-  color: white;
-}
+
 .progress_underbar{
   align-self: center;
   background-color:white;
   width:100%;
-  height: 0.5vh;
+  height: 0.7vh;
 }
