@@ -16,8 +16,9 @@ const pause_icon=document.querySelector('.pause_icon')
 const shuffle=document.querySelector('.shuffle')
 const progress_ball=document.querySelector('.progress_ball')
 
-let musicIndex=0
-let shuffle_status=false
+let musicIndex = 0
+let shuffle_status =false
+let recently_played_list=[]
 
 const musics=JSON.parse(document.getElementById('musics_list').textContent)
 
@@ -38,6 +39,7 @@ return `${min}:${sec}`
 // setSRC() va folosi mereu variabila grobala musicIndex , pentru a determina care pisa sa se ruleze din lista de obiecte musics, care a fost citita din codul HTML unde a fost plasata de catre django
 
 const setSRC=()=>{
+manage_recently_played(musics[musicIndex].id)
 player.src=`/media/${musics[musicIndex].audio_file}`
 song_title.textContent=musics[musicIndex].title
 artist.textContent=musics[musicIndex].artiste 
@@ -69,7 +71,45 @@ if (player.paused){
 
   }
 }
+const manage_recently_played=function(new_played_id){
 
+  function find_index(music_id){
+    return musics.findIndex(function(item){
+      return item.id == music_id
+      })
+    }
+
+
+  function is_in_list(){
+    return recently_played_list.findIndex(function(id){
+      return id == new_played_id
+      }
+    )}
+
+  console.log('a',is_in_list())
+  if(is_in_list()!=-1){
+    console.log('sa ajuns')
+    recently_played_list.splice(is_in_list(),1)
+    recently_played_list.unshift(new_played_id)
+  }else{
+    
+    recently_played_list.unshift(new_played_id)
+    if(recently_played_list.length>6){recently_played_list.pop()}
+  }
+  console.log(recently_played_list)
+
+
+  for (let i = 0; i < recently_played_list.length; i++){
+    index=find_index(recently_played_list[i])
+    console.log(index)
+    document.getElementById(i).innerHTML=`
+    <td>${musics[index].id}</td> 
+    <td>${musics[index].title}</td>
+    <td>${musics[index].artiste}</td>
+    <td>${musics[index].album_name}</td>
+    `
+  }
+}
 
 
 // incarca prima piesa din lista cand se lanseaza pagina
@@ -126,8 +166,8 @@ prev.addEventListener('click',()=>{
   musicIndex = Math.floor(Math.random() * musics.length);
   if(musicIndex==old_musicIndex){musicIndex-=1}
   }
-  else{musicIndex=musicIndex+1}
 
+  else{musicIndex=musicIndex-1}
   if(musicIndex<0){
     musicIndex=musics.length-1
   }
@@ -177,11 +217,11 @@ shuffle.addEventListener('click',()=>{
 // navigheaza prin piesa cu ajutorul barei de duratie/progres
 //
 progress_container.addEventListener('click',e=>{
-
-  const where = (e.offsetX/progress_container.offsetWidth)
-
+  const where = (e.pageX/progress_container.offsetWidth)
+  
   progress.style.width = `${progress_container.offsetWidth * where}px`
   player.currentTime = player.duration * where
+
 })
 
 
@@ -202,6 +242,5 @@ progress_container.onmousedown = function(e){
     document.onmouseup = null
     }
 }
-
 */
 
