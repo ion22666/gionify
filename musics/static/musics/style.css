@@ -215,8 +215,3 @@ tbody tr:hover {
   margin: 0;
 }
 
-.volume_container{
-  position: absolute;
-  right: 0;
-  justify-self: center;
-}

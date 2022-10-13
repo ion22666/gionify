@@ -86,22 +86,19 @@ const manage_recently_played=function(new_played_id){
       }
     )}
 
-  console.log('a',is_in_list())
+
   if(is_in_list()!=-1){
-    console.log('sa ajuns')
     recently_played_list.splice(is_in_list(),1)
     recently_played_list.unshift(new_played_id)
   }else{
-    
     recently_played_list.unshift(new_played_id)
     if(recently_played_list.length>6){recently_played_list.pop()}
   }
-  console.log(recently_played_list)
+
 
 
   for (let i = 0; i < recently_played_list.length; i++){
     index=find_index(recently_played_list[i])
-    console.log(index)
     document.getElementById(i).innerHTML=`
     <td>${musics[index].id}</td> 
     <td>${musics[index].title}</td>
@@ -216,18 +213,10 @@ shuffle.addEventListener('click',()=>{
 
 // navigheaza prin piesa cu ajutorul barei de duratie/progres
 //
-progress_container.addEventListener('click',e=>{
-  const where = (e.pageX/progress_container.offsetWidth)
-  
-  progress.style.width = `${progress_container.offsetWidth * where}px`
-  player.currentTime = player.duration * where
-
-})
-
 
 progress_container.addEventListener('mouseover',()=>{progress_ball.style.color = 'white';progress_ball.style.height = '1.5vh'})
-
 progress_container.addEventListener('mouseout',()=>{progress_ball.style.height = '0vh'})
+
 /*
 progress_container.onmousedown = function(e){
   progress.style.transition = '0.0s';
@@ -244,4 +233,12 @@ progress_container.onmousedown = function(e){
     }
 }
 */
+progress_container.addEventListener('click',e=>{
+  const where = (e.pageX/progress_container.offsetWidth)
+  
+  progress.style.width = `${progress_container.offsetWidth * where}px`
+  player.currentTime = player.duration * where
 
+
+  
+})
