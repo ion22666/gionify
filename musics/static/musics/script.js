@@ -17,7 +17,7 @@ const shuffle=document.querySelector('.shuffle')
 const progress_ball=document.querySelector('.progress_ball')
 
 let musicIndex = 0
-let shuffle_status =false
+let shuffle_status = false
 let recently_played_list=[]
 
 const musics=JSON.parse(document.getElementById('musics_list').textContent)
@@ -204,11 +204,11 @@ shuffle.addEventListener('click',()=>{
   if(shuffle_status){
     shuffle_status=false
 
-    shuffle.style.color = 'black'
+    document.getElementById("shuffle").style.color = 'white'
   }else{
     shuffle_status=true
-
-    shuffle.style.color = 'white'
+    document.getElementById("shuffle").style.color = 'rgb(22, 224, 107)'
+    
   }
 
 })
@@ -225,8 +225,9 @@ progress_container.addEventListener('click',e=>{
 })
 
 
-progress_container.addEventListener('mouseover',()=>{progress_ball.style.color = 'black'})
-progress_container.addEventListener('mouseout',()=>{progress_ball.style.color = 'transparent'})
+progress_container.addEventListener('mouseover',()=>{progress_ball.style.color = 'white';progress_ball.style.height = '1.5vh'})
+
+progress_container.addEventListener('mouseout',()=>{progress_ball.style.height = '0vh'})
 /*
 progress_container.onmousedown = function(e){
   progress.style.transition = '0.0s';

@@ -47,7 +47,7 @@ tbody tr:hover {
   width: 100%;
   height: 10%;
   display:flex;
-  background-color: grey;
+  background-color: black;
 }
 
 
@@ -84,15 +84,17 @@ tbody tr:hover {
 .svg_icons{
   width: 100%;
   height: 100%;
+  color: white;
 }
-svg.repeat{
+#repeat{
   width: 80%;
   height: 80%;
+  color: white;
 }
-svg.shuffle{
+#shuffle{
   width: 80%;
   height: 80%;
-
+  color: white;
 }
 
 .pause_icon{
@@ -105,12 +107,14 @@ svg.shuffle{
   position:absolute;
   bottom:50%;
   padding-left: 2vw;
+  color: white;
 }
 
 .artist{
   position:absolute;
   top:50%;
   padding-left: 2vw;
+  color: white;
 
 }
 
@@ -122,7 +126,7 @@ svg.shuffle{
   bottom: 0;
   padding-left: 0.5vw;
   font-size: 120%;
-  color:white;
+  color:gray;
 }
 
 .currentTime{
@@ -130,6 +134,7 @@ svg.shuffle{
   left: 0;
   padding-top: 0.5vh;
   padding-left: 0.4vw;
+  color: white;
 }
 
 .duration{
@@ -137,6 +142,7 @@ svg.shuffle{
   right: 0;
   padding-top: 0.5vh;
   padding-right: 0.4vw;
+  color: white;
 }
 
 
@@ -149,9 +155,10 @@ svg.shuffle{
   border: 0;
   position: absolute;
   width: 100%;
-  height: fit-content;
+  height: 2vh;
   top: 0;
   display: flex;
+  transform: translateY(-50%);
 
 }
 .progress{
@@ -162,7 +169,7 @@ svg.shuffle{
   border: 0;
   padding: 0;
 
-  background-color: black;
+  background-color: rgb(22, 224, 107);
 
   height: 0.7vh;
   border-bottom-right-radius: 100vh;
@@ -174,15 +181,14 @@ svg.shuffle{
 .progress_ball{
   position:absolute;
   align-self:center;
-  height: 1vh;
   transform: translateX(50%);
   color: transparent;
-  transition: 0.5s;
+  transition: 0.2s;
 }
 
 .progress_underbar{
   align-self: center;
-  background-color:white;
+  background-color:gray;
   width:100%;
   height: 0.7vh;
 }
@@ -207,4 +213,10 @@ svg.shuffle{
 
 .tabela_secundara{
   margin: 0;
+}
+
+.volume_container{
+  position: absolute;
+  right: 0;
+  justify-self: center;
 }
