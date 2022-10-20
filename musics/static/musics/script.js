@@ -1,4 +1,4 @@
-const player=document.querySelector('.audio-player')
+const player=document.querySelector('.audio_player')
 const play=document.querySelector('.playing')
 const prev=document.querySelector('.prev')
 const next=document.querySelector('.next')
@@ -15,6 +15,12 @@ const play_icon=document.querySelector('.play_icon')
 const pause_icon=document.querySelector('.pause_icon')
 const shuffle=document.querySelector('.shuffle')
 const progress_ball=document.querySelector('.progress_ball')
+const add_song = document.getElementById('addSong_button')
+const close_form = document.getElementById('close_form')
+const form_page = document.getElementById('form_page')
+const song_img = document.querySelector('.song_img')
+const close_img = document.querySelector('.close_img')
+const open_img = document.querySelector('.open_img')
 
 let musicIndex = 0
 let shuffle_status = false
@@ -38,19 +44,56 @@ return `${min}:${sec}`
 // cand un se shimba src-ul , se incepe de la inceput audioul , dar cu pauza
 // setSRC() va folosi mereu variabila grobala musicIndex , pentru a determina care pisa sa se ruleze din lista de obiecte musics, care a fost citita din codul HTML unde a fost plasata de catre django
 
-const setSRC=()=>{
-manage_recently_played(musics[musicIndex].id)
-player.src=`/media/${musics[musicIndex].audio_file}`
-song_title.textContent=musics[musicIndex].title
-artist.textContent=musics[musicIndex].artiste 
-music_img.setAttribute('src',`media/${musics[musicIndex].cover_image}`)
 
-if(musics[musicIndex].album_name=="Single"){
-    album.innerHTML='<span>Single</span>'
-}
-else{
-    album.innerHTML= '<span>' + musics[musicIndex].album_name + ' ' +  'album</span>'
-}
+
+
+
+
+
+
+const setSRC=(was_paused)=>{
+  
+  fetch(`/media/${musics[musicIndex].audio_file}`)
+  // Retrieve its body as ReadableStream
+  .then((response) => {
+    const reader = response.body.getReader();
+    return new ReadableStream({
+      start(controller) {
+        return pump();
+        function pump() {
+          return reader.read().then(({ done, value }) => {
+            // When no more data needs to be consumed, close the stream
+            if (done) {
+              controller.close();
+              return;
+            }
+            // Enqueue the next data chunk into our target stream
+            controller.enqueue(value);
+            return pump();
+          });
+        }
+      }
+    })
+  })
+  // Create a new response out of the stream
+  .then((stream) => new Response(stream))
+  // Create an object URL for the response
+  .then((response) => response.blob())
+  .then((blob) => URL.createObjectURL(blob))
+  .then((url) => {console.log(player.src = url);progress.style.width = "0px";if(was_paused != true){playOrPause()}})
+  .catch(error=>{console.log(error)})
+
+  song_title.textContent=musics[musicIndex].title
+  artist.textContent=musics[musicIndex].artiste 
+  manage_recently_played(musics[musicIndex].id)
+  song_img.setAttribute('src',`/media/${musics[musicIndex].cover_image}`)
+  console.log(song_img.src)
+  if(musics[musicIndex].album_name=="Single"){
+      album.innerHTML='<span>Single</span>'
+  }
+  else{
+      album.innerHTML= '<span>' + musics[musicIndex].album_name + ' ' +  'album</span>'
+  }
 
 }
 
@@ -58,28 +101,20 @@ else{
 const playOrPause=()=>{
 if (player.paused){
     player.play()
-    play_icon.style.display = 'none'
-    pause_icon.style.display = 'block'
-
-    
   }
-
   else{
     player.pause()
-    play_icon.style.display = 'block'
-    pause_icon.style.display = 'none'
-
   }
 }
-const manage_recently_played=function(new_played_id){
 
-  function find_index(music_id){
-    return musics.findIndex(function(item){
-      return item.id == music_id
-      })
-    }
+function find_index(music_id){
+  return musics.findIndex(function(item){
+    return item.id == music_id
+    })
+  }
 
-
+var manage_recently_played=function(new_played_id){
+  
   function is_in_list(){
     return recently_played_list.findIndex(function(id){
       return id == new_played_id
@@ -97,6 +132,7 @@ const manage_recently_played=function(new_played_id){
 
 
 
+
   for (let i = 0; i < recently_played_list.length; i++){
     index=find_index(recently_played_list[i])
     document.getElementById(i).innerHTML=`
@@ -110,7 +146,7 @@ const manage_recently_played=function(new_played_id){
 
 
 // incarca prima piesa din lista cand se lanseaza pagina
-setSRC()
+
 // implicit va fi cu pauza
 player.pause()
 
@@ -135,14 +171,14 @@ player.addEventListener('timeupdate',()=>{
   
   currentTime.textContent=formatTime(sec)
   let total_width = progress_container.offsetWidth
-  let progress_width = progress.offsetWidth
   let audio_played = (sec/total)
   let new_width = total_width * audio_played
   
   progress.style.width = `${new_width}px`
   
-  if (audio_played==1){       //and if is the last song in a playlist
-    prev.click()
+  if (sec==player.duration){       //and if is the last song in a playlist
+    player.play()
+    next.click()
     progress.style.width = `0px`
     play_icon.style.display = 'block'
     pause_icon.style.display = 'none'
@@ -169,10 +205,8 @@ prev.addEventListener('click',()=>{
     musicIndex=musics.length-1
   }
 
-  setSRC()
-  if (player.paused == true){
-    playOrPause()
-  }
+  setSRC(player.paused)
+
   progress.style.width = '0px'
 })
 
@@ -188,10 +222,8 @@ next.addEventListener('click',()=>{
   if(musicIndex>musics.length-1){
     musicIndex=0
   }
-  setSRC()
-  if (player.paused == true){
-    playOrPause()
-  }
+  setSRC(player.paused)
+
   progress.style.width = '0px'
 })
 
@@ -209,15 +241,19 @@ shuffle.addEventListener('click',()=>{
   }
 
 })
+//seeking
+progress_container.addEventListener('click',e=>{
+    player.currentTime = player.duration * (e.pageX/progress_container.offsetWidth)
+})
+
 
 
 // navigheaza prin piesa cu ajutorul barei de duratie/progres
 //
-
 progress_container.addEventListener('mouseover',()=>{progress_ball.style.color = 'white';progress_ball.style.height = '1.5vh'})
 progress_container.addEventListener('mouseout',()=>{progress_ball.style.height = '0vh'})
 
-/*
+/**
 progress_container.onmousedown = function(e){
   progress.style.transition = '0.0s';
   document.onmousemove = function(e){progress.style.width = e.offsetX + 'px'}
@@ -232,13 +268,66 @@ progress_container.onmousedown = function(e){
     document.onmouseup = null
     }
 }
-*/
-progress_container.addEventListener('click',e=>{
-  const where = (e.pageX/progress_container.offsetWidth)
-  
-  progress.style.width = `${progress_container.offsetWidth * where}px`
-  player.currentTime = player.duration * where
-
-
-  
+**/
+player.addEventListener("play",()=>{
+  play_icon.style.display = 'none'
+    pause_icon.style.display = 'block'
 })
+
+player.addEventListener("pause",()=>{
+  play_icon.style.display = 'block'
+  pause_icon.style.display = 'none'
+})
+
+
+self.addEventListener("fetch", (event) => {
+  console.log("Handling fetch event for", event.request.url);
+})
+
+
+
+
+close_form.addEventListener('click',()=>{
+  form_page.style.display = 'none'
+})
+
+document.getElementById('close_create_playlist_form').addEventListener('click',()=>{
+  document.getElementById('create_playlist_form_page').style.display = 'none'
+})
+
+document.querySelector('.song_img').addEventListener('mouseover',()=>{close_img.style.display = 'block'})
+document.querySelector('.song_img').addEventListener('mouseout',()=>{close_img.style.display = 'none'})
+
+document.querySelector('.close_img').addEventListener('mouseover',()=>{close_img.style.display = 'block'})
+document.querySelector('.close_img').addEventListener('mouseout',()=>{close_img.style.display = 'none'})
+
+function show_hide_img(){
+  console.log("ttt")
+  if(document.querySelector('.song_img_container').style.height == '0px'){
+    document.querySelector('.song_img_container').style.height = '15vw'
+    close_img.style.transform = 'translateY(0%)';
+    open_img.style.display = 'none'
+  }
+  else{
+    document.querySelector('.song_img_container').style.height = '0px'
+    open_img.style.display = 'block'
+    close_img.style.transform = 'translateY(-100%)';
+  }
+}
+close_img.onclick = show_hide_img
+open_img.onclick = show_hide_img
+setSRC(true)
+
+
+function create_function_for_each_play_buttons() {
+  var buttons = document.getElementsByClassName('play_this_song_button');
+  console.log(buttons)
+  for ( var i in Object.keys( buttons ) ) {
+      buttons[i].onclick = function() {
+        musicIndex = find_index(this.value)
+        setSRC(player.paused)
+      };
+  }
+};
+
+create_function_for_each_play_buttons();

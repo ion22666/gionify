@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 from musics.helper import get_audio_length
 from django.db import models
 from musics.validators import validate_is_audio
-
+from django.conf import settings
 
 
 class Music(models.Model):
@@ -36,6 +36,12 @@ class Music(models.Model):
 
 
 class Album(models.Model):
-
     name=models.CharField(max_length=400)
 
+class Playlist(models.Model):
+    name=models.CharField(max_length=400)
+    user_id=models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,null=False,blank=False)
+
+class Playlist_group(models.Model):
+    playlist_id=models.ForeignKey('Playlist',on_delete=models.CASCADE,null=False,blank=False)
+    song_id=models.ForeignKey('Music',on_delete=models.CASCADE,null=False,blank=False)

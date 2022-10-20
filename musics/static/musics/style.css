@@ -215,3 +215,70 @@ tbody tr:hover {
   margin: 0;
 }
 
+#form_page{
+  top:0;
+  left:0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255,0,0,0.3);
+  z-index: 1;
+  display: none;
+}
+
+#create_playlist_form_page{
+  top:0;
+  left:0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(26, 255, 0, 0.3);
+  z-index: 1;
+  display: none;
+}
+
+
+.song_img_container{
+  position: absolute;
+  right: 0;
+  top: 0;
+  transform: translateY(-100%);
+  background-color: green;
+  height: 15vw;
+  width:  15vw;
+  transition: 0.5s;
+}
+.song_img{
+  width: 100%;
+  height: 100%;
+}
+.close_img{
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin: 0.5vh;
+  border: 0px solid transparent;
+  display: none;
+  transition: 0.5s;
+  background-color: transparent;
+}
+
+.open_img{
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  margin: 0.1vh;
+  display: none;
+  border: 0px solid transparent;
+  background-color: transparent;
+}
+.close_img_icon{
+  height: 4vh;
+  color: rgb(22, 224, 107);
+}
+.open_img_icon{
+  height: 4vh;
+  color: rgb(22, 224, 107);
+  background-color: rgba(0, 0, 0, 0.6);
+  clip-path: polygon(15% 100%, 15% 60%, 50% 25%, 85% 60%, 85% 100%);
+}

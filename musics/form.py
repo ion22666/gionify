@@ -1,6 +1,6 @@
 from dataclasses import fields
 from django.forms import widgets
-from musics.models import Music
+from musics.models import Music, Playlist, Playlist_group
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -19,6 +19,23 @@ class AddMusicForm(forms.ModelForm):
             'audio_file',
             'cover_image',
         ]
+
+class AddPlaylistForm(forms.ModelForm):
+    user_id=forms.CharField(max_length=500,required=False)
+    class Meta:
+        model=Playlist
+        fields=[
+            'name',
+        ]
+
+class AddPlaylistGroupForm(forms.ModelForm):
+    class Meta:
+        model=Playlist_group
+        fields=[
+            'playlist_id',
+            'song_id',
+        ]
+
 
 class ManageMusicForm(forms.ModelForm):
     album=forms.CharField(max_length=500,required=False)
@@ -41,3 +58,4 @@ class CreateUserForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['username','password1','password2','first_name','last_name']
+

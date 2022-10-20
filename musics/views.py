@@ -1,16 +1,23 @@
-from ast import arg
-from musics.models import Album, Music
+import json
+from django.http import HttpResponse, HttpRequest
+from musics.models import Album, Music, Playlist, Playlist_group
 from django.shortcuts import redirect, render, get_object_or_404
-from .form import AddMusicForm,ManageMusicForm,CreateUserForm
+from .form import AddMusicForm, ManageMusicForm, CreateUserForm, AddPlaylistForm
 from django.contrib import messages  
 from django.contrib.auth import authenticate, login, logout
 from .decorators import logged_not_allowed, allowed_goups, admin_only, only_logged
-
+from django.core.signals import request_finished
+from django.dispatch import receiver
+from django.views.generic.base import RedirectView
+from django.conf import settings
 
 @only_logged("You must be logged in to access the home page")
 @allowed_goups(['full_admin','db_staff'])
 def homePage(request):
     musics_list = list(Music.objects.select_related('album').all().values())
+    playlist_list = list(Playlist.objects.select_related('user_id').filter(user_id=request.user.id).values())
+    for playlist in playlist_list:
+        playlist['songs_count'] = Playlist_group.objects.filter(playlist_id=playlist['id']).count()
     for music in musics_list:
         if music["album_id"]!=None:
             music["album_name"]=Album.objects.get(id=music["album_id"]).name
@@ -18,6 +25,7 @@ def homePage(request):
             music["album_name"]='Single'
     return render(request,'home.html',{
         'musics_list':musics_list,
+        'playlist_list':playlist_list,
     })
 
 @only_logged("Only those logged in can logout")
@@ -59,11 +67,10 @@ def register_user(request):
 
     return render(request,'register_user.html',{'form':form,})
 
-def addMusic(request):
+def addSong(request):
     form=AddMusicForm()
     if request.POST:
         form=AddMusicForm(request.POST,request.FILES)
-     
         if form.is_valid():
             instance=form.save(commit=False)
             album=form.cleaned_data.get('album')
@@ -73,18 +80,19 @@ def addMusic(request):
                 print(music_album)
                 instance.album=music_album[0]
                 instance.save()
-                return redirect("music:home_page")
             else:
+                print("sa salvat")
                 instance.save()
-                return redirect("music:home_page")
-
+            return HttpResponse(json.dumps({'message': "done"}))
         else:
             print("no",form.data)
             print(form.errors.as_data())
-    
-    return render(request,'addPage.html',{
-        'form':form,
+
+    if 'HTTP_REFERER' in request.META.keys() and request.META['HTTP_REFERER']=='http://127.0.0.1:8000/':
+        return render(request,'add_song_form.html',{
+            'form':form,
     })
+    return redirect("music:home_page")
 
 def delete_song(request,song_id):
     song=get_object_or_404(Music, pk=song_id)
@@ -120,3 +128,27 @@ def manage_song(request,song_id):
         'form':form,
         'song':song,
     })
+def add_playlist_view(request):
+    form=AddPlaylistForm()
+    if request.POST:
+        form=AddPlaylistForm(request.POST)
+        print(form.data)
+        if form.is_valid():
+            instance=form.save(commit=False)
+            if request.user.is_authenticated:
+                user = request.user
+            else:
+                return HttpResponse("ce dreacu faci bre?")
+            instance.user_id = user
+            instance.save()
+            print("sa salvat")
+            return HttpResponse(json.dumps({'message': "sa creat un playlist"}))
+        else:
+            print("no",form.data)
+            print(form.errors.as_data())
+
+    if 'HTTP_REFERER' in request.META.keys() and request.META['HTTP_REFERER']=='http://127.0.0.1:8000/':
+        return render(request,'create_playlist_form.html',{
+            'form':form,
+    })
+    return redirect("music:home_page")

@@ -1,5 +1,6 @@
+<h2>The Form</h2>
 {% block content %}
-<form action="" method="post" enctype="multipart/form-data">
+<form id="add_song_form" action="{% url 'musics:getForm' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Submit">
