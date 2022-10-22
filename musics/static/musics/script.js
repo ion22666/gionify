@@ -1,7 +1,6 @@
 const player=document.querySelector('.audio_player')
 const play=document.querySelector('.playing')
-const prev=document.querySelector('.prev')
-const next=document.querySelector('.next')
+
 const currentTime=document.querySelector('.currentTime')
 const duration=document.querySelector('.duration')
 const progress=document.querySelector('.progress')
@@ -11,12 +10,9 @@ const song_title=document.querySelector('.song-title')
 const artist=document.querySelector('.artist')
 const album=document.querySelector('.album')
 const music_img=document.querySelector('.music_img')
-const play_icon=document.querySelector('.play_icon')
-const pause_icon=document.querySelector('.pause_icon')
-const shuffle=document.querySelector('.shuffle')
+
 const progress_ball=document.querySelector('.progress_ball')
 const add_song = document.getElementById('addSong_button')
-const close_form = document.getElementById('close_form')
 const form_page = document.getElementById('form_page')
 const song_img = document.querySelector('.song_img')
 const close_img = document.querySelector('.close_img')
@@ -25,8 +21,6 @@ const open_img = document.querySelector('.open_img')
 let musicIndex = 0
 let shuffle_status = false
 let recently_played_list=[]
-
-const musics=JSON.parse(document.getElementById('musics_list').textContent)
 
 // functions
 // format time for music
@@ -80,14 +74,13 @@ const setSRC=(was_paused)=>{
   // Create an object URL for the response
   .then((response) => response.blob())
   .then((blob) => URL.createObjectURL(blob))
-  .then((url) => {console.log(player.src = url);progress.style.width = "0px";if(was_paused != true){playOrPause()}})
+  .then((url) => {player.src = url;progress.style.width = "0px";if(was_paused != true){playOrPause()}})
   .catch(error=>{console.log(error)})
 
   song_title.textContent=musics[musicIndex].title
   artist.textContent=musics[musicIndex].artiste 
   manage_recently_played(musics[musicIndex].id)
   song_img.setAttribute('src',`/media/${musics[musicIndex].cover_image}`)
-  console.log(song_img.src)
   if(musics[musicIndex].album_name=="Single"){
       album.innerHTML='<span>Single</span>'
   }
@@ -152,7 +145,7 @@ player.pause()
 
 // eventlisteners
 // butonul cu clasa play are doua iconite suprapuse, cand dam click pe el, una disapre si alta apare in dependenta daca playerul ruleza sau nu
-play.addEventListener("click",e=>{ playOrPause() } )
+
 // cand are loc o incarcare de metadata, adica cand se introduce un src, sectiunea 'duration' , va primi valoarea lungimii acelei piese incaracate
 // player-ul este un tag de tip audio, si doar el poate avea proprietatea .duration
 player.addEventListener('loadedmetadata',()=>{duration.textContent=formatTime(player.duration)})
@@ -178,7 +171,7 @@ player.addEventListener('timeupdate',()=>{
   
   if (sec==player.duration){       //and if is the last song in a playlist
     player.play()
-    next.click()
+    document.getElementById('next').click()
     progress.style.width = `0px`
     play_icon.style.display = 'block'
     pause_icon.style.display = 'none'
@@ -187,60 +180,11 @@ player.addEventListener('timeupdate',()=>{
 
 })
 
-// prev si next nu fac nimic altceva decat sa modifice musicIndex cu 1,dupa ce sa modificat indexul, 
-// trebuie sa rulam si un setSRC() pentru a actualiza informatiile pe pagina cu piesa noua, altfel raman informatile de la piesa veche
-// implicit dupa ce se seteaza un nou src, audioul este pe pauza , deci noi vrem ca sa se dea play automat si apelam playOrPause()
-// folosim musics.length-1 pentru a determina ultimul index ( lenfgt-1 == ultimul index )
-
-//PRIV
-prev.addEventListener('click',()=>{
-  old_musicIndex = musicIndex
-  if(shuffle_status){
-  musicIndex = Math.floor(Math.random() * musics.length);
-  if(musicIndex==old_musicIndex){musicIndex-=1}
-  }
-
-  else{musicIndex=musicIndex-1}
-  if(musicIndex<0){
-    musicIndex=musics.length-1
-  }
-
-  setSRC(player.paused)
-
-  progress.style.width = '0px'
-})
-
-//NEXT
-next.addEventListener('click',()=>{
-  old_musicIndex = musicIndex
-  if(shuffle_status){
-  musicIndex = Math.floor(Math.random() * musics.length);
-  if(musicIndex==old_musicIndex){musicIndex+=1}
-  }
-  else{musicIndex=musicIndex+1}
-
-  if(musicIndex>musics.length-1){
-    musicIndex=0
-  }
-  setSRC(player.paused)
-
-  progress.style.width = '0px'
-})
 
 
 
-shuffle.addEventListener('click',()=>{
-  if(shuffle_status){
-    shuffle_status=false
 
-    document.getElementById("shuffle").style.color = 'white'
-  }else{
-    shuffle_status=true
-    document.getElementById("shuffle").style.color = 'rgb(22, 224, 107)'
-    
-  }
 
-})
 //seeking
 progress_container.addEventListener('click',e=>{
     player.currentTime = player.duration * (e.pageX/progress_container.offsetWidth)
@@ -253,47 +197,13 @@ progress_container.addEventListener('click',e=>{
 progress_container.addEventListener('mouseover',()=>{progress_ball.style.color = 'white';progress_ball.style.height = '1.5vh'})
 progress_container.addEventListener('mouseout',()=>{progress_ball.style.height = '0vh'})
 
-/**
-progress_container.onmousedown = function(e){
-  progress.style.transition = '0.0s';
-  document.onmousemove = function(e){progress.style.width = e.offsetX + 'px'}
-  document.onmouseup = function(e){
-    document.onmousemove = null
-    const where = (e.offsetX/progress_container.offsetWidth)
 
-    progress.style.width = `${progress_container.offsetWidth * where}px`
-    console.log(player.duration * where)
-    player.currentTime = (player.duration * where)
-    console.log(player.currentTime)
-    document.onmouseup = null
-    }
-}
-**/
-player.addEventListener("play",()=>{
-  play_icon.style.display = 'none'
-    pause_icon.style.display = 'block'
-})
-
-player.addEventListener("pause",()=>{
-  play_icon.style.display = 'block'
-  pause_icon.style.display = 'none'
-})
 
 
 self.addEventListener("fetch", (event) => {
   console.log("Handling fetch event for", event.request.url);
 })
 
-
-
-
-close_form.addEventListener('click',()=>{
-  form_page.style.display = 'none'
-})
-
-document.getElementById('close_create_playlist_form').addEventListener('click',()=>{
-  document.getElementById('create_playlist_form_page').style.display = 'none'
-})
 
 document.querySelector('.song_img').addEventListener('mouseover',()=>{close_img.style.display = 'block'})
 document.querySelector('.song_img').addEventListener('mouseout',()=>{close_img.style.display = 'none'})
@@ -330,4 +240,14 @@ function create_function_for_each_play_buttons() {
   }
 };
 
-create_function_for_each_play_buttons();
+// create_function_for_each_play_buttons();
+
+// function add_song_to_liked(){
+//   musics.[musicIndex]
+//   $.ajax({
+//     type:"POST",
+//     url:""
+//   })
+// }
+
+// $('svg.liked_song_icon').click(()=)

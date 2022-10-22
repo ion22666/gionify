@@ -1,0 +1,66 @@
+.icons{
+    position: absolute;
+    height: 1vh;
+    width: fit-content;
+    background-color: transparent;
+    
+}
+
+.svg_icons{
+    height: 100%;
+    color: white;
+    fill: currentColor;
+    background-color: transparent;
+
+}
+
+.main_icon{
+    height: 5vh;
+    border: none;
+    position:absolute;
+    align-self: center;
+    transform: translateX(-50%);
+}
+
+#prev{
+    left: 45vw;
+}
+#next{
+    left: 55vw;
+}
+#playing{
+    left: 50vw;
+}
+#shuffle{
+    left: 40vw;
+}
+#repeat{
+    left: 60vw;
+}
+  
+#liked_song{
+    position: absolute;
+    border: none;
+    background-color: transparent;
+    height: 2.5vh;
+    padding-left: 0.5vw;
+    bottom:50%;
+  }
+#not_liked_song{
+    position: absolute;
+    border: none;
+    background-color: transparent;
+    height: 2.5vh;
+    width: 2.5vh;
+    padding-left: 0.5vw;
+    bottom:50%;
+}
+
+
+#svg_liked_song{
+    display: none;
+    color: rgb(22, 224, 107);;
+  }
+#svg_pause{
+    display: none;
+}

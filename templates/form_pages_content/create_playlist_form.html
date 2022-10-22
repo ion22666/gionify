@@ -1,5 +1,5 @@
 <h2>New Playlist</h2>
-<form id="add_playlist_form" action="{% url 'musics:get_playlist_form' %}" method="post" enctype="multipart/form-data">
+<form id="add_playlist_form" action="{% url 'musics:add_playlist_url' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <p>
         <label for="id_name">Name:</label>
