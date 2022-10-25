@@ -1,0 +1,25 @@
+
+{{ playlist_id }}
+<table id="tabela_liked_songs">
+<tr>
+    <th>ID</th> 
+    <th>TITLE</th>
+    <th>ARTISTE</th>
+    <th>ALBUM</th>
+    <th>TIME LENGHT</th>
+    <th>EDIT</th>
+    <th>PLAY</th>
+</tr>
+
+{% for song in songs %}
+<tr>
+    <td>{{song.id}}</td> 
+    <td>{{song.title}}</td>
+    <td>{{song.artiste}}</td>
+    <td>{{song.album_name}}</td>
+    <td>{{song.time_length}}</td>
+    <td><button onclick="window.location.href='manage/{{song.id}}';">edit</button></td>
+    <td><button id="iomaio" class="play_this_song_button" value="{{song.id}}">Play</button></td>
+</tr>
+{% endfor %}
+</table>

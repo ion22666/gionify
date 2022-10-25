@@ -13,4 +13,6 @@ urlpatterns = [
     path('delete/<int:song_id>/',views.delete_song,name='delete_song'),  
     path('addSong/',views.addSong,name='add_song_url'),
     path('add_playlist/',views.add_playlist_view,name='add_playlist_url'),
+    path('user_request/',views.user_request_view,name='user_request_url'),
+    path('liked/',views.liked_songs_view,name='liked_songs_page_url'),
 ]

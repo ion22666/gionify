@@ -43,10 +43,8 @@ return `${min}:${sec}`
 
 
 
-
-
 const setSRC=(was_paused)=>{
-  
+  update_liked_icon()
   fetch(`/media/${musics[musicIndex].audio_file}`)
   // Retrieve its body as ReadableStream
   .then((response) => {

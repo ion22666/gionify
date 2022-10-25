@@ -1,27 +1,47 @@
 import json
+from re import template
+from urllib import response
+
+from django.template import Template, Context, loader
 from django.http import HttpResponse, HttpRequest
-from musics.models import Album, Music, Playlist, Playlist_group
+from numpy import true_divide
+from musics.models import Album, Music, Playlist, Playlist_group, LikedPlaylists
 from django.shortcuts import redirect, render, get_object_or_404
-from .form import AddMusicForm, ManageMusicForm, CreateUserForm, AddPlaylistForm
-from django.contrib import messages  
-from django.contrib.auth import authenticate, login, logout
-from .decorators import logged_not_allowed, allowed_goups, admin_only, only_logged
-from django.core.signals import request_finished
 from django.dispatch import receiver
 from django.views.generic.base import RedirectView
-from django.conf import settings
+from django.middleware.csrf import CsrfViewMiddleware
+from django.core.exceptions import ObjectDoesNotExist
+from django.core.signals import request_finished
+from django.contrib import messages  
+from django.contrib.auth import authenticate, login, logout
+
 from . import urls
+from .decorators import logged_not_allowed, allowed_goups, admin_only, only_logged
+from .form import AddMusicForm, ManageMusicForm, CreateUserForm, AddPlaylistForm
+
+
+
+
+def get_playlist_list(request):
+    playlist_list = { p['id']:p for p in list(Playlist.objects.select_related('user_id').filter(user_id=request.user.id).values())}
+    for id in playlist_list.keys():
+            playlist_list[id]['songs_count'] = Playlist_group.objects.filter(playlist_id=id).count()
+            playlist_list[id]['songs_id'] = list(Playlist_group.objects.filter(playlist_id=id).values_list('song_id',flat=True))
+    playlist_list['main_playlist_id'] = list(LikedPlaylists.objects.filter(user_id=request.user).values_list('playlist_id',flat=True))[0]
+    return playlist_list
+
+
 
 
 @only_logged("You must be logged in to access the home page")
 @allowed_goups(['full_admin','db_staff'])
 def homePage(request):
     musics_list = list(Music.objects.select_related('album').all().values())
-    playlist_list = list(Playlist.objects.select_related('user_id').filter(user_id=request.user.id).values())
     url_patterns = { i.name : str(i.pattern)[0:str(i.pattern).find('/')+1] for i in urls.urlpatterns}
-
+    playlist_list = list(Playlist.objects.select_related('user_id').filter(user_id=request.user.id).values())
     for playlist in playlist_list:
-        playlist['songs_count'] = Playlist_group.objects.filter(playlist_id=playlist['id']).count()
+            playlist['songs_count'] = Playlist_group.objects.filter(playlist_id=playlist['id']).count()
+            playlist['songs_id'] = list(Playlist_group.objects.filter(playlist_id=playlist['id']).values_list('song_id',flat=True))
     for music in musics_list:
         if music["album_id"]!=None:
             music["album_name"]=Album.objects.get(id=music["album_id"]).name
@@ -29,7 +49,7 @@ def homePage(request):
             music["album_name"]='Single'
     return render(request,'home.html',{
         'musics_list':musics_list,
-        'playlist_list':playlist_list,
+        'playlist_list':get_playlist_list(request),
         'url_patterns':url_patterns,
     })
 
@@ -90,8 +110,12 @@ def addSong(request):
                 instance.save()
             return HttpResponse(json.dumps({'message': "done"}))
         else:
-            print("no",form.data)
-            print(form.errors.as_data())
+            return render(
+                request,
+                template_name='form_pages_content/add_song_form.html',
+                context={'form':form,},
+                status=415,
+            )
 
     if 'HTTP_REFERER' in request.META.keys() and request.META['HTTP_REFERER']=='http://127.0.0.1:8000/':
         return render(request,'form_pages_content/add_song_form.html',{
@@ -133,11 +157,11 @@ def manage_song(request,song_id):
         'form':form,
         'song':song,
     })
+
 def add_playlist_view(request):
     form=AddPlaylistForm()
     if request.POST:
         form=AddPlaylistForm(request.POST)
-        print(form.data)
         if form.is_valid():
             instance=form.save(commit=False)
             if request.user.is_authenticated:
@@ -157,3 +181,44 @@ def add_playlist_view(request):
             'form':form,
     })
     return redirect("music:home_page")
+
+
+def user_request_view(request):
+    
+    if request.method == 'POST':
+        data = json.loads(request.body.decode("utf-8"))
+        song = Music.objects.get(pk=data['song_id'])
+        playlist =Playlist.objects.get(pk=data['playlist_id'])
+        if data['add']:
+            try:
+                if Playlist_group.objects.get(song_id=song,playlist_id=playlist):
+                    print('alredy exist')
+                    return HttpResponse(status=400,content=json.dumps({'message': "alredy exist"}))
+            except:
+                instance = Playlist_group.objects.create(song_id=song,playlist_id=playlist)
+                instance.save()
+                print('sa salvat')
+                return HttpResponse(status=201,content=json.dumps({'message': "sa salvat",'get_playlist_list':(get_playlist_list(request))}))
+            
+        else:
+            print('sa sters')
+            Playlist_group.objects.filter(song_id=song,playlist_id=playlist).delete()
+            return HttpResponse(status=202,content=json.dumps({'message': "sa eliminat",'get_playlist_list':(get_playlist_list(request))}))
+    else:
+        return HttpResponse(status=405)
+
+
+def liked_songs_view(request):
+    if request.user.is_authenticated:
+        try:#verificam daca in tabela LikedPlaylists exista vreun rand care sa contina id-ul userului
+            liked_playlist = LikedPlaylists.objects.get(user_id=request.user)
+        except LikedPlaylists.DoesNotExist: # daca nu exista , cream un plailist nou si il folosim drept pentru liked_song playlist
+            new_playlist = Playlist.objects.create(name='2266',user_id=request.user).save()
+            liked_playlist = LikedPlaylists.objects.create(user_id=request.user,playlist_id=new_playlist).save()
+        liked_ids = list(Playlist_group.objects.filter(playlist_id=liked_playlist.playlist_id).values_list('song_id',flat=True))
+        liked_songs = (list(Music.objects.filter(pk__in=liked_ids).values()))
+        template = loader.get_template('main_page/liked_songs_page.html')
+        response = template.render({'songs':liked_songs,'playlist_id':liked_playlist.playlist_id})
+        return HttpResponse(content=response)
+    else:
+        return HttpResponse(status=401)

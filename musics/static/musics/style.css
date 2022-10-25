@@ -1,44 +1,67 @@
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,600);
 
-*, *:before, *:after {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
 .space{
   height: 200%;
 }
-#main_display{
+html{
+  margin: 0;
+  position: relative;
+  height: 100%;
+}
+body {
+  margin: 0;
+  position: relative;
   display: flex;
-  position: relative;
-  width: 100%;
-  flex-grow: 1;
-}
+  flex-flow: column;
+  height: 100%;
 
-#main_page{
-  position: relative;
-  background-image: url("istockphoto-1018714548-612x612.jpg");
-  overflow: auto;
-  flex:1;
-  max-height: 100%;
-  color: rgb(255, 255, 255);
-  font-size: 200%;
+  font-family: 'Open Sans', sans-serif;
 }
-
 #audio_player_container{
   position: relative;
   width: 100%;
   height: 10%;
   display:flex;
+  flex-grow: 1;
+
   background-color: black;
 }
-
-body {
-  font-family: 'Open Sans', sans-serif;
+#main_display{
+  margin: 0;
+  position: relative;
   display: flex;
-  flex-flow: column;
-  height: 100%;
+  width: 100%;
+  height: 90%;
+  
 }
+
+
+#main_page{
+  margin: 0;
+  position: relative;
+  background-image: url("istockphoto-1018714548-612x612.jpg");
+  overflow-y:scroll;
+  overflow-x: hidden;
+  flex:1;
+  max-height: 100%;
+
+  color: rgb(255, 255, 255);
+  font-size: 100%;
+}
+
+.main_page_views{
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+
+
+
+
 table {
   background: #012B39;
   border-radius: 0.25em;
@@ -59,29 +82,21 @@ td {
   font-weight: 400;
   padding: 0.65em 1em;
 }
-.disabled td {
-  color: #4F5F64;
-}
-tbody tr {
-  transition: background 0.25s ease;
-}
-tbody tr:hover {
-  background: #014055;
-}
+
 
 
 .song-title{
   font-size: 2.5vh;
   position:absolute;
   bottom:50%;
-  padding-left: 2vw;
+  margin-left: 2vw;
   color: white;
 }
 
 .artist{
   position:absolute;
   top:50%;
-  padding-left: 2vw;
+  margin-left: 2vw;
   color: white;
 
 }
@@ -195,7 +210,7 @@ tbody tr:hover {
 
 .song_img_container{
   position: absolute;
-  right: 10px;
+  right: 8px;
   top: 0;
   transform: translateY(-100%);
   background-color: green;
@@ -249,7 +264,7 @@ tbody tr:hover {
 
 #main_page::-webkit-scrollbar
 {
-	width: 10px;
+	width: 8px;
 	background-color: transparent;
 }
 
@@ -257,6 +272,15 @@ tbody tr:hover {
 {
 	background-color: rgb(22, 224, 107);
 }
+
+#main_page
+{
+  scrollbar-color: rgb(22, 224, 107) black;
+  scrollbar-width:thin;
+}
+
+
+
 .Your_Playlists{
   color: white;
   margin-left: 2%;

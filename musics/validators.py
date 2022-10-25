@@ -2,10 +2,13 @@ import os
 
 from django.core.exceptions import ValidationError
 from mutagen.mp3 import MPEGInfo
+from PIL.Image import open
 
-
-
-
+def validate_is_img(file):
+    try:
+        img = open(file,formats=['PNG','JPEG','GIF','WEBP'])
+    except Exception as e:
+        raise ValidationError('Unsupported file. Supported(PNG,JPEG,GIF,WEBP)')
 
 def validate_is_audio(file):
     try:

@@ -28,14 +28,6 @@ class AddPlaylistForm(forms.ModelForm):
             'name',
         ]
 
-class AddPlaylistGroupForm(forms.ModelForm):
-    class Meta:
-        model=Playlist_group
-        fields=[
-            'playlist_id',
-            'song_id',
-        ]
-
 
 class ManageMusicForm(forms.ModelForm):
     album=forms.CharField(max_length=500,required=False)

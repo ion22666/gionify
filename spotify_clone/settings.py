@@ -28,7 +28,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 # Application definition
 
 INSTALLED_APPS = [
@@ -39,8 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'musics',
-    'tailwind',
-    'theme'
 ]
 
 MIDDLEWARE = [
@@ -128,9 +126,5 @@ STATIC_ROOT= BASE_DIR/'static_root'
 MEDIA_ROOT= BASE_DIR/'media_root'
 
 STATICFILES_DIRS=[
-    'static'
+    
 ]
-
-
-# Tailwind
-TAILWIND_APP_NAME = 'theme'

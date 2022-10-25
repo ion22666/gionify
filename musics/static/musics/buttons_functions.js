@@ -71,3 +71,69 @@ shuffle.addEventListener('click',()=>{
     }
 
 })
+// dai update la inimioara in dependeta de piesa care acum ruleaza
+
+
+async function add_or_remove_to_playlist(add,song_id,playlist_id){
+    try{
+        let response = await fetch(urls['user_request_url'],{
+            method:'POST',
+            headers: {'X-CSRFToken': csrftoken},
+            body:JSON.stringify({
+                'add':add,
+                'song_id':song_id,
+                'playlist_id':playlist_id
+            })
+        })
+        let json_response = await response.json()
+        return json_response
+    }catch(e){
+        alert(e)
+    }
+}   
+
+// adauga sau elimina piesa de la favorite cand apesi pe inimioara,
+document.getElementById('is_liked_song').addEventListener('click',()=>{
+    let to_add = false
+    if(document.getElementById('svg_liked_song').style.display != 'block'){
+        to_add = true
+    }
+    add_or_remove_to_playlist(to_add,musics[musicIndex].id,playlists['main_playlist_id'])
+        .then((response)=>{
+            playlists = response['get_playlist_list']
+            update_liked_icon()
+        })
+        .catch((error)=>{console.log(error)})
+
+})
+
+
+document.getElementById('liked_songs_page').addEventListener('click',()=>{
+    fetch(urls['liked_songs_page_url'])
+        .then((response)=>{return response.text()})
+        .then((response)=>{
+            console.log(typeof(response));
+            console.log((response));
+            document.getElementById('home_page').style.display = 'none'
+            document.getElementById('liked_page').style.display = 'block'
+            $('#liked_page').html(response)
+            //document.getElementById('liked_page').innerHTML = response
+            
+        })
+        .catch((error)=>{console.log(error)})
+})
+
+document.getElementById('liked_songs_page').addEventListener('click',()=>{
+    fetch(urls['liked_songs_page_url'])
+        .then((response)=>{return response.text()})
+        .then((response)=>{
+            console.log(typeof(response));
+            console.log((response));
+            document.getElementById('home_page').style.display = 'none'
+            document.getElementById('liked_page').style.display = 'block'
+            $('#liked_page').html(response)
+            //document.getElementById('liked_page').innerHTML = response
+            
+        })
+        .catch((error)=>{console.log(error)})
+})

@@ -1,7 +1,9 @@
+<!DOCTYPE html>
 <html>
   {% load static %}
   <title>Gionify</title>
   <link rel="stylesheet" href="{% static 'musics/style.css' %}">
+  <link rel="stylesheet" href="{% static 'musics/tables_style.css' %}">
   <link rel="stylesheet" href="{% static 'musics/icons_style.css' %}">
   <link rel="stylesheet" href="{% static 'musics/volume_style.css' %}">
   <link rel="stylesheet" href="{% static 'musics/form_style.css' %}">
@@ -9,7 +11,8 @@
   <link rel="icon" type="image/x-icon" href="{% static 'musics/favicon.ico' %}">
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js" type="text/javascript"></script>
 
-  <body>
+  <body>  
+    {% comment %} ______________________________________DISPLAY-UL APLICATIEI, ESTE RESTUL ECRANULUI MAI PUTIN PLAYERUL________ {% endcomment %}
     <div id="main_display">
 
       {% comment %}___________________________________UN LOC DE AFISAT NOTIFICARI / MESAJE___________________________________{% endcomment %}
@@ -43,16 +46,36 @@
     {% comment %}_________________________________SCRIPTURI SI TRESTII_____________________________ {% endcomment %}
     {{musics_list|json_script:'musics_list'}}
     {{url_patterns|json_script:'url_patterns'}}
+    {{playlist_list|json_script:'playlist_list'}}
+    {% csrf_token %}
     <script>
       const musics=JSON.parse(document.getElementById('musics_list').textContent)
+      let playlists=JSON.parse(document.getElementById('playlist_list').textContent)
       const urls=JSON.parse(document.getElementById('url_patterns').textContent)
+      const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value; 
+
+
+      function update_liked_icon(){
+        if(playlists[playlists['main_playlist_id']]['songs_id'].includes(musics[musicIndex].id)){
+            document.getElementById('svg_not_liked_song').style.display = 'none'
+            document.getElementById('svg_liked_song').style.display = 'block'
+        }else{
+            document.getElementById('svg_not_liked_song').style.display = 'block'
+            document.getElementById('svg_liked_song').style.display = 'none'
+        }
+      }
+
+
     </script>
 
     <script src="{% static 'musics/include-script.js' %}"></script>
+    
     <script src="{% static 'musics/script.js' %}"></script>
     <script src="{% static 'musics/volume_script.js' %}"></script>
     <script src="{% static 'musics/forms_requests.js' %}"></script>
     <script src="{% static 'musics/buttons_functions.js' %}"></script>
+
+
 
   </body>
 </html>
