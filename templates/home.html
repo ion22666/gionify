@@ -8,6 +8,8 @@
   <link rel="stylesheet" href="{% static 'musics/volume_style.css' %}">
   <link rel="stylesheet" href="{% static 'musics/form_style.css' %}">
   <link rel="stylesheet" href="{% static 'musics/main_menu_style.css' %}">
+  <link rel="stylesheet" href="{% static 'musics/main_page.css' %}">
+  <link rel="stylesheet" href="{% static 'musics/profile_page.css' %}">
   <link rel="icon" type="image/x-icon" href="{% static 'musics/favicon.ico' %}">
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js" type="text/javascript"></script>
 
@@ -22,10 +24,15 @@
 
 
       {% comment %}___________________________________MENIUL PRINCIPAL DE PE STANGA___________________________________{% endcomment %}
-      <div id="main_menu">
-        {% include 'main_menu_content.html' %}
-      </div>
-
+      {% if main_menu_pre_render %}
+        <div id="main_menu">
+          {{ main_menu_pre_render }}
+        </div>
+      {% else %}
+        <div id="main_menu">
+          {% include 'main_menu_content.html' %}
+        </div>
+      {% endif %}
 
       {% comment %}___________________________________PAGINA PRINCIPALA DE CONTINUT___________________________________{% endcomment %}
       <div id="main_page">
@@ -47,33 +54,46 @@
     {{musics_list|json_script:'musics_list'}}
     {{url_patterns|json_script:'url_patterns'}}
     {{playlist_list|json_script:'playlist_list'}}
+    {{main_playlist_id|json_script:'main_playlist_id'}}
+    {{current_user|json_script:'current_user'}}
     {% csrf_token %}
     <script>
       const musics=JSON.parse(document.getElementById('musics_list').textContent)
+      const main_playlist_id=JSON.parse(document.getElementById('main_playlist_id').textContent)
+      const current_user=JSON.parse(document.getElementById('current_user').textContent)
       let playlists=JSON.parse(document.getElementById('playlist_list').textContent)
       const urls=JSON.parse(document.getElementById('url_patterns').textContent)
       const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value; 
 
 
-      function update_liked_icon(){
-        if(playlists[playlists['main_playlist_id']]['songs_id'].includes(musics[musicIndex].id)){
-            document.getElementById('svg_not_liked_song').style.display = 'none'
-            document.getElementById('svg_liked_song').style.display = 'block'
-        }else{
-            document.getElementById('svg_not_liked_song').style.display = 'block'
-            document.getElementById('svg_liked_song').style.display = 'none'
-        }
-      }
 
+      const player=document.querySelector('.audio_player')
+      const play=document.querySelector('.playing')
+      const currentTime=document.querySelector('.currentTime')
+      const duration=document.querySelector('.duration')
+      const progress=document.querySelector('.progress')
+      const progress_container=document.querySelector('.progress_container')
+      const audio_tracks=document.querySelector('.audio-tracks')
+      const song_title=document.querySelector('.song-title')
+      const artist=document.querySelector('.artist')
+      const album=document.querySelector('.album')
+      const music_img=document.querySelector('.music_img')
+
+      const progress_ball=document.querySelector('.progress_ball')
+      const add_song = document.getElementById('addSong_button')
+      const form_page = document.getElementById('form_page')
+      const song_img = document.querySelector('.song_img')
+      const close_img = document.querySelector('.close_img')
+      const open_img = document.querySelector('.open_img')
 
     </script>
-
-    <script src="{% static 'musics/include-script.js' %}"></script>
     
+    <script src="{% static 'musics/buttons_functions.js' %}"></script>
     <script src="{% static 'musics/script.js' %}"></script>
+    
     <script src="{% static 'musics/volume_script.js' %}"></script>
     <script src="{% static 'musics/forms_requests.js' %}"></script>
-    <script src="{% static 'musics/buttons_functions.js' %}"></script>
+    
 
 
 

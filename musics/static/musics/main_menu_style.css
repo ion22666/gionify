@@ -38,6 +38,9 @@ img{padding-right:1.2rem;}
 .playlists{
     font-size:  100%;
     position: relative;
+    max-height:52%;
+    overflow-y:scroll;
+    overflow-x: hidden;
 
 }
 
@@ -58,3 +61,28 @@ hr {
 }
 
 br {line-height: 100px;}
+
+
+
+.playlists::-webkit-scrollbar-track
+{
+	border: 1px solid black;
+	background-color:black;
+}
+
+.playlists::-webkit-scrollbar
+{
+	width: 8px;
+	background-color: transparent;
+}
+
+.playlists::-webkit-scrollbar-thumb
+{
+	background-color: rgb(129, 129, 129);
+}
+
+.playlists
+{
+  scrollbar-color: rgb(129, 129, 129) black;
+  scrollbar-width:thin;
+}

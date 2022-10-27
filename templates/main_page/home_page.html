@@ -1,0 +1,97 @@
+<div class="tabela_principala">
+    <table>
+    <tr>
+        <th>ID</th> 
+        <th>TITLE</th>
+        <th>ARTISTE</th>
+        <th>ALBUM</th>
+        <th>TIME LENGHT</th>
+        <th>EDIT</th>
+        <th>PLAY</th>
+    </tr>
+    
+    {% for music in home_songs %}
+    <tr>
+        <td>{{music.id}}</td> 
+        <td>{{music.title}}</td>
+        <td>{{music.artiste}}</td>
+        <td>{{music.album_name}}</td>
+        <td>{{music.time_length}}</td>
+        <td><button onclick="window.location.href='manage/{{music.id}}';">edit</button></td>
+        <td><button id="iomaio" class="play_this_song_button" value="{{music.id}}">Play</button></td>
+    </tr>
+    {% endfor %}
+    </table>
+</div>
+
+<div class="container_tabela_secundara">
+    
+    <table class="tabela_secundara">
+    <tr>
+        <th colspan="5"><p class="table_name">Recently played</p></th>
+    </tr>
+    <tr>
+        <th>ID</th> 
+        <th>TITLE</th>
+        <th>ARTISTE</th>
+        <th>ALBUM</th>
+    </tr>
+
+    {% for i in "0123456789" %}
+    <tr id="{{ i }}">
+        <td>{{music.id}}</td> 
+        <td>{{music.title}}</td>
+        <td>{{music.artiste}}</td>
+        <td>{{music.album_name}}</td>
+    </tr>
+    {% endfor %}
+
+    </table>
+</div>
+
+
+<div class="tabela_lista_playlist">
+    <table><h3 class="Your_Playlists">Your Playlists:</h3>
+    <tr>
+        <th>NUME</th>
+        <th>SONGS NUMBER</th>
+    </tr>
+
+    {% for id, playlist in playlist_list.items %}
+    <tr>
+        <td>{{playlist.name}}</td>
+        <td>{{playlist.songs_count}}</td>
+    </tr>
+    {% endfor %}
+
+    </table>
+</div>
+
+
+<button onclick="window.location.href='{% url 'musics:logout_user' %}';">
+    not
+</button>
+
+
+{% include 'button_with_form_page_blueprint.html' with form_name='add_song_form' open_b="Add Song" close_b="Close" %}
+
+{% include 'button_with_form_page_blueprint.html' with form_name='add_playlist_form' open_b="Add Playlist" close_b="Close" %}
+
+{% include 'button_with_form_page_blueprint.html' with form_name='logout_form' open_b="Logout" close_b="Cancel" %}
+
+<h4> You are logged in as <span>{{ request.user }}</span></h4>
+
+<button onclick="window.location.href='{% url 'musics:logout_user' %}';">
+    Logout
+</button>
+
+{% if request.user.is_staff %}
+<button onclick="window.location.href='{{'admin' }}';">
+    ADMIN INTERFACE
+</button>
+{% endif %}
+
+
+<div class="space">
+    SOME SPACE
+</div>

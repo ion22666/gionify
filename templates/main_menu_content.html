@@ -1,7 +1,7 @@
 {% load static %}
 
 <div class="categories">
-    <div class="rand" id="" ><img src="{% static 'musics/menu_icons/puncte.png' %}"></div>
+    <div class="rand" id="profile_button" ><img src="{% static 'musics/menu_icons/puncte.png' %}"></div>
     <div class="rand" id="home_page_button"><img src="{% static 'musics/menu_icons/home.png' %}">Home</div>
     <div class="rand" id=""><img src="{% static 'musics/menu_icons/search.png' %}">Search</div>
     <div class="rand" id=""><img src="{% static 'musics/menu_icons/library.png' %}">Your Library</div>
@@ -13,16 +13,9 @@
 
 <div class="playlists">
     <ul style="list-style: none;">
-        <li>5</li>
-        <li>giovanni2266</li>
-        <li>Psytrance 2022</li>
-        <li>Techno Chill</li>
-        <li>Techno Rave</li>
-        <li>Moretin|Releases</li>
-        <li>EBSM/Dark Electro</li>
-        <li>ACID TCHNO 2022</li>
-        <li>Night Rider</li>
-        <li>FUTURE HOUSE</li>
+        {% for id,playlist in playlist_list.items %}
+        <li class="menu_playlist" value="{{id}}" >{{playlist.name}} ({{playlist.songs_count}})</li>
+        {% endfor %}
     </ul>
 
 </div>

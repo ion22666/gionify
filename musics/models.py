@@ -54,3 +54,8 @@ class LikedPlaylists(models.Model):
     default_auto_field = 'django.db.models.AutoField'
     playlist_id = models.ForeignKey('Playlist',on_delete=models.CASCADE,null=False,blank=False)
     user_id = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,null=False,blank=False)
+
+class UserProfile(models.Model):
+    default_auto_field = 'django.db.models.AutoField'
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,null=False,blank=False)
+    picture = models.FileField(upload_to='music_images/',validators=[validate_is_img])

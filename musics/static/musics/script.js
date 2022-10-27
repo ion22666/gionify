@@ -1,23 +1,3 @@
-const player=document.querySelector('.audio_player')
-const play=document.querySelector('.playing')
-
-const currentTime=document.querySelector('.currentTime')
-const duration=document.querySelector('.duration')
-const progress=document.querySelector('.progress')
-const progress_container=document.querySelector('.progress_container')
-const audio_tracks=document.querySelector('.audio-tracks')
-const song_title=document.querySelector('.song-title')
-const artist=document.querySelector('.artist')
-const album=document.querySelector('.album')
-const music_img=document.querySelector('.music_img')
-
-const progress_ball=document.querySelector('.progress_ball')
-const add_song = document.getElementById('addSong_button')
-const form_page = document.getElementById('form_page')
-const song_img = document.querySelector('.song_img')
-const close_img = document.querySelector('.close_img')
-const open_img = document.querySelector('.open_img')
-
 let musicIndex = 0
 let shuffle_status = false
 let recently_played_list=[]
@@ -227,18 +207,6 @@ open_img.onclick = show_hide_img
 setSRC(true)
 
 
-function create_function_for_each_play_buttons() {
-  var buttons = document.getElementsByClassName('play_this_song_button');
-  console.log(buttons)
-  for ( var i in Object.keys( buttons ) ) {
-      buttons[i].onclick = function() {
-        musicIndex = find_index(this.value)
-        setSRC(player.paused)
-      };
-  }
-};
-
-// create_function_for_each_play_buttons();
 
 // function add_song_to_liked(){
 //   musics.[musicIndex]
