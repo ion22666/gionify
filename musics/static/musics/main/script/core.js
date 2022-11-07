@@ -11,11 +11,9 @@ function load_scripts(files){
         existent_scripts.push(temp[i].src)
         console.log('e='+temp[i].src)
     }
-    console.log(existent_scripts)
-    setTimeout(_=>{
+
         for(let i=0;i<files.length;i++){
             let src = files[i]
-            console.log("http://127.0.0.1:8000"+src)
             if(existent_scripts.includes("http://127.0.0.1:8000"+src)){
                 console.log('exista deja')
             }else{
@@ -33,7 +31,7 @@ function load_scripts(files){
             }
         }
         return Promise.all(promises)
-    })
+
 }
 
 function load_styles(files){
@@ -81,17 +79,17 @@ function clear_styles(){
 
 
 
-function hide_page(){
+async function hide_page(){
     const loading = document.getElementById('loading_screen');
     const page = document.getElementById('main');
 
     loading.style.display = 'block';
-    setTimeout(()=>{loading.style.opacity = '1';})
+    // window.requestAnimationFrame(()=>{loading.style.opacity = '1';})
+    await new Promise(resolve=>{setTimeout(()=>{resolve();loading.style.opacity = '1'},0);}) 
     loading.addEventListener('transitionend',()=>{page.style.display = 'none'},{once:true});
 
     return new Promise((resolve)=>{
         loading.addEventListener('transitionend',resolve,{once:true});
-        setTimeout(resolve,2000)
     })
 }
 
@@ -110,9 +108,9 @@ function display_PAGE(){
 }
 
 async function switch_PAGE(url){
-    console.log('hide_page')
+
     await hide_page();
-    console.log('final hide_page')
+
     // facem request pentru pagina noua
     let http_response = await fetch(url);
     console.log('final http_response')
@@ -143,7 +141,7 @@ async function switch_PAGE(url){
 
     // asteptam sa se incarce si execute toate scripturile din in pagina
     await load_scripts(scripts);
-
+    console.log('bbbbbbbbbbb');
     await display_PAGE();
 }
 

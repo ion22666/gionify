@@ -104,9 +104,6 @@ def login_user(request):
     return response
 
 
-
-
-
 @only_logged("Only those logged in can logout")
 def logout_user(request):
     #if request.method == 'POST':
@@ -128,6 +125,7 @@ def register_user(request):
             return redirect("music:login_user")
 
     return render(request,'form_pages_content/register_user.html',{'form':form,})
+
 
 def profile_page_view(request,user_name):
     if str(request.user)!=user_name:
@@ -171,6 +169,7 @@ def addSong(request):
     })
     return redirect("music:home_page")
 
+
 def delete_song(request,song_id):
     song=get_object_or_404(Music, pk=song_id)
     
@@ -178,6 +177,7 @@ def delete_song(request,song_id):
         song.delete() 
         return redirect("music:home_page")
     return render(request,'form_pages_content/delete_song.html',{'song':song})
+
 
 def manage_song(request,song_id):
     song=get_object_or_404(Music, pk=song_id)
@@ -205,6 +205,7 @@ def manage_song(request,song_id):
         'form':form,
         'song':song,
     })
+
 
 def add_playlist_view(request):
     form=AddPlaylistForm()
@@ -269,6 +270,7 @@ def home_page_view(request,direct=True):
         return HttpResponse(content=response)
     return [response,home_songs]
 
+
 def main_menu_view(request,direct=True):
     template = loader.get_template('main_menu_content.html')
     playlists = get_playlist_list(request)
@@ -277,6 +279,7 @@ def main_menu_view(request,direct=True):
     if direct:
         return HttpResponse(content=response)
     return response
+
 
 def liked_songs_view(request):
     if request.user.is_authenticated:
@@ -293,6 +296,7 @@ def liked_songs_view(request):
     else:
         HttpResponse(staus=401)
 
+
 def playlist_page_view(request,playlist_id):
     try:
         playlist = Playlist.objects.get(pk=playlist_id)
@@ -305,6 +309,7 @@ def playlist_page_view(request,playlist_id):
     except Playlist.DoesNotExist:
         return redirect('musics:home_page')
 
+
 def add_to_playlist_view(request):
     if request.method == 'POST':
         data = json.loads(request.body.decode("utf-8"))
@@ -312,6 +317,7 @@ def add_to_playlist_view(request):
             Playlist_group.objects.create(playlist_id=Playlist.objects.get(pk=data['playlist_id']),song_id=Music.objects.get(pk=data['song_id'])).save()
             return HttpResponse(content=json.dumps({'message':'OK'}))
     return HttpResponse(status=415,content=json.dumps({'message':'ERROR'}))
+
 
 def remove_from_playlist_view(request):
     if request.method == 'POST':
@@ -341,6 +347,7 @@ def get_playlist_list(request):
             playlist_list[id]['songs_id'] = list(Playlist_group.objects.filter(playlist_id=id).values_list('song_id',flat=True))
     return playlist_list
 
+
 def get_main_playlist_id(request):
     try:
         return list(LikedPlaylists.objects.filter(user_id=request.user).values_list('playlist_id',flat=True))[0]
@@ -352,6 +359,7 @@ def get_main_playlist_id(request):
         new_playlist.save()
         liked_playlist.save()
         return get_main_playlist_id(request)
+
 
 def format_time(secons):
     return str(secons//60).zfill(1) + ':' + str(floor(secons%60)).zfill(2)
