@@ -1,6 +1,8 @@
+from email import header
 import json
-from re import template
-from urllib import response
+from math import floor
+import os
+import string
 
 from django.template import Template, Context, loader
 from django.http import HttpResponse, HttpRequest
@@ -19,12 +21,21 @@ from django.contrib.auth.models import User
 from . import urls
 from .decorators import logged_not_allowed, allowed_goups, admin_only, only_logged
 from .form import AddMusicForm, ManageMusicForm, CreateUserForm, AddPlaylistForm
+from django.templatetags.static import static
 
 
 
+# acest view va fi apelat doar cand intram prima oara pe site
+# in template verificam daca userul este logat , si il fortam sa faca request la login sau application
+def main(request):
+    return render(request,'main.html')
+
+
+
+## HOME PAGE
 @only_logged("You must be logged in to access the home page")
-@allowed_goups(['full_admin','db_staff'])
-def main_view(request):
+#@allowed_goups(['full_admin','db_staff'])
+def application(request):
     home_pre_render,musics_list = home_page_view(request,direct=False)
     main_menu_render = main_menu_view(request,direct=False)
     url_patterns = { i.name : str(i.pattern)[0:str(i.pattern).find('/')+1] for i in urls.urlpatterns}
@@ -32,7 +43,10 @@ def main_view(request):
     for playlist in playlist_list:
             playlist['songs_count'] = Playlist_group.objects.filter(playlist_id=playlist['id']).count()
             playlist['songs_id'] = list(Playlist_group.objects.filter(playlist_id=playlist['id']).values_list('song_id',flat=True))
-    return render(request,'home.html',{
+    template = loader
+
+    template = loader.get_template('home.html')
+    context = {
         'musics_list':musics_list,
         'home_pre_render':home_pre_render,
         'main_menu_pre_render':main_menu_render,
@@ -40,32 +54,66 @@ def main_view(request):
         'main_playlist_id':get_main_playlist_id(request),
         'url_patterns':url_patterns,
         'current_user':request.user.username,
-    })
+        'head':get_scripts("application"),
+    }
+    response = render(
+        request,
+        'home.html',
+        {
+            'musics_list':musics_list,
+            'home_pre_render':home_pre_render,
+            'main_menu_pre_render':main_menu_render,
+            'playlist_list':get_playlist_list(request),
+            'main_playlist_id':get_main_playlist_id(request),
+            'url_patterns':url_patterns,
+            'current_user':request.user.username,
+            'scripts':get_scripts('application/script'),
+            'styles':get_scripts('application/style')
+        }
+    )
+    response['scripts'] = str(get_scripts('application/script'))
+    response['styles'] = str(get_scripts('application/style'))
+    return response
 
-@only_logged("Only those logged in can logout")
-def logout_user(request):
-    if request.POST:
-        if request.POST.get('DA'):
-            logout(request)
-            return redirect('musics:login_user')
-        if request.POST.get('NU'):
-            return redirect('musics:home_page')
-    return render(request,'form_pages_content/logout_user.html')
 
-
+## LOGIN PAGE
 @logged_not_allowed("You're already logged in, you want to logout?")
 def login_user(request):
-    if request.POST:
+    if request.method == 'POST':
+        print(request)
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(request,username=username,password=password)
-
+        print(user)
         if user is not None:
             login(request,user)
-            return redirect('musics:home_page')
+            return HttpResponse(status=200)
         else:
-            messages.info(request,'Ceva nu e bine')
-    return render(request,'form_pages_content/login_user.html')
+            return HttpResponse(status=403,content=json.dumps({'error':'user not exists'}))
+    response = render(
+        request,
+        'form_pages_content/login_user.html',
+        {
+            'scripts':get_scripts('login'),
+            'url_patterns': { i.name : str(i.pattern)[0:str(i.pattern).find('/')+1] for i in urls.urlpatterns},
+        },
+        request
+    )
+    response['scripts'] = str(get_scripts('login/script'))
+    response['styles'] = str(get_scripts('login/style'))
+    return response
+
+
+
+
+
+@only_logged("Only those logged in can logout")
+def logout_user(request):
+    #if request.method == 'POST':
+    if request.user.is_authenticated:
+        logout(request)
+        return redirect('musics:main')
+
 
 @logged_not_allowed("You're already registered and logged in, you want to logout?")
 def register_user(request):
@@ -208,21 +256,6 @@ def user_request_view(request):
         return HttpResponse(status=405)
 
 
-def liked_songs_view(request):
-    if request.user.is_authenticated:
-        try:#verificam daca in tabela LikedPlaylists exista vreun rand care sa contina id-ul userului
-            liked_playlist = LikedPlaylists.objects.get(user_id=request.user)
-        except LikedPlaylists.DoesNotExist: # daca nu exista , cream un plailist nou si il folosim drept pentru liked_song playlist
-            get_main_playlist_id()
-        liked_ids = list(Playlist_group.objects.filter(playlist_id=liked_playlist.playlist_id).values_list('song_id',flat=True))
-        liked_songs = (list(Music.objects.filter(pk__in=liked_ids).values()))
-        template = loader.get_template('main_page/liked_songs_page.html')
-        response = template.render({'songs':liked_songs,'playlist_id':liked_playlist.playlist_id})
-        return HttpResponse(content=response)
-    else:
-        HttpResponse(staus=401)
-        
-
 def home_page_view(request,direct=True):
     home_songs = list(Music.objects.select_related('album').all().values())
     for music in home_songs:
@@ -238,20 +271,64 @@ def home_page_view(request,direct=True):
 
 def main_menu_view(request,direct=True):
     template = loader.get_template('main_menu_content.html')
-    response = template.render({'playlist_list':get_playlist_list(request)})
+    playlists = get_playlist_list(request)
+    playlists.pop(get_main_playlist_id(request),None)
+    response = template.render({'playlist_list':playlists})
     if direct:
         return HttpResponse(content=response)
     return response
+
+def liked_songs_view(request):
+    if request.user.is_authenticated:
+        try:#verificam daca in tabela LikedPlaylists exista vreun rand care sa contina id-ul userului
+            liked_playlist = LikedPlaylists.objects.get(user_id=request.user)
+        except LikedPlaylists.DoesNotExist: # daca nu exista , cream un plailist nou si il folosim drept pentru liked_song playlist
+            get_main_playlist_id()
+        liked_songs = Music.objects.filter(pk__in=list(Playlist_group.objects.filter(playlist_id=liked_playlist.playlist_id).values_list('song_id',flat=True)))
+        for song in liked_songs:
+            song.time_length = format_time(song.time_length)
+        template = loader.get_template('main_page/liked_songs_page.html')
+        response = template.render({'songs':liked_songs,'playlist_id':liked_playlist.playlist_id})
+        return HttpResponse(content=response)
+    else:
+        HttpResponse(staus=401)
 
 def playlist_page_view(request,playlist_id):
     try:
         playlist = Playlist.objects.get(pk=playlist_id)
         songs = Music.objects.filter(pk__in=list(Playlist_group.objects.filter(playlist_id=playlist).values_list('song_id',flat=True)))
+        for song in songs:
+            song.time_length = format_time(song.time_length)
         template = loader.get_template('main_page/playlist_page.html')
         response = template.render({'playlist':playlist,'songs':songs})
         return HttpResponse(content=response)
     except Playlist.DoesNotExist:
         return redirect('musics:home_page')
+
+def add_to_playlist_view(request):
+    if request.method == 'POST':
+        data = json.loads(request.body.decode("utf-8"))
+        if data['action'] == 'add_to_playlist':
+            Playlist_group.objects.create(playlist_id=Playlist.objects.get(pk=data['playlist_id']),song_id=Music.objects.get(pk=data['song_id'])).save()
+            return HttpResponse(content=json.dumps({'message':'OK'}))
+    return HttpResponse(status=415,content=json.dumps({'message':'ERROR'}))
+
+def remove_from_playlist_view(request):
+    if request.method == 'POST':
+        data = json.loads(request.body.decode("utf-8"))
+        if data['action'] == 'remove_from_playlist':
+            try:
+                Playlist_group.objects.filter(playlist_id=Playlist.objects.get(pk=data['playlist_id']),song_id=Music.objects.get(pk=data['song_id'])).delete()
+                return HttpResponse(content=json.dumps({'message':'OK'}))
+            except Playlist_group.DoesNotExist:
+                pass
+                
+                
+    return HttpResponse(status=415,content=json.dumps({'message':'ERROR'}))
+
+
+
+
 
 
 
@@ -275,3 +352,10 @@ def get_main_playlist_id(request):
         new_playlist.save()
         liked_playlist.save()
         return get_main_playlist_id(request)
+
+def format_time(secons):
+    return str(secons//60).zfill(1) + ':' + str(floor(secons%60)).zfill(2)
+
+
+def get_scripts(folder):
+    return [ str(static("musics"+"/"+folder+"/"+file)) for file in os.listdir(os.path.relpath('musics\\static\\musics'+'\\'+folder)) ]

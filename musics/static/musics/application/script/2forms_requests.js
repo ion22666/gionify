@@ -1,3 +1,4 @@
+console.log('formele se executa')
 function request_form_by_click(form_name, form_url){
     $(document).ready(()=>{
         $('#'+form_name+'_button').click(()=>{ // cand un buton este apasat , se executa requestul functia ()

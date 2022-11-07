@@ -1,29 +1,42 @@
+{% load static %}
+<div class="playlist_page_header" id="liked_song_page_header">
 
-{{ playlist_id }}
-<table id="tabela_liked_songs">
-    <tr>
-        <th colspan="7">Liked Songs</th>
-    </tr>
-    
-    <tr>
-        <th>ID</th> 
-        <th>TITLE</th>
-        <th>ARTISTE</th>
-        <th>ALBUM</th>
-        <th>TIME LENGHT</th>
-        <th>EDIT</th>
-        <th>PLAY</th>
+
+    <div id="playlist_img_container">
+        <img class="playlist_img" src="{% static 'musics/img/liked-playlist-img.png' %}" alt="">
+    </div>
+    <p id="liked_songs_title">Liked Songs</p>
+
+</div>
+
+
+
+<table class="playlist_table" id="tabela_liked_songs">
+    <tr class="playlist_head_row">
+        <th width="5%" >#</th> 
+        <th>COVER</th> 
+        <th width="25%">TITLE</th>
+        <th width="25%">ARTISTE</th>
+        <th width="25%">ALBUM</th> 
+        <th class="song_time_icon_container">
+            <svg class="svg_icons" id="svg_song_time_icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16"><path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/></svg>
+        </th>
+        <th></th>
     </tr>
 
     {% for song in songs %}
-    <tr>
-        <td>{{song.id}}</td> 
+    <tr class="playlist_row">
+        <td>{{ forloop.counter }}</td>
+        <td class="song_img_in_playlist_container" ><img class="song_img_in_playlist" src="media/{{ song.cover_image }}" alt=""></td>
         <td>{{song.title}}</td>
         <td>{{song.artiste}}</td>
-        <td>{{song.album_name}}</td>
+        {% if  song.album_name%}<td>{{song.album_name}}</td>{% else %}<td>Single</td>{% endif %}
         <td>{{song.time_length}}</td>
-        <td><button onclick="window.location.href='manage/{{song.id}}';">edit</button></td>
-        <td><button id="iomaio" class="play_this_song_button" value="{{song.id}}">Play</button></td>
+        <td>
+            <button id="remove_from_playlist_button" data-id="{{song.id}}" data-playlist="{{ playlist.id }}" >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16"> <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg>
+            </button>
+        </td>
     </tr>
     {% endfor %}
 </table>

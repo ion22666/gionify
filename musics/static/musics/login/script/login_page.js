@@ -1,0 +1,28 @@
+// pentru a realiza un post request cu fetch api , lucrand cu un form se procedeaza astfel:
+// 1. avem nevoie de elementul 'form' (tagul)
+// 2. adaugam un event listener pe form si zicem ca e la 'submit' si mai zicem sa dea sa dea preventDefault() ca asa vrem noi
+// 3. pentru a extrage datele din form , ne folosim de clasa FormDtata , ex: form_data = new FormDtata(my_form)
+// 3.1 django va crea un csrf token doar daca templateul este render-at cu referinta la un request
+// 4. cream functia fetch
+function main(){
+    function send_login_request(event){
+        event.preventDefault()
+        let form_data = new FormData(this)
+    
+        fetch('login/',{
+            method:'POST',
+            headers: {
+                'X-CSRFToken': csrftoken,
+            },
+            body:form_data
+        })
+        .then(response=>{
+            console.log('se duce la app')
+            switch_PAGE('application/')
+        })
+        .catch(error=>console.error(error))
+    }
+    
+    document.getElementById('login_form').addEventListener('submit',send_login_request)
+}
+main()

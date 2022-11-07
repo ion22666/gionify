@@ -15,23 +15,22 @@
 }
 
 .categories{
-
-    font-size: 100%;
-    padding-bottom: 10%;
-
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
 }
 
 
 .rand{
+    margin-top: 2vh;
+    margin-left: 3vh;
+    width: 100%;
     display:flex;
     align-items:center;
-    padding-left: 1rem;
-    padding-top: 1.5rem;
     color:var(--lighter);
-    font-size:100%;
+    font-size:1.2rem;
 }
 
-img{padding-right:1.2rem;}
 
 
 
@@ -60,7 +59,9 @@ hr {
     background-color:rgb(39, 38, 38)
 }
 
-br {line-height: 100px;}
+#break_line_in_main_menu{
+    height: 6vh;
+}
 
 
 
@@ -85,4 +86,24 @@ br {line-height: 100px;}
 {
   scrollbar-color: rgb(129, 129, 129) black;
   scrollbar-width:thin;
+}
+
+.rand:hover{
+    color: rgb(22, 224, 107);
+
+}
+/* aceste reguli se aplica doar cand este hover pe .rand, cand pe rand este hover svg_icons din icons vor fi vrezi */
+.rand:hover .icons .svg_icons{ 
+    color: rgb(22, 224, 107); 
+}
+
+.rand:active,.rand:active .icons .svg_icons{ 
+    color: gold;
+}
+
+
+#svg_home_icon{
+    height: 110%;
+    width: 110%;
+    transform: translate(-10%,-10%);
 }

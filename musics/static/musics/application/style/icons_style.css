@@ -1,6 +1,6 @@
 .icons{
     position: absolute;
-    height: 1vh;
+    min-height: 1vh;
     width: fit-content;
     background-color: transparent;
     
@@ -8,10 +8,14 @@
 
 .svg_icons{
     height: 100%;
-    color: white;
+    width: 100%;
+    color: var(--lighter);
     fill: currentColor;
     background-color: transparent;
 
+}
+.svg_icons:hover{
+    color: rgb(22, 224, 107);
 }
 
 .main_icon{
@@ -21,6 +25,15 @@
     align-self: center;
     transform: translateX(-50%);
 }
+
+.menu_icons{
+    position: relative;
+    height: 3vh;
+    width: 3vh;
+    margin-right: 2vh;
+}
+
+
 
 #prev{
     left: 45vw;
@@ -43,10 +56,17 @@
     border: none;
     background-color: transparent;
     height: 2.5vh;
-    padding-left: 0.5vw;
+    margin-left: 1vw;
     bottom:50%;
 }
-  
+
+#add_to_playlist{
+    position: absolute;
+    border: none;
+    height: 2.5vh;
+    margin-left: 1vw;
+    top:50%;
+}
 
 
 #svg_not_liked_song{
@@ -61,4 +81,15 @@
 
 #svg_pause{
     display: none;
+}
+#logout_button{
+    display: flex;
+    align-items: center;
+    font-size: 1.2rem;
+}
+
+#logout_icon{
+    position: relative;
+    height: 4vh;
+    width: 4vh;
 }

@@ -1,0 +1,79 @@
+.playlist_table{
+    width: 100%;
+    background: black;
+    border-radius: 0.25em;
+    border-collapse: collapse;
+    margin: 0;
+    font-family: 'Gantari', sans-serif;
+}
+
+.playlist_row{
+    height: fit-content;
+    transition: 0.1s ease-in;
+}
+.song_img_in_playlist_container{
+    width: 4vh;
+    height: 4vh;
+
+}
+.song_img_in_playlist{
+    width: 100%;
+    height: 100%;
+
+}
+
+.playlist_row:hover{
+    border-radius: 0.25em;
+}
+.playlist_row:hover > td{
+    color: black;
+}
+.playlist_row:hover{
+    background-color: rgb(22, 224, 107);
+}
+
+
+#playlist_title,#liked_songs_title{
+    height: fit-content;
+    font-size: 300%;
+    font-family: 'Gantari', sans-serif;
+    align-self: flex-end;
+    margin: 1vh;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+
+}
+
+
+.song_time_icon_container{
+    position: relative;
+    height: 2vh;
+}
+#svg_song_time_icon{
+    color: white;
+}
+.playlist_head_row{
+    position: relative;
+    height: fit-content;
+}
+
+#playlist_img_container{
+    margin: 2vh;
+    position: relative;
+    height: 20vh;
+    width: 20vh;
+}
+
+.playlist_img{
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+.playlist_page_header{
+    display: flex;
+}
+#liked_song_page_header{
+    background-image:url("/static/musics/img/ClumsyChiefDassierat-max-1mb.jpg")
+}
+#playlist_page_header{
+    background-image:url("/static/musics/img/1814652-sfondo-sfocato-vettore-azzurro-verde-vettoriale.jpg")
+}

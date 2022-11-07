@@ -1,0 +1,38 @@
+{% comment %} acest temlate va fi folsot doar cand pornim prima data siteul {% endcomment %}
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head id="head">
+        <title>Gionify</title>
+        <base href="http://127.0.0.1:8000/" target="_blank">
+        <link rel="icon" type="image/x-icon" href="{% static 'musics/img/favicon.ico' %}">
+        <script src="{% static 'musics/main/script/core.js' %}" type="text/javascript"></script>
+        <script src="https://code.jquery.com/jquery-3.6.1.js" type="text/javascript"></script>
+        <link rel="stylesheet" href="{% static 'musics/main/style/main.css' %}">
+        <link rel="stylesheet" href="{% static 'musics/main/style/loader.css' %}">
+        <script>
+            const csrftoken = "{{ csrf_token }}"
+        </script>
+    </head>
+    <body>
+        <div id="loading_screen" class="page">
+            <div class="middle">
+                <div class="bar bar1"></div>
+                <div class="bar bar2"></div>
+                <div class="bar bar3"></div>
+                <div class="bar bar4"></div>
+                <div class="bar bar5"></div>
+                <div class="bar bar6"></div>
+                <div class="bar bar7"></div>
+                <div id="last_bar" class="bar bar8"></div>
+              </div>
+        </div>
+        <main id="main" class="page">
+            {% if user.is_authenticated %}
+            <script>switch_PAGE('application/')</script>
+            {% else %}
+            <script>switch_PAGE('login/')</script>
+            {% endif %}
+        </main>
+    </body>
+</html>

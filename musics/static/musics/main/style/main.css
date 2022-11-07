@@ -1,0 +1,33 @@
+:root{
+    --verde:rgb(22, 224, 107);
+}
+html,body,#main,#loading_screen{
+    position: absolute;
+    margin: 0;
+    border: 0;
+    padding: 0;
+    top:0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    max-height: 100vh;
+    max-width: 100vw;
+    min-height: 100vh;
+    min-width: 100vw;
+    z-index: 0;
+    background-color: black;
+}
+
+
+#main{
+    display: none;
+    overflow: hidden;
+}
+#loading_screen{
+    box-sizing: border-box;
+    opacity:0;
+    background-color: black;
+    transition: opacity 1s ease 1s;
+    display: none;
+    z-index: 1;
+}

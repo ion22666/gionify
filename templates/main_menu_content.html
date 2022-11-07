@@ -1,13 +1,41 @@
 {% load static %}
 
 <div class="categories">
-    <div class="rand" id="profile_button" ><img src="{% static 'musics/menu_icons/puncte.png' %}"></div>
-    <div class="rand" id="home_page_button"><img src="{% static 'musics/menu_icons/home.png' %}">Home</div>
-    <div class="rand" id=""><img src="{% static 'musics/menu_icons/search.png' %}">Search</div>
-    <div class="rand" id=""><img src="{% static 'musics/menu_icons/library.png' %}">Your Library</div>
-    <br>
-    <div class="rand" id=""><img src="{% static 'musics/menu_icons/add_playlist.png' %}">Create Playlist</div>
-    <div class="rand" id="liked_songs_page"><img src="{% static 'musics/menu_icons/liked_songs.png' %}">Liked Songs</div>
+    <div class="rand" id="profile_button" >
+        <div class="icons menu_icons" id="profile_icon">
+            <svg class="svg_icons" id="svg_profile_icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16"> <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/> <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/> </svg>
+        </div>
+        My Profile
+    </div>
+    <div class="rand" id="home_page_button">
+        <div class="icons menu_icons" id="home_icon">
+            <svg class="svg_icons" id="svg_home_icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M11.03 2.59a1.5 1.5 0 011.94 0l7.5 6.363a1.5 1.5 0 01.53 1.144V19.5a1.5 1.5 0 01-1.5 1.5h-5.75a.75.75 0 01-.75-.75V14h-2v6.25a.75.75 0 01-.75.75H4.5A1.5 1.5 0 013 19.5v-9.403c0-.44.194-.859.53-1.144l7.5-6.363zM12 3.734l-7.5 6.363V19.5h5v-6.25a.75.75 0 01.75-.75h3.5a.75.75 0 01.75.75v6.25h5v-9.403L12 3.734z"/></svg>
+        </div>
+        Home
+    </div>
+    <div class="rand" id="">
+        <div class="icons menu_icons" id="search_icon">
+            <svg class="svg_icons" id="svg_search_icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16"> <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/> </svg>
+        </div>
+        Search
+    </div>
+    <div class="rand" id="">
+        <div class="icons menu_icons" id="library_icon">
+            <svg class="svg_icons" id="svg_library_icon" xmlns="http://www.w3.org/2000/svg" wfill="currentColor" viewBox="0 0 16 16"> <path d="M12 13c0 1.105-1.12 2-2.5 2S7 14.105 7 13s1.12-2 2.5-2 2.5.895 2.5 2z"/> <path fill-rule="evenodd" d="M12 3v10h-1V3h1z"/> <path d="M11 2.82a1 1 0 0 1 .804-.98l3-.6A1 1 0 0 1 16 2.22V4l-5 1V2.82z"/> <path fill-rule="evenodd" d="M0 11.5a.5.5 0 0 1 .5-.5H4a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 7H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 3H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5z"/> </svg>
+        </div>
+        Your Library</div>
+    <div id="break_line_in_main_menu"> 
+    </div>
+    <div class="rand" id="">
+        <div class="icons menu_icons" id="create_playlist_icon">
+            <svg class="svg_icons" id="svg_create_playlist_icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16"> <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/> <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/> </svg>
+        </div>
+        Create Playlist</div>
+    <div class="rand" id="liked_songs_page">
+        <div class="icons menu_icons" id="liked_songs_icon">
+            <svg class="svg_icons" id="svg_liked_songs_icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16"> <path d="M8 7.982C9.664 6.309 13.825 9.236 8 13 2.175 9.236 6.336 6.31 8 7.982Z"/> <path d="M3.75 0a1 1 0 0 0-.8.4L.1 4.2a.5.5 0 0 0-.1.3V15a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V4.5a.5.5 0 0 0-.1-.3L13.05.4a1 1 0 0 0-.8-.4h-8.5Zm0 1H7.5v3h-6l2.25-3ZM8.5 4V1h3.75l2.25 3h-6ZM15 5v10H1V5h14Z"/> </svg>
+        </div>
+        Liked Songs</div>
 </div>
 <hr>
 
