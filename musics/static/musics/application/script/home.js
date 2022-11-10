@@ -1,3 +1,3 @@
-function home(){
+function home_setup(){
 
 }

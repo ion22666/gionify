@@ -6,7 +6,6 @@ import string
 
 from django.template import Template, Context, loader
 from django.http import HttpResponse, HttpRequest
-from numpy import true_divide
 from musics.models import Album, Music, Playlist, Playlist_group, LikedPlaylists, UserProfile
 from django.shortcuts import redirect, render, get_object_or_404
 from django.dispatch import receiver
@@ -19,6 +18,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.conf import settings
 from django.contrib.auth.models import User
 from . import urls
+from django.urls import reverse
 from .decorators import logged_not_allowed, allowed_goups, admin_only, only_logged
 from .form import AddMusicForm, ManageMusicForm, CreateUserForm, AddPlaylistForm
 from django.templatetags.static import static
@@ -36,8 +36,9 @@ def main(request):
 @only_logged("You must be logged in to access the home page")
 #@allowed_goups(['full_admin','db_staff'])
 def application(request):
-    home_pre_render,musics_list = home_page_view(request,direct=False)
-    main_menu_render = main_menu_view(request,direct=False)
+    home_pre_render = home_page_view(request)
+    musics_list = get_all_songs()
+    main_menu_render = main_menu_view(request)
     url_patterns = { i.name : str(i.pattern)[0:str(i.pattern).find('/')+1] for i in urls.urlpatterns}
     playlist_list = list(Playlist.objects.select_related('user_id').filter(user_id=request.user.id).values())
     for playlist in playlist_list:
@@ -133,8 +134,7 @@ def profile_page_view(request,user_name):
     profile = UserProfile.objects.get(user_id=request.user.id)
     #aparent cand un field este de foreigkey, acel fild va tine o valoare de tip obiect, deci vom pute scrie profile.user_id.id
     print(profile.user.id)
-    template = loader.get_template('main_page/profile_page.html')
-    response = template.render({'username':str(request.user),'picture':profile.picture})
+    response = render(request,'main_page/profile_page.html',{'username':str(request.user),'picture':profile.picture})
     return HttpResponse(content=response)
 
 
@@ -257,28 +257,16 @@ def user_request_view(request):
         return HttpResponse(status=405)
 
 
-def home_page_view(request,direct=True):
-    home_songs = list(Music.objects.select_related('album').all().values())
-    for music in home_songs:
-        if music["album_id"]!=None:
-            music["album_name"]=Album.objects.get(id=music["album_id"]).name
-        else:
-            music["album_name"]='Single'
-    template = loader.get_template('main_page/home_page.html')
-    response = template.render({'home_songs':home_songs,'playlist_list':get_playlist_list(request),})
-    if direct:
-        return HttpResponse(content=response)
-    return [response,home_songs]
+def home_page_view(request):
+    response = loader.render_to_string('main_page/home_page.html',{'home_songs':get_all_songs(),'playlist_list':get_playlist_list(request)},request)
+    return HttpResponse(content=response) if request.path != reverse("musics:application") else response
 
 
-def main_menu_view(request,direct=True):
-    template = loader.get_template('main_menu_content.html')
+def main_menu_view(request):
     playlists = get_playlist_list(request)
     playlists.pop(get_main_playlist_id(request),None)
-    response = template.render({'playlist_list':playlists})
-    if direct:
-        return HttpResponse(content=response)
-    return response
+    response = loader.render_to_string('main_menu_content.html',{'playlist_list':playlists},request)
+    return HttpResponse(content=response) if request.path != reverse("musics:application") else response
 
 
 def liked_songs_view(request):
@@ -347,7 +335,6 @@ def get_playlist_list(request):
             playlist_list[id]['songs_id'] = list(Playlist_group.objects.filter(playlist_id=id).values_list('song_id',flat=True))
     return playlist_list
 
-
 def get_main_playlist_id(request):
     try:
         return list(LikedPlaylists.objects.filter(user_id=request.user).values_list('playlist_id',flat=True))[0]
@@ -360,10 +347,17 @@ def get_main_playlist_id(request):
         liked_playlist.save()
         return get_main_playlist_id(request)
 
-
-def format_time(secons):
-    return str(secons//60).zfill(1) + ':' + str(floor(secons%60)).zfill(2)
-
+def format_time(seconds):
+    return str(seconds//60).zfill(1) + ':' + str(floor(seconds%60)).zfill(2)
 
 def get_scripts(folder):
     return [ str(static("musics"+"/"+folder+"/"+file)) for file in os.listdir(os.path.relpath('musics\\static\\musics'+'\\'+folder)) ]
+
+def get_all_songs():
+    songs = list(Music.objects.select_related('album').all().values())
+    for music in songs:
+        if music["album_id"]!=None:
+            music["album_name"]=Album.objects.get(id=music["album_id"]).name
+        else:
+            music["album_name"]='Single'
+    return songs

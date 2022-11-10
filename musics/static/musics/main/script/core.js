@@ -79,17 +79,18 @@ function clear_styles(){
 
 
 
-async function hide_page(){
+function hide_page(){
+    
     const loading = document.getElementById('loading_screen');
     const page = document.getElementById('main');
 
     loading.style.display = 'block';
-    // window.requestAnimationFrame(()=>{loading.style.opacity = '1';})
-    await new Promise(resolve=>{setTimeout(()=>{resolve();loading.style.opacity = '1'},0);}) 
-    loading.addEventListener('transitionend',()=>{page.style.display = 'none'},{once:true});
+    $('#loading_screen').animate({opacity:"1"});
 
-    return new Promise((resolve)=>{
-        loading.addEventListener('transitionend',resolve,{once:true});
+    loading.addEventListener('transitionend',_=>page.style.display = "none",{once:true});
+
+    return new Promise(resolve=>{
+        loading.ontransitionend = resolve;
     })
 }
 
@@ -98,22 +99,22 @@ function display_PAGE(){
     const page = document.getElementById('main');
 
     page.style.display = 'flex';
-    loading.style.opacity = '0';
-    loading.addEventListener('transitionend',()=>{loading.style.display = 'none'} ,{once:true});
+    $('#loading_screen').animate({opacity:"0"});
 
-    return new Promise((resolve)=>{
-        loading.addEventListener('transitionend',resolve,{once:true});
-        setTimeout(resolve,2000)
+    loading.addEventListener('transitionend',_=>loading.style.display = "none",{once:true});
+
+    return new Promise(resolve=>{
+        loading.ontransitionend = resolve;
     })
 }
 
 async function switch_PAGE(url){
 
-    await hide_page();
+    // await hide_page();
 
     // facem request pentru pagina noua
     let http_response = await fetch(url);
-    console.log('final http_response')
+
     if (http_response.status!=200){
         alert('http response is not 200');
         return
@@ -129,10 +130,10 @@ async function switch_PAGE(url){
     // din header luam stylurile si scripturile si le facem cate o lista
     let styles = JSON.parse(http_response.headers.get('styles').replace(/'/g, '"'))
     let scripts = JSON.parse(http_response.headers.get('scripts').replace(/'/g, '"'));
-    console.log('aaa')
+
     // asteptam sa se incarce toate stylurile in pagina
     load_styles(styles)
-    console.log('aaa')
+
     // asteptam sa extragem din continutul text din response
     let body = await http_response.text();
 
@@ -141,7 +142,8 @@ async function switch_PAGE(url){
 
     // asteptam sa se incarce si execute toate scripturile din in pagina
     await load_scripts(scripts);
-    console.log('bbbbbbbbbbb');
+
     await display_PAGE();
+    return;
 }
 

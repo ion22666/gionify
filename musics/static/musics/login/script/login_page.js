@@ -5,24 +5,22 @@
 // 3.1 django va crea un csrf token doar daca templateul este render-at cu referinta la un request
 // 4. cream functia fetch
 function main(){
-    function send_login_request(event){
+     async function send_login_request(event){
         event.preventDefault()
         let form_data = new FormData(this)
-    
-        fetch('login/',{
+        let http_respose = await fetch('login/',{
             method:'POST',
             headers: {
                 'X-CSRFToken': csrftoken,
             },
             body:form_data
-        })
-        .then(response=>{
-            console.log('se duce la app')
-            switch_PAGE('application/')
-        })
-        .catch(error=>console.error(error))
+        });
+        if(http_respose.status == 200){
+            console.log("POST acceptat");
+            switch_PAGE('application/');
+            return;
+        }
     }
-    
     document.getElementById('login_form').addEventListener('submit',send_login_request)
 }
 main()

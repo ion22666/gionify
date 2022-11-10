@@ -26,7 +26,7 @@ function update_liked_icon(){
 // cand un se shimba src-ul , se incepe de la inceput audioul , dar cu pauza
 // setSRC() va folosi mereu letiabila grobala musicIndex , pentru a determina care pisa sa se ruleze din lista de obiecte musics, care a fost citita din codul HTML unde a fost plasata de catre django
 function setSRC(was_paused){
-    update_liked_icon()
+    update_liked_icon();
     fetch(`/media/${musics[musicIndex].audio_file}`)
     // Retrieve its body as ReadableStream
     .then((response) => {
@@ -54,7 +54,7 @@ function setSRC(was_paused){
     // Create an object URL for the response
     .then((response) => response.blob())
     .then((blob) => URL.createObjectURL(blob))
-    .then((url) => {player.src = url;progress.style.width = "0px";if(was_paused != true){playOrPause()}})
+    .then((url) => {player.src = url;if(was_paused != true){playOrPause()}})
     .catch(error=>{console.log(error)})
   
     song_title.textContent=musics[musicIndex].title
@@ -115,40 +115,26 @@ function manage_recently_played(new_played_id){
 }
 
 
-function set_player_timeupdate(){
-  // tag de tip audio poate oferi mereu timpul curent, astfel aflam cate % din intreg audioul sau rulat, si facem ca bara de muzica sa fie la aceasi ratie
-  player.addEventListener('timeupdate',()=>{
-      temp = player.currentTime
-      let sec = player.currentTime
-      let total = player.duration
 
-      currentTime.textContent=formatTime(sec)
-      let total_width = progress_container.offsetWidth
-      let audio_played = (sec/total)
-      let new_width = total_width * audio_played
+// tag de tip audio poate oferi mereu timpul curent, astfel aflam cate % din intreg audioul sau rulat, si facem ca bara de muzica sa fie la aceasi ratie
+function update_player(){
+  let input = document.getElementById("progress_input")
+  temp = player.currentTime
+ 
+  input.value = (isNaN(player.duration)) ? 0:(player.currentTime/player.duration) * input.max; 
 
-      progress.style.width = `${new_width}px`
-
-      if (sec==player.duration){       //and if is the last song in a playlist
-          player.play()
-          document.getElementById('next').click()
-          progress.style.width = `0px`
-          play_icon.style.display = 'block'
-          pause_icon.style.display = 'none'
-      }
-  })
+  if (player.currentTime==player.duration){
+    player.play();
+    document.getElementById('next').click();
+  }
 }
-function set_player_seeking(){
-  //derulare/mataire
-  //navigheaza prin piesa cu ajutorul barei de duratie/progres
-  progress_container.addEventListener('click',e=>{
-      player.currentTime = player.duration * (e.pageX/progress_container.offsetWidth)
-  })
-}
+player.ontimeupdate = update_player
 
-//on hover make the ball apear
-progress_container.addEventListener('mouseover',()=>{progress_ball.style.color = 'white';progress_ball.style.height = '1.5vh'})
-progress_container.addEventListener('mouseout',()=>{progress_ball.style.height = '0vh'})
+document.getElementById("progress_input").oninput = ()=>{player.ontimeupdate = null;};
+document.getElementById("progress_input").onchange = (e)=>{
+  player.ontimeupdate = update_player;
+  player.currentTime = player.duration * (e.target.value/e.target.max)
+}
 
 // cand mouseul este in nautrul imaginii, iconita de inchide este vizibila
 document.querySelector('.song_img').addEventListener('mouseover',()=>{close_img.style.display = 'block'})

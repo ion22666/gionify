@@ -9,6 +9,7 @@ document.getElementById('playing').addEventListener('click',()=>{
 
 //PRIV
 $('#prev').click(()=>{
+    document.getElementById("progress_input").value = 0;
     old_musicIndex = musicIndex
     if(shuffle_status){
     musicIndex = Math.floor(Math.random() * musics.length);
@@ -21,12 +22,11 @@ $('#prev').click(()=>{
     }
 
     setSRC(player.paused)
-
-    progress.style.width = '0px'
 })
 
 //NEXT
 $('#next').click(()=>{
+    document.getElementById("progress_input").value = 0;
     old_musicIndex = musicIndex
     if(shuffle_status){
     musicIndex = Math.floor(Math.random() * musics.length);
@@ -38,7 +38,6 @@ $('#next').click(()=>{
     musicIndex=0
     }
     setSRC(player.paused)
-    progress.style.width = '0px'
 })
 
 shuffle.addEventListener('click',()=>{
@@ -54,15 +53,6 @@ shuffle.addEventListener('click',()=>{
 
 })
 
-// get home_page and display it
-document.getElementById('home_page_button').addEventListener('click',()=>{
-    fetch(urls['home_page_url'])
-        .then((response)=>{return response.text()})
-        .then((response)=>{
-            display_page(response,'home_page') 
-        })
-        .catch((error)=>{console.log(error)})
-})
 // get profile_page and display it
 document.getElementById('profile_button').addEventListener('click',()=>{
     console.log(urls['profile_page_url']+current_user)
@@ -89,15 +79,6 @@ addEventListener_for_each('play_this_song_button',()=>{
     setSRC(player.paused)
 });
 
-
-
-
-// cand dam click pe like songs din menu, se face request si se plaseaza in main page
-document.getElementById('liked_songs_page').addEventListener('click',()=>{
-    fetch_page(urls['liked_songs_page_url'],(response)=>{
-        display_page(response,'liked_page')
-    })
-})
 
 // adaugam functia onclick pentru toate playlisturile din meniu si fiecare va face un request al lui si va plasa continutul in main page
 for ( let i in document.getElementsByClassName('menu_playlist') ) {

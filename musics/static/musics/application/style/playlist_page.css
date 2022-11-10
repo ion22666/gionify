@@ -10,11 +10,11 @@
 .playlist_row{
     height: fit-content;
     transition: 0.1s ease-in;
+    max-width: 100%;
 }
 .song_img_in_playlist_container{
     width: 4vh;
     height: 4vh;
-
 }
 .song_img_in_playlist{
     width: 100%;
@@ -50,6 +50,8 @@
 }
 #svg_song_time_icon{
     color: white;
+    height: 2vh;
+    width: 2vh;
 }
 .playlist_head_row{
     position: relative;
@@ -61,6 +63,10 @@
     position: relative;
     height: 20vh;
     width: 20vh;
+
+    -webkit-box-shadow: 11.5px -2.5px 12px 4.5px rgba(0, 0, 0, 0.48);
+    -moz-box-shadow: 11.5px -2.5px 12px 4.5px rgba(0, 0, 0, 0.48);
+    box-shadow: 11.5px -2.5px 12px 4.5px rgba(0, 0, 0, 0.48);
 }
 
 .playlist_img{

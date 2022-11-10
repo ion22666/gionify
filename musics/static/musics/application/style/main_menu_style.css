@@ -7,6 +7,7 @@
     position: relative;
     background-color: black;
     width: 12%;
+    min-width: fit-content;
     height: 100%;
     font-family: 'Gantari', sans-serif;
     display:inline;
@@ -24,6 +25,7 @@
 .rand{
     margin-top: 2vh;
     margin-left: 3vh;
+    margin-right: 3vh;
     width: 100%;
     display:flex;
     align-items:center;
@@ -89,21 +91,24 @@ hr {
 }
 
 .rand:hover{
-    color: rgb(22, 224, 107);
-
-}
-/* aceste reguli se aplica doar cand este hover pe .rand, cand pe rand este hover svg_icons din icons vor fi vrezi */
-.rand:hover .icons .svg_icons{ 
-    color: rgb(22, 224, 107); 
+    color: rgb(22, 224, 107) !important;
+    cursor: pointer;
 }
 
-.rand:active,.rand:active .icons .svg_icons{ 
+
+.rand:active{ 
     color: gold;
 }
 
 
-#svg_home_icon{
+.icons.menu{
+    height: 2rem;
+    width: 2rem;
+    padding-right: 1rem;
+}
+
+/* #home_icon{
     height: 110%;
     width: 110%;
     transform: translate(-10%,-10%);
-}
+} */

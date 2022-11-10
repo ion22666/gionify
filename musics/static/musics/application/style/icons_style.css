@@ -1,29 +1,24 @@
 .icons{
-    position: absolute;
-    min-height: 1vh;
-    width: fit-content;
-    background-color: transparent;
-    
-}
-
-.svg_icons{
-    height: 100%;
-    width: 100%;
-    color: var(--lighter);
+    height: 1rem;
+    width: 1rem;
+    min-height: rem;
     fill: currentColor;
     background-color: transparent;
-
 }
-.svg_icons:hover{
-    color: rgb(22, 224, 107);
+
+.icons:hover{
+    color: rgb(22, 224, 107) !important;
 }
 
 .main_icon{
+    position: absolute;
     height: 5vh;
+    width: 5vh;
     border: none;
     position:absolute;
     align-self: center;
     transform: translateX(-50%);
+    color: var(--lighter);
 }
 
 .menu_icons{
@@ -55,7 +50,8 @@
     position: absolute;
     border: none;
     background-color: transparent;
-    height: 2.5vh;
+    height: 1.5rem;
+    width: 1.5rem;
     margin-left: 1vw;
     bottom:50%;
 }
@@ -63,9 +59,11 @@
 #add_to_playlist{
     position: absolute;
     border: none;
-    height: 2.5vh;
+    height: 1.5rem;
+    width: 1.5rem;
     margin-left: 1vw;
     top:50%;
+    color: var(--lighter);
 }
 
 
