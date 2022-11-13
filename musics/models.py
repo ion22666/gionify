@@ -4,6 +4,8 @@ from django.db import models
 from musics.validators import validate_is_audio, validate_is_img
 from django.conf import settings
 from django.apps import AppConfig
+from django.db.models.signals import post_save
+from django.contrib.auth.models import User
 
 class Music(models.Model):
     default_auto_field = 'django.db.models.AutoField'
@@ -59,3 +61,9 @@ class UserProfile(models.Model):
     default_auto_field = 'django.db.models.AutoField'
     user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,null=False,blank=False)
     picture = models.FileField(upload_to='music_images/',validators=[validate_is_img])
+
+    
+def create_profile(sender,instance,created,**kwargs):
+    if created:
+        UserProfile.objects.create(user=instance)
+post_save.connect(create_profile,sender=User)

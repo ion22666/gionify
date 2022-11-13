@@ -1,0 +1,7 @@
+prentu a crea un rand in baza de date, tre sa creezi un obiect mai intai
+deoarece obiectul are metoda .save()
+obiectul este instanta directa a clasei sale, calsa sa fiind insasi tabela
+deci putem scrie oricand obiect.field1
+
+cand avem un field cu referinta/foreignkey , acest fiel va lua ca valoare insasi obiectul de referinta
+ex: carte1.autor1.nume_autor

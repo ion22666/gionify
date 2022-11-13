@@ -1,0 +1,30 @@
+Arhitectura client/server
+    In esenta , web-ul foloseste urmatoarea arhitectura : 
+        clientul, adica browserul este nevoi sa trimita un request serverului folosind propocolul HTTP
+        si serverul raspunde inapoi prin acelasi protocol
+    Un form de pe o pagina web , nu este nimic altceva decat un blueprint user-friendly de a construi si trimite un request serverului
+    utilizatorul nu trebuie sa cunoasca protocolul http, se ocupa formularul de acceasta (formularul este construit tot de developer)
+
+    ! In mod general si normal, atat pe partea de client cat si pe partea de server tre sa existe validificari ale datelor formularului
+
+Din partea clientului : defineste cum se va trimite data din form, adica ce fel de request vom trimite la server
+    !!! HTTPS functioneaza atunci cand el urmeaza sa primeasca un request, 
+    daca trimitem un form la un link cu https, browserul va intelege si va encrypta datele inainte sa le trimita
+    dar daca trimitem la un link cu http, nu se vor encrypta pentru ca browserul stie ca serverul nu le va putea decrypta
+    (nu conteaza de unde trimitem, ci conteaza unde trimitem)
+
+    cele mai importante atribute ale unui element <form> sunt method si action
+        action este o atributa care ne intreaba unde sa se duce requestul cu data din form, adica la ce adresa
+        poate avea o adresa absoluta sau relativa
+        daca nu este specificat unde, atunci se va trimite implicit la aceasi adresa de unde formularul a fost creat
+
+The enctype attribute- o atributa care defineste tipul de date pe care un request/response il are:
+    form-ul nostru din HTML , implicit are accest enctype cand trimitem prin POST, 
+    cand trimitem prin GET, se trimite acelasi luctru doar ca datele se aplipesc la url, dar in POST se trec in request body
+        application/x-www-form-urlencoded
+    
+
+!Pentru a trimite fisiere in requesturi trebui respecatete uramtoarele reguli:
+    metoda este numai decat POST
+    enctype-ul tre sa fie multipart/form-data, aici fiecare fisier se va trimite separat , le fel si textul separat, fiecare va face requestul sau
+    si folosim <input type="file"> pentru inputul din form, ca sa stie browserul ca tre sa ceara un fisier de la user

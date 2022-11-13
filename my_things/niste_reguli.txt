@@ -1,0 +1,7 @@
+1. La inceputul unui proiect, mereu de inceput cu baza de date , adica modelele. Mereu trebe inceput de la modele caci pe parcurs nu vom fi nevoiti sa mai facem schimbari.
+2.De construit medote pentru obiectele claselor, de exemplu as pute construi o metoda pentru user care sa genereze toate playlisturile sale sau piesele favorite.
+3. De folosot  reverse si numele url-urilor pentru a decalra un path
+4. same as 3
+5. De selectat din baza de date doar campurile de care avem nevoie, ca sa fie mai rapid
+6.De folosit sistemul de mesaje pentru o experienta mai buna
+7.De folosit python.exe manage.py shell   , pentru a face taskuri mici precum inserarea a niste obiecte in baza de date

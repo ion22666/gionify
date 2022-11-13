@@ -1,0 +1,122 @@
+<style>
+
+    .alune{
+        color:red;
+        font-size: 500%;
+    }
+    .a1{
+        color:blue;
+    }
+    .container{
+        color:red;
+
+    }
+
+    svg{
+        height: 1rem;
+    }
+    #range{
+        width: 100%;
+    }
+</style>
+
+
+
+
+
+<body>
+    
+    <div class="a1 container">
+        HELLO
+        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-1-square" viewBox="0 0 16 16">
+            <path d="M9.283 4.002V12H7.971V5.338h-.065L6.072 6.656V5.385l1.899-1.383h1.312Z"/>
+            <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2Zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2Z"/>
+        </svg>
+    </div>
+    <input id="range" type="range" min="0" max="1000">
+    <script id="this_script">
+        const range = document.querySelector("#range")
+        console.log("value = "+range.value);
+        range.onchange = ()=>console.log("value = "+range.value);
+        range.oninput = ()=>console.log("seeking");
+    (() => {
+        console.log('1')
+        let script = document.getElementById("this_script")
+        document.body.removeChild(script)
+        console.info(`%c A script tag has been removed, id="${script.id}"`, 'background: white; color: blue')
+        return ''
+        console.log('2')
+        function my_function_for_good_response(response){ // aceastea sunt functiile finale, ultimile care primesc promisunea/response , aici ar trebui sa lucram cu datele doar
+            if(response){console.log(response)}
+            
+            
+        }
+        function my_function_for_bad_response(response){ // aici la fel ca mai sus
+            if(response){console.log(response)}
+            else{console.log("eroare cu nici un raspuns")}
+        }
+
+        // my_f(1).then(my_function_for_good_response).catch(my_function_for_bad_response) // randul asta face exact ce face su functia async, asteapta o promisunea
+        //nu stiu daca trebe folosita, adica poti prelua deja de la return-ul functiei async promisiunea si so exploatezi
+        let lista_de_functii_care_returneaza_o_promisiune = []
+
+
+        for(let i = -5;i<10;i++){
+
+            lista_de_functii_care_returneaza_o_promisiune.push(my_f(-i))
+        }
+
+
+        Promise.allSettled(lista_de_functii_care_returneaza_o_promisiune)
+            .then(
+                (responses)=>{
+                        for(let i=0;i < responses.length ; i++){
+                            if(responses[i].status=='fulfilled'){
+                                console.log(responses[i].value)
+                            }else{
+                                console.log(responses[i].reason)
+                            }
+                            
+                    }
+                }).catch(
+                    ((responses)=>{
+                            console.log()
+                            for(let i=0;i < responses.length ; i++){
+                                    console.log(responses[i].reason)
+
+                                
+                            }
+                    })
+                )
+            
+
+
+        async function my_f(n){ // declaram ca functia asta este de tip async , deci poate rula in backgreound sau ceva de genu
+            let response = await my_promise_function(n) // response va primi valoarea doar cand este gata promisiunea
+            // pana randul de sus se termina, adica nu primeste promisunea sa, nu se executa mai departe
+            return response // returnam promisunea, deci insasi dunctia asta este o functie cu promisiune 
+            // doar ca aici este mult mai usor de colectat mai multe promisiuni, scriem mai putin si la urma trimitem o singura promisiune care poate sa le cuprinda pe toate
+        }
+
+
+
+        function my_promise_function(parameter){ 
+            // asa se creaza o functie care returneaza o promisune (este locul exact unde se intamla chestiile, de aia avem nevoie de parametri)
+
+            // aceasta este functie executor, este principala functie care decide daca promisunea este succes sau error
+            // functia executor are ca parametru de intrare doua functii, care se vor apela cand vrem noi
+            function executor(resolve, reject){// resolve se acceseaza cu .then(alta functie care va primi ca input raspunsul) si reject cu .catch()
+
+                if (parameter>0){
+                    setTimeout(()=>{return resolve("good response")},2000) // presupun ca nu aceasta functie este acea care se executa in continu, aceasta se executa doar la final pentru a vedea in ce categorie intra promisunea
+                }else if(parameter>-10){
+                    reject('eroare1')
+                }else{
+                    reject('eroare2')
+                }
+            }
+            return new Promise(executor)
+        }
+    })();
+    </script>
+</body>

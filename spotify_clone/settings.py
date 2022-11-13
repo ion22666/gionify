@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'api',
     'musics',
 ]
 
@@ -81,6 +83,16 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'railway',
+#         'USER': 'postgres',
+#         'PASSWORD': '9H5wcNgshBOiDouDZa86',
+#         'HOST': 'containers-us-west-108.railway.app',
+#         'PORT': '7625',
+#     }
+# }
 
 
 # Password validation
@@ -126,5 +138,13 @@ STATIC_ROOT= BASE_DIR/'static_root'
 MEDIA_ROOT= BASE_DIR/'media_root'
 
 STATICFILES_DIRS=[
-    
+    "/api/static",
 ]
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ]
+}

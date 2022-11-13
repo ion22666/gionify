@@ -140,6 +140,7 @@ def profile_page_view(request,user_name):
 
 def addSong(request):
     form=AddMusicForm()
+    print(request.POST)
     if request.POST:
         form=AddMusicForm(request.POST,request.FILES)
         if form.is_valid():
@@ -155,19 +156,19 @@ def addSong(request):
                 print("sa salvat")
                 instance.save()
             return HttpResponse(json.dumps({'message': "done"}))
-        else:
-            return render(
-                request,
-                template_name='form_pages_content/add_song_form.html',
-                context={'form':form,},
-                status=415,
-            )
+    else:
+        return render(
+            request,
+            template_name='form_pages_content/add_song_form.html',
+            context={'form':form,},
+            status=415,
+        )
 
-    if 'HTTP_REFERER' in request.META.keys() and request.META['HTTP_REFERER']=='http://127.0.0.1:8000/':
-        return render(request,'form_pages_content/add_song_form.html',{
-            'form':form,
-    })
-    return redirect("music:home_page")
+    # if 'HTTP_REFERER' in request.META.keys() and request.META['HTTP_REFERER']=='http://127.0.0.1:8000/':
+    #     return render(request,'form_pages_content/add_song_form.html',{
+    #         'form':form,
+    # })
+    # return redirect("music:home_page")
 
 
 def delete_song(request,song_id):

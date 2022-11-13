@@ -1,0 +1,36 @@
+cum am facut un request de fisier/resursa cu fetch():
+    am vrut sa pun src-ul unei piese in playe pentru a canta,
+    daca il pun direct,player.src = url, nu e bine ca browserul crede ca resursa este deja culeasa/descarcata complet (cred)
+    asa ca trebuie sa ne asiguram ca am cules resursa complet, si dupa ii dam play(momentan)
+    pentru asta tre sa generam noi "manual" un http request de tip get,
+    am folosit functia fetch() care asta face , intrun mod simplu de controlat,
+    fetch(resource, options) -> oprions este optional, acolo se include si method, by default este GET, fix ce ne trebe nou acum
+    fetch(resursa_url), fetch() este o functie asincrona, adica va rula in background pana vom primi o PROMISIUNE
+        fetch().then(my_function(succes))- se ruleaza functia my_function() cand fetch() returneaza o promisiune de tip succes
+        fetch().catch(my_function(error)) - la fel ca mai sus doar ca cand se returneaza o eroare
+        succes/error este insasi continutul raspusnului http, este generat automat
+
+    o promisiune este fie succes fie error, daca e succes , 
+    putem linistiti sa setam src-ul cu url-ul resursei, vom sti sigur ca resursa este 100% incarcata
+
+cum am creat POST request cu ajax avand niste fisiere:
+    pentru a folosi ajax, tre sa importam jquery, el trebe instalat da poti sa ii dai si import 
+    deci aparent "submit" este un eveniment global, 
+    astfel putem sa scriem ca document.on(submit , provenind de la form-ul acesta , si se declanseaza functia asta)
+    $(document).on('submit','#add_song_form',function(e){})
+    foarte important in functie sa zicem ca e.preventDefault(); 
+    e pare a fi niste proprieteti/parametri la itemul curent la care se adreseaza functia
+    astfel nu se va mai da reload la pagina, daca vrei
+    dupa apelam $ajax( {json data},)
+    in json tre sa fie :
+    {
+        data: datele din form care au fost inserate in json format,
+             se foloseste my_form_id.serialize() pentru a crea json automat
+             daca avem si fisiere tre sa folosim  new FormData(my_form_id)
+        type: GET or POST,
+        url: resursa_url,
+        processData: false, //astea le folosim daca avem fisiere si folosim FormData
+        contentType: false, //astea le folosim daca avem fisiere si folosim FormData
+        success: function(response) {}, // continutul cu raspunsul bun
+        error: function(error) {}// continutul cu raspunsul rau
+    }

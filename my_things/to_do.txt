@@ -1,0 +1,30 @@
+- de pastrat muzica cand se navigheaza in alte pagini, sa se opreasca doar cand se delogheaza sau se duce in admin interface
+- de facut un pop-up meniu pentru recently played songs
+- de adaugat undeva un pop up image cu imaginea piesei
+- de adaugat un view cu info despre o piesa,artist,album
+- de adaugat numere de likeuri la piese,artisti,albume
+- de adaugat numere de vizualizari la piese
+- de intelses si facut ce face butonul de repeat
+- de facut un sistem mai bun de shuffle
+
+
+- de trecut de la json la ajax, adica cand se lanseaza pagina sa nu se faca un request la toate piesele, ci se face dupa cu un request de la ajax
+- de folosit cache pentru a pastra in memorie ce piesa se asculta , ce piese sunt la recente
+
+- de adaugat un search page, pentru piese,artisti,plylisturi,albume ,etc
+
+- de informat cu se organizeaza informatie in baza de date cand vine vorba de useri
+- sa se faca o tabela cu playlisturi
+- fiecare user sa aibe o biblioteca a sa ( playlisturi , liked songs , liked artists)
+
+- de folosit stocare in cloud in loc de local
+
+- de optimzat web-ul pentru mobile si toate deviceurile in general
+
+
+- de informat cum functioneaza toata politica pieselor si copyrightului , plm // asta la urma urmei
+- de facut o sectiune care cauta piese pe spotify si le poate clona pe gionify // ilegal!!!
+- de gasit niste utilizatori pentru a testa pe gionify
+*
+- de facut vulume seterul ala cum vreau
+- de caut progres seterul ala cum vreau

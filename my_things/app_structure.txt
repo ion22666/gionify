@@ -1,0 +1,8 @@
+ViewPage:
+    -fetch_page()
+    - display_page()
+
+SETUP APP:
+    SETUP PLAYER:
+    SETUP MENU:
+    SETUP HOME VIEW:

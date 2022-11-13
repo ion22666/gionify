@@ -1,0 +1,23 @@
+proprietatile unui obiect pot fi stringuri sau key directe:
+name:
+"name":
+apelam obj.name sau obj["name"]
+putem folosi si cifre, doar ca tre sa fie alaturi de litere si sa nu fie primele caractere din string
+
+Cateva solutii pentru a obtine datele unui obiect sunt:
+	Obtine proprietatile obiectului dupa key/nume
+	person.name + "," + person.age + "," + person.city;
+	Obtine proprietatile obiectului prin un loop
+	for (let x in person) {
+  		txt += person[x] + " ";
+	};
+	Obtine proprietatile obiectului cu obj.values()
+	const myArray = Object.values(person); 
+	Obtine proprietatile obiectului cu JSON.stringify()
+	let myString = JSON.stringify(person); 
+
+
+
+
+pentru a sterge o proprietate a unui obiect:
+	delete obj.proprietate
