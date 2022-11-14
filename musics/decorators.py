@@ -2,6 +2,23 @@ from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.contrib import messages  
 
+
+# -------------------------------------------------
+
+# @decorator(params)
+# def func_name():
+#     ''' Function implementation'''
+
+# -------------------------------------------------
+
+# def func_name():
+#     ''' Function implementation'''
+
+# func_name = decorator(params)(func_name)
+
+# -------------------------------------------------
+
+
 def logged_not_allowed(why_message):
     def decorator(view_func):
         def wrapper_func(request, *args, **kwargs):

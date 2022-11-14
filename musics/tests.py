@@ -2,11 +2,23 @@
 
 # Create your tests here.
 
+def endpoint(function):
+    def inner(*args, **kwargs):
+        return function(*args, **kwargs)
+    return function
 
-def create(validated_data):
+@endpoint
+def sessions(event_id):
+    """Returns the session ids for the event."""
+    return [1, 2, 3]
 
-    def temp(**validated_data):
-        for i,j in validated_data.items():
-            print(i,j)
 
-create({0:1})
+@endpoint
+def events():
+    """Returns the events to which you have access"""
+    return [2717]
+
+
+if __name__ == "__main__":
+    event_id = events()[0]
+    print(sessions(event_id))
