@@ -1,30 +1,37 @@
-<div class="tabela_principala">
-    <table>
-    <tr>
-        <th>ID</th> 
-        <th>TITLE</th>
-        <th>ARTISTE</th>
-        <th>ALBUM</th>
-        <th>TIME LENGHT</th>
-        <th>EDIT</th>
-        <th>PLAY</th>
-    </tr>
-    
-    {% for music in home_songs %}
-    <tr>
-        <td>{{music.id}}</td> 
-        <td>{{music.title}}</td>
-        <td>{{music.artiste}}</td>
-        <td>{{music.album_name}}</td>
-        <td>{{music.time_length}}</td>
-        <td><button onclick="window.location.href='manage/{{music.id}}';">edit</button></td>
-        <td><button id="iomaio" class="play_this_song_button" value="{{music.id}}">Play</button></td>
-    </tr>
-    {% endfor %}
+<div id="new_releases">
+    <div id="new_releases_title">New Releases</div>
+    <img id="new_releases_img" src="http://127.0.0.1:8000/media/music_images/pexels-photo-577289.jpeg" alt="">
+    <table id="new_releases_songs_list">
+        <thead>
+            <tr>
+                <th>ID</th> 
+                <th>TITLE</th>
+                <th>ARTISTE</th>
+                <th>ALBUM</th>
+                <th>TIME LENGHT</th>
+                <th>EDIT</th>
+                <th>PLAY</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for music in home_songs %}
+                <tr>
+                    <td>{{music.id}}</td> 
+                    <td>{{music.title}}</td>
+                    <td>{{music.artiste}}</td>
+                    <td>{{music.album_name}}</td>
+                    <td>{{music.time_length}}</td>
+                    <td><button onclick="window.location.href='manage/{{music.id}}';">edit</button></td>
+                    <td><button id="iomaio" class="play_this_song_button" value="{{music.id}}">Play</button></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot></tfoot>
     </table>
 </div>
 
-<div class="container_tabela_secundara">
+
+<div class="container_tabela_secundara" style="display:none;">
     
     <table class="tabela_secundara">
     <tr>

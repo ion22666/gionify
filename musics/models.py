@@ -7,6 +7,7 @@ from django.apps import AppConfig
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 
+
 class Music(models.Model):
     default_auto_field = 'django.db.models.AutoField'
     title=models.CharField(max_length=500)
@@ -15,13 +16,13 @@ class Music(models.Model):
     time_length=models.DecimalField(max_digits=20, decimal_places=2,blank=True)
     audio_file=models.FileField(upload_to='musics/',validators=[validate_is_audio])
     cover_image=models.FileField(upload_to='music_images/',validators=[validate_is_img])
-
+    owner = models.ForeignKey(User, related_name='songs', on_delete=models.CASCADE,null=True,blank=True)
+    date_created = models.DateTimeField(auto_now_add=True)
+    
     def save(self,*args, **kwargs):
-        if not self.time_length:
-            # logic for getting length of audio
-            audio_length=get_audio_length(self.audio_file)
-            self.time_length =f'{audio_length:.3f}'
-
+        if self.album:
+            self.album=Album.objects.get_or_create(name=self.album)[0]
+        self.time_length =f'{get_audio_length(self.audio_file):.3f}'
         return super().save(*args, **kwargs)
 
     '''    def __str__(self):

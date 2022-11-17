@@ -137,25 +137,16 @@ def profile_page_view(request,user_name):
     response = render(request,'main_page/profile_page.html',{'username':str(request.user),'picture':profile.picture})
     return HttpResponse(content=response)
 
-
+@only_logged("Only those logged in can logout")
 def addSong(request):
     form=AddMusicForm()
-    print(request.POST)
     if request.POST:
         form=AddMusicForm(request.POST,request.FILES)
         if form.is_valid():
-            instance=form.save(commit=False)
-            album=form.cleaned_data.get('album')
-
-            if album:
-                music_album=Album.objects.get_or_create(name=album)
-                print(music_album)
-                instance.album=music_album[0]
-                instance.save()
-            else:
-                print("sa salvat")
-                instance.save()
-            return HttpResponse(json.dumps({'message': "done"}))
+            instance = form.save(commit=False)
+            instance.owner = request.user
+            instance.save()
+            return HttpResponse(status=201)
     else:
         return render(
             request,

@@ -1,5 +1,12 @@
-{% extends "rest_framework/base.html" %}
-{% comment %} {% load static %}
-{% block bootstrap_theme %}
-    <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}" type="text/css">
-{% endblock %} {% endcomment %}
+{% extends "rest_framework/base.html" %} 
+{% load static %}
+{% block title %}
+    Gionify API
+{% endblock %}
+
+{% block branding %}
+<a class='navbar-brand' rel="nofollow" href='{% url 'musics:main' %}'>
+    Gionify
+</a>
+{% endblock %}
+{% block bootstrap_navbar_variant %}{% endblock %}
