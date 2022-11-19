@@ -1,55 +1,43 @@
-class ViewPage{
-  all_views = document.querySelectorAll(".main_page_views")
-  static activated_element = document.getElementById("home_page_button")
-  constructor(id,func,links){
-    this.id = id;
-    this.func = func;
-    this.url = urls[id];
-    this.element =  document.getElementById(id);
+class View{
+  static #active_view;
 
-    this.add_link(links);
-  }
-  
-  // returneaza o promisune cu continutul paginii
-  async fetch(){
-    return await (await fetch(this.url)).text()
+
+  // ascunde div-ul clasei din care este apelata aceasta functie
+  static hide(){
+    this.button.style.color = "rgb(150, 146, 146)";
+    this.div.style.display = 'none';
   }
 
-  // funtia care da display la o pagina si ii seteaza si continutul totodata daca exista
-  // cand se da display se executa si view_setup function
-  display(body=null){
-    this.all_views.forEach(view=>{
-      if(view.id==this.id){
-        if(body){
-          view.style.display = 'block';
-          view.innerHTML = body;
-          this.func();
-        }else{
-          view.style.display = 'block';
-        }
-      }
-      else{
-        view.style.display = 'none';
-      }
-    })
+  // se da display la div-ul clasei din care se apeleaza
+  static async display(with_fetch=false, url_param=""){
+
+    // mai intai se ascunde div-ul clasei vechi
+    try{View.#active_view.hide();}catch(e){}
+    
+
+    // actualizam clasa activa
+    View.#active_view = this;
+
+    if (with_fetch){
+
+      // daca fetch este true, dam fetch si inseram continutul div-ului
+      this.div.innerHTML = await (await fetch(this.url+url_param)).text();
+      
+      // by default doar prima data se da fetch cand apasam pe un link
+      this.empty = false;
+
+      // de fiecare data cand cand dam fetch, rulam sau mai rulam odata setupul clasei
+      this.setup();
+    }
+    this.button.style.color = "rgb(22, 224, 107)";
+    this.div.style.display = 'block';
   }
-  fetch_and_display(argm = ""){  
-    let temp = this.url
-    this.url += argm;
-    this.fetch().then(r=>{this.display(r)});
-    this.url = temp;
-  }
-  // o metoda care adauga linkuri pentru elements ca atunci cand sunt pasate sa afiseze this.view
-  add_link(elements){
-    document.querySelectorAll(elements).forEach(element=>{
-      element.onclick = _=>{
-        console.log(ViewPage.activated_element);
-        ViewPage.activated_element.style.color = "rgb(150, 146, 146)";
-        ViewPage.activated_element = element;
-        ViewPage.activated_element.style.color = "rgb(22, 224, 107)";
-        this.fetch_and_display(element.dataset.url_param);
-      };
-    })
+
+  // creaza link pentru fiecare element inclus in lista
+  // link = cand apesi se da display
+  // parametrul fetch depinde de atributa clasei "empty", empty devine false cand sa realizat primul fetch al clasei
+  static make_link(elements){
+    elements.forEach(query => document.querySelectorAll(query).forEach(e => e.onclick = _ => this.display(with_fetch=this.empty,e.dataset.url_param)))
   }
 
 }

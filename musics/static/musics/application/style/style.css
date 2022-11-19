@@ -85,7 +85,6 @@ table {
   font-family: 'Gantari', sans-serif;
 }
 th {
-  border-bottom: 1px solid #364043;
   color: #E2B842;
   font-size: 0.85em;
   font-weight: 600;
@@ -229,11 +228,11 @@ td {
   right: 8px;
   top: 0;
   transform: translateY(-100%);
-  background-color: green;
+  background-color: transparent;
   height: 15vw;
   width:  15vw;
   transition: 0.5s;
-
+  border: 6px double #000000;
 }
 .song_img{
   padding: 0;

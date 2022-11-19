@@ -1,9 +1,7 @@
-from email import header
 import json
 from math import floor
 import os
-import string
-
+from django.core import serializers
 from django.template import Template, Context, loader
 from django.http import HttpResponse, HttpRequest
 from musics.models import Album, Music, Playlist, Playlist_group, LikedPlaylists, UserProfile
@@ -22,7 +20,7 @@ from django.urls import reverse
 from .decorators import logged_not_allowed, allowed_goups, admin_only, only_logged
 from .form import AddMusicForm, ManageMusicForm, CreateUserForm, AddPlaylistForm
 from django.templatetags.static import static
-
+from colorthief import ColorThief
 
 
 # acest view va fi apelat doar cand intram prima oara pe site
@@ -49,7 +47,7 @@ def application(request):
     template = loader.get_template('home.html')
     context = {
         'musics_list':musics_list,
-        'home_pre_render':home_pre_render,
+        # 'home_pre_render':home_pre_render,
         'main_menu_pre_render':main_menu_render,
         'playlist_list':get_playlist_list(request),
         'main_playlist_id':get_main_playlist_id(request),
@@ -250,6 +248,7 @@ def user_request_view(request):
 
 
 def home_page_view(request):
+
     response = loader.render_to_string('main_page/home_page.html',{'home_songs':get_all_songs(),'playlist_list':get_playlist_list(request)},request)
     return HttpResponse(content=response) if request.path != reverse("musics:application") else response
 
@@ -348,8 +347,8 @@ def get_scripts(folder):
 def get_all_songs():
     songs = list(Music.objects.select_related('album').all().values())
     for music in songs:
-        if music["album_id"]!=None:
-            music["album_name"]=Album.objects.get(id=music["album_id"]).name
+        if music['album_id'] == None:
+            music['album_name'] = 'Single'
         else:
-            music["album_name"]='Single'
+            music['album_name'] = Album.objects.get(pk=music['album_id']).name
     return songs

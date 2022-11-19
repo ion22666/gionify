@@ -15,22 +15,22 @@ tbody{
     overflow-y: scroll;
 }
 </style>
-
+<button id="button">play</button>
 <table>
     <thead>
-        <tr>
+        <tr id="123">
             <th>thhhhhhhhhhhhhhhhhh</th>
             <th>th</th>
             <th>th</th>
         </tr>
     </thead>
     <tbody>
-        <tr>
+        <tr id="124">
             <td>td</td>
             <td>td</td>
             <td>td</td>
         </tr>
-        <tr>
+        <tr id="125">
             <td>td</td>
             <td>td</td>
             <td>td</td>
@@ -47,3 +47,20 @@ tbody{
         </tr>
     </tbody>
 </table>
+
+
+<script>
+    class A{
+        static f(arg){
+            console.log(arg);
+        }
+    }
+
+    class B extends A{
+        static{
+            this.f(super.arg=1)
+            this.f(arg=2)
+        }
+    }
+
+</script>

@@ -128,7 +128,7 @@ async function switch_PAGE(url){
     clear_styles();
 
     // din header luam stylurile si scripturile si le facem cate o lista
-    let styles = JSON.parse(http_response.headers.get('styles').replace(/'/g, '"'))
+    let styles = JSON.parse(http_response.headers.get('styles').replace(/'/g, '"'));
     let scripts = JSON.parse(http_response.headers.get('scripts').replace(/'/g, '"'));
 
     // asteptam sa se incarce toate stylurile in pagina
