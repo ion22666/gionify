@@ -76,7 +76,7 @@ def application(request):
 
 
 ## LOGIN PAGE
-@logged_not_allowed("You're already logged in, you want to logout?")
+# @logged_not_allowed("You're already logged in, you want to logout?")
 def login_user(request):
     if request.method == 'POST':
         print(request)

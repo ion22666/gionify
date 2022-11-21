@@ -17,7 +17,7 @@ function main(){
         });
         if(http_respose.status == 200){
             console.log("POST acceptat");
-            switch_PAGE('application/');
+            AppPage.switch();
             return;
         }
     }

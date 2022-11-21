@@ -1,7 +1,9 @@
-#main#app{
-    display: grid;
-    grid-template-rows: 1fr 15vh;
-    grid-template-columns: 1fr;
+#main{
+    &#app{
+        display: grid;
+        grid-template-rows: 1fr 15vh;
+        grid-template-columns: 1fr;
+    }
 }
 
 @import 'form_style';
