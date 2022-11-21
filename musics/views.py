@@ -248,16 +248,15 @@ def user_request_view(request):
 
 
 def home_page_view(request):
-
     response = loader.render_to_string('main_page/home_page.html',{'home_songs':get_all_songs(),'playlist_list':get_playlist_list(request)},request)
-    return HttpResponse(content=response) if request.path != reverse("musics:application") else response
+    return HttpResponse(content=response) if request.path != reverse("musics:app") else response
 
 
 def main_menu_view(request):
     playlists = get_playlist_list(request)
     playlists.pop(get_main_playlist_id(request),None)
     response = loader.render_to_string('main_menu_content.html',{'playlist_list':playlists},request)
-    return HttpResponse(content=response) if request.path != reverse("musics:application") else response
+    return HttpResponse(content=response) if request.path != reverse("musics:app") else response
 
 
 def liked_songs_view(request):

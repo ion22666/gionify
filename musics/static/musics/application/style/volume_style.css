@@ -1,58 +1,60 @@
 
 #volume_range {
-    position: absolute;
-    align-self: center;
+  position: absolute;
+  align-self: center;
 
-    right: 4vh;
-    width: 160px;
-    height: 4px;
+  right: 4vh;
+  width: 10vh;
+  height: 4px;
 
-    border: 0;
+  border: 0;
 
 
-    -webkit-transform: translate(-0%, -50%);
-    -moz-transform: translate(-0%, -50%);
-    -o-transform: translate(-0%, -50%);
-    -ms-transform: translate(-0%, -50%);
-    transform: translateX(-0%, -50%);
-    
-    
-    background: rgb(150, 146, 146);
-    outline: none; 
-  }
+  -webkit-transform: translate(-0%, -50%);
+  -moz-transform: translate(-0%, -50%);
+  -o-transform: translate(-0%, -50%);
+  -ms-transform: translate(-0%, -50%);
+  transform: translateX(-0%, -50%);
   
-  #volume_range .ui-slider-handle {
-    height: 2vh;
-    width: 2vh;
+  
+  background: rgb(150, 146, 146);
+  outline: none; 
+}
+  
+#volume_range .ui-slider-handle {
+  height: 2vh;
+  width: 2vh;
 
-    position: absolute;
-    margin: -2px 0 0 -9px;
-    -webkit-border-radius: 100%;
-    border-radius: 100%;
-    background: #fff;
-    border: 0;
-    outline: none;
-    cursor: pointer;
-  }
-  
-  #volume_range .ui-slider-handle:hover{
-    -webkit-transform: scale(1.1);
-    -moz-transform: scale(1.1);
-    -o-transform: scale(1.1);
-    -ms-transform: scale(1.1);
-    transform: scale(1.1);
-  }
-  
-  #volume_range .ui-slider-range { background: rgb(22, 224, 107); }
-  
-  #volume_range #currentVal {
-    position: absolute;
-    font-size: 1rem;
-    color: white;
-    width: 160px;
-    text-align: center;
-    margin-top: -30px;
-  }
+  margin: 0;
+  position: absolute;
+  -webkit-border-radius: 100%;
+  border-radius: 100%;
+  background: #fff;
+
+  outline: none;
+  cursor: pointer;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+}
+
+
+#volume_range .ui-slider-handle:hover{
+  height: 2.2vh;
+  width: 2.2vh;
+}
+
+#volume_range .ui-slider-range { background: rgb(22, 224, 107); }
+
+#volume_range #currentVal {
+  position: absolute;
+  font-size: 1rem;
+  color: white;
+  width: fit-content;
+  left: 50%;
+  transform: translate(-50%,-150%);
+}
+
 
 #sound_icon{
     width: 3vh;

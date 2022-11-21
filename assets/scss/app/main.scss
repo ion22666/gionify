@@ -1,0 +1,17 @@
+#main#app{
+    display: grid;
+    grid-template-rows: 1fr 15vh;
+    grid-template-columns: 1fr;
+}
+
+@import 'form_style';
+@import 'home';
+@import 'icons_style';
+@import 'main_menu_style';
+@import 'main_page';
+@import 'playlist_page';
+@import 'profile_page';
+@import 'style';
+@import 'volume_style';
+
+

@@ -50,8 +50,8 @@
     position: absolute;
     border: none;
     background-color: transparent;
-    height: 1.5rem;
-    width: 1.5rem;
+    height: 3vh;
+    width: 3vh;
     margin-left: 1vw;
     bottom:50%;
 }

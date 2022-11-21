@@ -1,54 +1,20 @@
 <style>
-table,thead,tbody{
-    display: block;
-    border:1px solid black;
-}
-td,th{
-    border:1px solid black;
-}
-table{
-    background: blue;
-    width: fit-content;
-}
-tbody{
-    height: 50px;
-    overflow-y: scroll;
-}
+    *{
+        font-family: 'CircularStd Medium';
+    }
+    .container{
+        width: 20%;
+        height: 20%;
+        font-size: 4vmin;
+        background-color: lightblue;
+        min-width: fit-content;
+    }
+
 </style>
-<button id="button">play</button>
-<table>
-    <thead>
-        <tr id="123">
-            <th>thhhhhhhhhhhhhhhhhh</th>
-            <th>th</th>
-            <th>th</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr id="124">
-            <td>td</td>
-            <td>td</td>
-            <td>td</td>
-        </tr>
-        <tr id="125">
-            <td>td</td>
-            <td>td</td>
-            <td>td</td>
-        </tr>
-        <tr>
-            <td>td</td>
-            <td>td</td>
-            <td>td</td>
-        </tr>
-        <tr>
-            <td>td</td>
-            <td>td</td>
-            <td>td</td>
-        </tr>
-    </tbody>
-</table>
-
-
+<div class="container">
+    Hello World
+</div>
+<link rel="stylesheet" href="http://127.0.0.1:8000/static/style/main.css">
 <script>
     class A{
         static f(arg){

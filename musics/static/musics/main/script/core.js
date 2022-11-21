@@ -147,3 +147,50 @@ async function switch_PAGE(url){
     return;
 }
 
+class Page{
+    static #active_page = null;
+    static hide(){
+        this.div.classList.add("hide");
+    }
+    static dispaly(){
+        this.div.classList.remove("hide");
+    }
+    static delete_content(){
+        this.div.innerHTML = null;
+    }
+    static async fetch_content(){
+        let r = await fetch(this.url);
+        this.div.innerHTML = await r.text();
+        let styles = JSON.parse(r.headers.get('styles').replace(/'/g, '"'));
+        let scripts = JSON.parse(r.headers.get('scripts').replace(/'/g, '"'));
+        await load_scripts(scripts);
+    }
+    static async switch(){
+        let active_page = Page.#active_page;
+        LoadingScreen.dispaly();
+        await LoadingScreen.appear();
+        if(active_page)active_page.hide();   
+        await this.fetch_content();
+        if(active_page)active_page.delete_content();
+        Page.#active_page = this;
+        this.dispaly();
+        await LoadingScreen.disappear();
+        LoadingScreen.hide();
+    }
+}
+class LoadingScreen extends Page{
+    static div = document.querySelector("#loading_screen");
+    static appear(){
+        $('#loading_screen').animate({opacity:"1"});
+        return new Promise(resolve=>this.div.ontransitionend = resolve)
+    }
+    static disappear(){
+        $('#loading_screen').animate({opacity:"0"});
+        return new Promise(resolve=>this.div.ontransitionend = resolve)
+    }
+}
+
+class AppPage extends Page{
+    static div = document.getElementById("app");
+    static url = "application/";
+}

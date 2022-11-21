@@ -1,0 +1,93 @@
+.icons{
+    height: 1rem;
+    width: 1rem;
+    min-height: rem;
+    fill: currentColor;
+    background-color: transparent;
+}
+
+.icons:hover{
+    color: rgb(22, 224, 107) !important;
+}
+
+.main_icon{
+    position: absolute;
+    height: 5vh;
+    width: 5vh;
+    border: none;
+    position:absolute;
+    align-self: center;
+    transform: translateX(-50%);
+    color: var(--lighter);
+}
+
+.menu_icons{
+    position: relative;
+    height: 3vh;
+    width: 3vh;
+    margin-right: 2vh;
+}
+
+
+
+#prev{
+    left: 45vw;
+}
+#next{
+    left: 55vw;
+}
+#playing{
+    left: 50vw;
+}
+#shuffle{
+    left: 40vw;
+}
+#repeat{
+    left: 60vw;
+}
+
+#is_liked_song{
+    position: absolute;
+    border: none;
+    background-color: transparent;
+    height: 3vh;
+    width: 3vh;
+    margin-left: 1vw;
+    bottom:50%;
+}
+
+#add_to_playlist{
+    position: absolute;
+    border: none;
+    height: 1.5rem;
+    width: 1.5rem;
+    margin-left: 1vw;
+    top:50%;
+    color: var(--lighter);
+}
+
+
+#svg_not_liked_song{
+    display: block;
+    color: white;
+}
+
+#svg_liked_song{
+    display: none;
+    color: rgb(22, 224, 107);
+}
+
+#svg_pause{
+    display: none;
+}
+#logout_button{
+    display: flex;
+    align-items: center;
+    font-size: 1.2rem;
+}
+
+#logout_icon{
+    position: relative;
+    height: 4vh;
+    width: 4vh;
+}
