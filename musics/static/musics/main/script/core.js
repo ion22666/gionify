@@ -82,4 +82,4 @@ class LoginPage extends Page{
     static url = "login/";
 }
 
-LoginPage.switch()
+AppPage.switch()

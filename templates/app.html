@@ -1,0 +1,34 @@
+{% load static %}
+
+
+{% comment %}___________________________________MENIUL PRINCIPAL DE PE STANGA___________________________________{% endcomment %}
+<div id="menu">
+  {{ main_menu_pre_render }}
+</div>
+
+
+{% comment %}___________________________________PAGINA PRINCIPALA DE CONTINUT___________________________________{% endcomment %}
+<div id="body">
+  <div class="view hide" id="home"></div>
+  <div class="view hide" id="profile"></div>
+  <div class="view hide" id="liked"> </div>
+  <div class="view hide" id="playlist"></div>
+</div>
+
+
+
+{% comment %}_________________________________PLAYERUL IN SINE_____________________________ {% endcomment %}
+<div id="player">
+  {% include 'app/player.html' %}
+</div>
+
+
+
+{% comment %}_________________________________SCRIPTURI SI TRESTII_____________________________ {% endcomment %}
+{{musics_list|json_script:'musics_list'}}
+{{url_patterns|json_script:'url_patterns'}}
+{{playlist_list|json_script:'playlist_list'}}
+{{main_playlist_id|json_script:'main_playlist_id'}}
+{{current_user|json_script:'current_user'}}
+
+    

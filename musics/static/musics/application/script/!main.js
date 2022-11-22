@@ -4,8 +4,12 @@ class View{
 
   // ascunde div-ul clasei din care este apelata aceasta functie
   static hide(){
-    this.button.style.color = "rgb(150, 146, 146)";
-    this.div.style.display = 'none';
+    this.div.classList.add("hide");
+    this.main_link.classList.remove("active");
+  }
+  static dispaly(){
+    this.div.classList.remove("hide");
+    this.main_link.classList.add("active");
   }
 
   // se da display la div-ul clasei din care se apeleaza
@@ -19,18 +23,15 @@ class View{
     View.#active_view = this;
 
     if (with_fetch){
-
       // daca fetch este true, dam fetch si inseram continutul div-ului
       this.div.innerHTML = await (await fetch(this.url+url_param)).text();
-      
       // by default doar prima data se da fetch cand apasam pe un link
       this.empty = false;
-
       // de fiecare data cand cand dam fetch, rulam sau mai rulam odata setupul clasei
       this.setup();
     }
-    this.button.style.color = "rgb(22, 224, 107)";
-    this.div.style.display = 'block';
+
+    this.dispaly();
   }
 
   // creaza link pentru fiecare element inclus in lista
@@ -94,3 +95,6 @@ function pop_up_div(event,childs){
 }
 
 
+async function update_menu_playlists(){
+  await fetch()
+}

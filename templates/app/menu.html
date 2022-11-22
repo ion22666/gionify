@@ -1,0 +1,37 @@
+{% load static %}
+
+<div class="categories">
+    <div class="row" id="profile" data-url_param="{{ request.user }}">
+        <svg class="icons menu" id="profile_icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16"> <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/> <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/> </svg>
+        My Profile
+    </div>
+    <div class="row" id="home">
+        <svg class="icons menu" id="home_icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16"><path d="M 8.354 1.146 a 0.5 0.5 0 0 0 -0.708 0 l -6 6 A 0.5 0.5 0 0 0 1.5 7.5 v 7 a 0.5 0.5 0 0 0 0.5 0.5 h 4.5 a 0.5 0.5 0 0 0 0.5 -0.5 v -4 h 2 v 4 a 0.5 0.5 0 0 0 0.5 0.5 H 14 a 0.5 0.5 0 0 0 0.5 -0.5 v -7 a 0.5 0.5 0 0 0 -0.146 -0.354 L 13 5.793 L 8.354 1.146 z M 2.5 14 V 7.707 l 5.5 -5.5 l 5.5 5.5 V 14 H 10 v -4 a 0.5 0.5 0 0 0 -0.5 -0.5 h -3 a 0.5 0.5 0 0 0 -0.5 0.5 v 4 H 2.5 z"/></svg>
+        Home
+    </div>
+    <div class="row" id="">
+        <svg class="icons menu" id="search_icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16"> <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/> </svg>
+        Search
+    </div>
+    <div class="row" id="">
+        <svg class="icons menu" id="library_icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16"> <path d="M12 13c0 1.105-1.12 2-2.5 2S7 14.105 7 13s1.12-2 2.5-2 2.5.895 2.5 2z"/> <path fill-rule="evenodd" d="M12 3v10h-1V3h1z"/> <path d="M11 2.82a1 1 0 0 1 .804-.98l3-.6A1 1 0 0 1 16 2.22V4l-5 1V2.82z"/> <path fill-rule="evenodd" d="M0 11.5a.5.5 0 0 1 .5-.5H4a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 7H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 .5 3H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5z"/> </svg>
+        Your Library</div>
+    <div id="break_line_in_main_menu"> 
+    </div>
+    <div class="row" id="">
+        <svg class="icons menu" id="create_playlist_icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16"> <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/> <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/> </svg>
+        Create Playlist</div>
+    <div class="row" id="liked">
+        <svg class="icons menu" id="liked_songs_icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16"> <path d="M8 7.982C9.664 6.309 13.825 9.236 8 13 2.175 9.236 6.336 6.31 8 7.982Z"/> <path d="M3.75 0a1 1 0 0 0-.8.4L.1 4.2a.5.5 0 0 0-.1.3V15a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V4.5a.5.5 0 0 0-.1-.3L13.05.4a1 1 0 0 0-.8-.4h-8.5Zm0 1H7.5v3h-6l2.25-3ZM8.5 4V1h3.75l2.25 3h-6ZM15 5v10H1V5h14Z"/> </svg>
+        Liked Songs</div>
+</div>
+<hr>
+
+<div class="playlists">
+    <ul style="list-style: none;">
+        {% for id,playlist in playlist_list.items %}
+        <li class="menu_playlist" data-url_param="{{id}}" >{{playlist.name}} ({{playlist.songs_count}})</li>
+        {% endfor %}
+    </ul>
+
+</div>

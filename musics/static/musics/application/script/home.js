@@ -1,12 +1,9 @@
 class HomeView extends View{
-    static div = document.getElementById("home_page");
+    static div = document.querySelector("#body #home");
     static url = urls["home_page"];
-    static button = document.getElementById("home_page_button");
+    static main_link = document.querySelector("#menu #home");
     static empty = true;
 
-
-
-    static rows = document.querySelector("#new_releases table tbody").children;
     static row_index = 0;
 
 
@@ -18,7 +15,7 @@ class HomeView extends View{
 
     static change_release_song(){
         
-        let current_row = this.rows[this.row_index];
+        let current_row = (document.querySelector("#new_releases table tbody").children)[this.row_index];
         document.querySelector("#new_releases #title").innerHTML = `${current_row.dataset.title} <div id="album">${current_row.dataset.album}</div>`;
         document.querySelector("#new_releases #artist").textContent = current_row.dataset.artist;
 

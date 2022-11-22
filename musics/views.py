@@ -44,7 +44,7 @@ def application(request):
             playlist['songs_id'] = list(Playlist_group.objects.filter(playlist_id=playlist['id']).values_list('song_id',flat=True))
     template = loader
 
-    template = loader.get_template('home.html')
+    template = loader.get_template('app.html')
     context = {
         'musics_list':musics_list,
         # 'home_pre_render':home_pre_render,
@@ -57,7 +57,7 @@ def application(request):
     }
     response = render(
         request,
-        'home.html',
+        'app.html',
         {
             'musics_list':musics_list,
             'home_pre_render':home_pre_render,
@@ -91,7 +91,7 @@ def login_user(request):
             return HttpResponse(status=403,content=json.dumps({'error':'user not exists'}))
     response = render(
         request,
-        'form_pages_content/login_user.html',
+        'login.html',
         {
             'scripts':get_scripts('login'),
             'url_patterns': { i.name : str(i.pattern)[0:str(i.pattern).find('/')+1] for i in urls.urlpatterns},
@@ -132,7 +132,7 @@ def profile_page_view(request,user_name):
     profile = UserProfile.objects.get(user_id=request.user.id)
     #aparent cand un field este de foreigkey, acel fild va tine o valoare de tip obiect, deci vom pute scrie profile.user_id.id
     print(profile.user.id)
-    response = render(request,'main_page/profile_page.html',{'username':str(request.user),'picture':profile.picture})
+    response = render(request,'app/views/profile.html',{'username':str(request.user),'picture':profile.picture})
     return HttpResponse(content=response)
 
 @only_logged("Only those logged in can logout")
@@ -248,14 +248,14 @@ def user_request_view(request):
 
 
 def home_page_view(request):
-    response = loader.render_to_string('main_page/home_page.html',{'home_songs':get_all_songs(),'playlist_list':get_playlist_list(request)},request)
+    response = loader.render_to_string('app/views/home.html',{'home_songs':get_all_songs(),'playlist_list':get_playlist_list(request)},request)
     return HttpResponse(content=response) if request.path != reverse("musics:app") else response
 
 
 def main_menu_view(request):
     playlists = get_playlist_list(request)
     playlists.pop(get_main_playlist_id(request),None)
-    response = loader.render_to_string('main_menu_content.html',{'playlist_list':playlists},request)
+    response = loader.render_to_string('app/menu.html',{'playlist_list':playlists},request)
     return HttpResponse(content=response) if request.path != reverse("musics:app") else response
 
 
@@ -268,7 +268,7 @@ def liked_songs_view(request):
         liked_songs = Music.objects.filter(pk__in=list(Playlist_group.objects.filter(playlist_id=liked_playlist.playlist_id).values_list('song_id',flat=True)))
         for song in liked_songs:
             song.time_length = format_time(song.time_length)
-        template = loader.get_template('main_page/liked_songs_page.html')
+        template = loader.get_template('app/views/liked.html')
         response = template.render({'songs':liked_songs,'playlist_id':liked_playlist.playlist_id})
         return HttpResponse(content=response)
     else:
@@ -281,7 +281,7 @@ def playlist_page_view(request,playlist_id):
         songs = Music.objects.filter(pk__in=list(Playlist_group.objects.filter(playlist_id=playlist).values_list('song_id',flat=True)))
         for song in songs:
             song.time_length = format_time(song.time_length)
-        template = loader.get_template('main_page/playlist_page.html')
+        template = loader.get_template('app/views/playlist.html')
         response = template.render({'playlist':playlist,'songs':songs})
         return HttpResponse(content=response)
     except Playlist.DoesNotExist:

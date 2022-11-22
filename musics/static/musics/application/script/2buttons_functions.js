@@ -54,7 +54,7 @@ shuffle.addEventListener('click',()=>{
 })
 
 // get profile_page and display it
-document.getElementById('profile_button').addEventListener('click',()=>{
+document.querySelector("#menu #profile").addEventListener('click',()=>{
     console.log(urls['profile_page_url']+current_user)
     fetch(urls['profile_page_url']+current_user)
         .then((response)=>{return response.text()})
