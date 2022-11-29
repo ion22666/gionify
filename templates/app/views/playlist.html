@@ -1,5 +1,52 @@
 {% load static %}
-<div class="playlist_page_header" id="playlist_page_header">
+<div id="head" data-colors="{{ playlist.image_colors }}">
+    <img src="media/{{ playlist.cover_image }}" alt="">
+    <div id="title">{{ playlist.name }}</div>
+    <div id="info"> <span id="songs">{{ songs |length}} songs, </span><span id="duration">{{ total_duration }}</span> </div>
+</div>
+
+<div id="body">
+    <div id="space">
+        <div>PLAY</div>
+    </div>
+    <div id="table">
+        <div class="row" id="row-head">
+                <div>#</div>
+                <div id="title">TITLE</div>
+                <div>ARTIST</div>
+                <div>ALBUM</div>
+                <div></div>
+                <div></div>
+                <div></div>
+        </div>
+        {% for song in songs %}
+            <div class="row">
+                <div class="counter">{{ forloop.counter }}</div>
+                <svg class="icon play empty" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16"><path d="M10.804 8 5 4.633v6.734L10.804 8zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692z"/></svg>
+                <svg class="icon play full" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16"><path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/></svg>
+                <img src="media/{{ song.cover_image }}" alt="">
+                <div>{{song.title}}</div>
+                <div>{{song.artiste}}</div>
+                <div>
+                    {% if song.album %}
+                        {{ song.album.name}}
+                    {% else %}
+                        Single
+                    {% endif %}
+                </div>
+                <svg class="icon hide heart" id="full_heart" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16"> <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/> </svg>
+                <svg class="icon heart" id="empty_heart" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16"> <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/> </svg>
+                
+                <div class="time">{{song.time_length}}</div>
+
+                <svg class="icon trash" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16"> <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg>
+                
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% comment %} <div class="playlist_page_header" id="playlist_page_header">
 
 
     <div id="playlist_img_container">
@@ -42,4 +89,4 @@
         </td>
     </tr>
     {% endfor %}
-</table>
+</table> {% endcomment %}

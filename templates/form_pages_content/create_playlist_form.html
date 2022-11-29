@@ -1,9 +1,6 @@
 <h2>New Playlist</h2>
 <form id="add_playlist_form" action="{% url 'musics:add_playlist_url' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <p>
-        <label for="id_name">Name:</label>
-        <input type="text" name="name" maxlength="400" required="" id="id_name">
-    </p>
+    {{ form.as_p}}
     <input type="submit" value="Submit">
 </form>

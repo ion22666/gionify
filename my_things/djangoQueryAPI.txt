@@ -5,3 +5,5 @@ deci putem scrie oricand obiect.field1
 
 cand avem un field cu referinta/foreignkey , acest fiel va lua ca valoare insasi obiectul de referinta
 ex: carte1.autor1.nume_autor
+
+pentru campurile care sunt ForeignKey, poti fie sa introduci pk-ul randului strain , sau sa introduci direct instanta acelui obiect

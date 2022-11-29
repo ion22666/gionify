@@ -1,12 +1,12 @@
-@use 'var';
+@use 'var' as *;
 @each $font in ('Black','Bold','Book','Medium','Light'){
     @font-face{
         font-family: 'CircularStd #{$font}';
-        src: url(/static/style/fonts/CircularStd-#{$font}.woff) format('woff');
+        src: url(/static/fonts/CircularStd-#{$font}.woff) format('woff');
     }
     @font-face{
         font-family: 'CircularStd #{$font} Italic';
-        src: url(/static/style/fonts/CircularStd-#{$font}Italic.woff) format('woff');
+        src: url(/static/fonts/CircularStd-#{$font}Italic.woff) format('woff');
     }
 }
 
@@ -14,9 +14,15 @@
     margin:0;
     border:0;
     padding:0;
+    position: relative;
 
     font-size: 2vmin;
     font-family: 'CircularStd Medium';
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    @include scrollbar($green,black);
 }
     
 .screen{

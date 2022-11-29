@@ -21,11 +21,11 @@ class AddMusicForm(forms.ModelForm):
         ]
 
 class AddPlaylistForm(forms.ModelForm):
-    user_id=forms.CharField(max_length=500,required=False)
     class Meta:
         model=Playlist
         fields=[
             'name',
+            'cover_image',
         ]
 
 

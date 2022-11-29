@@ -1,0 +1,5 @@
+<form class="form" id="playlist" method="post" enctype="multipart/form-data" action="">
+    {% csrf_token %}
+    {{ form.as_div }}
+    <input type="submit" value="Submit">
+</form>

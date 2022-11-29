@@ -197,30 +197,47 @@ def manage_song(request,song_id):
     })
 
 
-def add_playlist_view(request):
-    form=AddPlaylistForm()
-    if request.POST:
-        form=AddPlaylistForm(request.POST)
-        if form.is_valid():
-            instance=form.save(commit=False)
-            if request.user.is_authenticated:
-                user = request.user
-            else:
-                return HttpResponse("ce dreacu faci bre?")
-            instance.user_id = user
-            instance.save()
+def playlist(request,playlist_id=None):
+
+    if request.method == "GET" and playlist_id == None:
+        # obiectele FormModel din django nu face nimic altceva decat sa construiasca un html form ( doar continutul, tagul form tre sal punem singuri)
+        html_form = loader.render_to_string(request, template_name='app/forms/playlist_form.html', context={'form':AddPlaylistForm()})
+        return HttpResponse(status=200,content = html_form)
+
+    if request.method == "POST" and request.POST:
+        # obiectele FormModel de asemenea se folosesc pentru a colecta datele din request, le verifica si le atribuie frumos in field-uri de care ne trebe noua
+        form_data=AddPlaylistForm(request.POST,request.FILES)
+        if form_data.is_valid():
+            if not request.user.is_authenticated:
+                return HttpResponse(status=401,content=json.dumps({'message':'User in not authenticated'}))
+            instance = Playlist(**form_data.cleaned_data,user_id=request.user)
+            # instance.save()
             print("sa salvat")
-            return HttpResponse(json.dumps({'message': "sa creat un playlist"}))
+            return HttpResponse(status=201, content=json.dumps({'message': "Playlist Created"}))
         else:
-            print("no",form.data)
-            print(form.errors.as_data())
+            return HttpResponse(status=406, content=json.dumps({'message': "Invalid data"}))
 
-    if 'HTTP_REFERER' in request.META.keys() and request.META['HTTP_REFERER']=='http://127.0.0.1:8000/':
-        return render(request,'form_pages_content/create_playlist_form.html',{
-            'form':form,
-    })
-    return redirect("music:home_page")
+    try:
+        playlist = Playlist.objects.get(pk=playlist_id)
+    except Playlist.DoesNotExist:
+        return HttpResponse(status=404, content=json.dumps({'message': "Playlist Does Not Exist"}))
 
+    if request.method == "GET":
+        songs = []
+        for song in Playlist_group.objects.filter(playlist_id=playlist):
+            songs.append(song.song_id)
+        seconds = 0
+        for song in songs:
+            m,s = song.time_length.split(":")
+            seconds += (int(m)*60) + int(s)
+        total_duration = str(seconds//3600)+" hr " if seconds//3600>0 else str(seconds//60)+" min" if seconds//60>0 else ""
+        response = loader.render_to_string('app/views/playlist.html', {'playlist':playlist,'songs':songs,'total_duration':total_duration},request)
+        return HttpResponse(content=response)
+    
+    if request.method == "PUT":
+        return
+    if request.method == "DELETE":
+        return
 
 def user_request_view(request):
     
@@ -266,27 +283,11 @@ def liked_songs_view(request):
         except LikedPlaylists.DoesNotExist: # daca nu exista , cream un plailist nou si il folosim drept pentru liked_song playlist
             get_main_playlist_id()
         liked_songs = Music.objects.filter(pk__in=list(Playlist_group.objects.filter(playlist_id=liked_playlist.playlist_id).values_list('song_id',flat=True)))
-        for song in liked_songs:
-            song.time_length = format_time(song.time_length)
         template = loader.get_template('app/views/liked.html')
         response = template.render({'songs':liked_songs,'playlist_id':liked_playlist.playlist_id})
         return HttpResponse(content=response)
     else:
         HttpResponse(staus=401)
-
-
-def playlist_page_view(request,playlist_id):
-    try:
-        playlist = Playlist.objects.get(pk=playlist_id)
-        songs = Music.objects.filter(pk__in=list(Playlist_group.objects.filter(playlist_id=playlist).values_list('song_id',flat=True)))
-        for song in songs:
-            song.time_length = format_time(song.time_length)
-        template = loader.get_template('app/views/playlist.html')
-        response = template.render({'playlist':playlist,'songs':songs})
-        return HttpResponse(content=response)
-    except Playlist.DoesNotExist:
-        return redirect('musics:home_page')
-
 
 def add_to_playlist_view(request):
     if request.method == 'POST':
@@ -336,9 +337,6 @@ def get_main_playlist_id(request):
         new_playlist.save()
         liked_playlist.save()
         return get_main_playlist_id(request)
-
-def format_time(seconds):
-    return str(seconds//60).zfill(1) + ':' + str(floor(seconds%60)).zfill(2)
 
 def get_scripts(folder):
     return [ str(static("musics"+"/"+folder+"/"+file)) for file in os.listdir(os.path.relpath('musics\\static\\musics'+'\\'+folder)) ]

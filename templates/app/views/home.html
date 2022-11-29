@@ -1,35 +1,33 @@
 <div id="new_releases">
-    <div id="new_releases_title">New Releases</div>
-    <svg class="icons svg_icons" id="prev_release_song" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 300.003 300.003"> <path d="M150,0C67.157,0,0,67.157,0,150c0,82.841,67.157,150,150,150s150-67.159,150-150C300,67.157,232.843,0,150,0z M195.708,160.159c-0.731,0.731-1.533,1.349-2.368,1.886l-56.295,56.295c-2.734,2.736-6.318,4.103-9.902,4.103 s-7.166-1.367-9.902-4.103c-5.47-5.47-5.47-14.34,0-19.808l48.509-48.516l-48.265-48.265c-5.47-5.473-5.47-14.34,0-19.808 c5.47-5.47,14.338-5.467,19.808-0.003l56.046,56.043c0.835,0.537,1.637,1.154,2.365,1.886c2.796,2.796,4.145,6.479,4.082,10.146 C199.852,153.68,198.506,157.361,195.708,160.159z"/></svg>
-    <svg class="icons svg_icons" id="next_release_song" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 300.003 300.003"> <path d="M150,0C67.159,0,0.001,67.159,0.001,150c0,82.838,67.157,150.003,149.997,150.003S300.002,232.838,300.002,150 C300.002,67.159,232.839,0,150,0z M189.226,218.202c-2.736,2.734-6.321,4.101-9.902,4.101c-3.582,0-7.169-1.367-9.902-4.103 l-56.295-56.292c-0.838-0.537-1.639-1.154-2.368-1.886c-2.796-2.799-4.145-6.479-4.077-10.144 c-0.065-3.667,1.281-7.35,4.077-10.146c0.734-0.731,1.53-1.349,2.368-1.886l56.043-56.043c5.47-5.465,14.34-5.467,19.808,0.003 c5.47,5.467,5.47,14.335,0,19.808l-48.265,48.265l48.514,48.516C194.695,203.864,194.695,212.732,189.226,218.202z"/></svg>
-    <img id="new_releases_img" src="http://127.0.0.1:8000/media/music_images/pexels-photo-577289.jpeg" alt="">
-    <div id="title">Title <div id="album">Album</div></div>
-    
+    <h1>New Releases</h1>
+    <svg class="icon" id="prev" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 300.003 300.003"> <path d="M150,0C67.157,0,0,67.157,0,150c0,82.841,67.157,150,150,150s150-67.159,150-150C300,67.157,232.843,0,150,0z M195.708,160.159c-0.731,0.731-1.533,1.349-2.368,1.886l-56.295,56.295c-2.734,2.736-6.318,4.103-9.902,4.103 s-7.166-1.367-9.902-4.103c-5.47-5.47-5.47-14.34,0-19.808l48.509-48.516l-48.265-48.265c-5.47-5.473-5.47-14.34,0-19.808 c5.47-5.47,14.338-5.467,19.808-0.003l56.046,56.043c0.835,0.537,1.637,1.154,2.365,1.886c2.796,2.796,4.145,6.479,4.082,10.146 C199.852,153.68,198.506,157.361,195.708,160.159z"/></svg>
+    <svg class="icon" id="next" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 300.003 300.003"> <path d="M150,0C67.159,0,0.001,67.159,0.001,150c0,82.838,67.157,150.003,149.997,150.003S300.002,232.838,300.002,150 C300.002,67.159,232.839,0,150,0z M189.226,218.202c-2.736,2.734-6.321,4.101-9.902,4.101c-3.582,0-7.169-1.367-9.902-4.103 l-56.295-56.292c-0.838-0.537-1.639-1.154-2.368-1.886c-2.796-2.799-4.145-6.479-4.077-10.144 c-0.065-3.667,1.281-7.35,4.077-10.146c0.734-0.731,1.53-1.349,2.368-1.886l56.043-56.043c5.47-5.465,14.34-5.467,19.808,0.003 c5.47,5.467,5.47,14.335,0,19.808l-48.265,48.265l48.514,48.516C194.695,203.864,194.695,212.732,189.226,218.202z"/></svg>
+    <img id="img" src="http://127.0.0.1:8000/media/music_images/pexels-photo-577289.jpeg" alt="">
+    <div id="title">Title<div id="album">Album</div></div>
     <p id="artist">Artist</p>
-    <table id="new_releases_songs_list">
-        <thead>
-            <tr id="head">
-                <th></th>
-                <th></th>
-                <th>TITLE</th>
-                <th>ARTISTE</th>
-                <th>ALBUM</th>
-                <th><svg class="svg_icons" id="svg_song_time_icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16"><path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/></svg></th>
-            </tr>
-        </thead>
-        <tbody>
+
+    <div id="table">
+        <div class="row" id="head">
+            <div> </div>
+            <div> </div>
+            <div>TITLE</div>
+            <div>ARTISTE</div>
+            <div>ALBUM</div>
+            <svg class="svg_icons" id="svg_song_time_icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16"><path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/></svg>
+        </div>
+        <div id="tbody">
             {% for music in home_songs %}
-                <tr data-id="{{ music.id }}" data-title="{{ music.title }}" data-album="{{ music.album_name }}" data-artist="{{ music.artiste }}" data-colors="{{ music.image_colors }}">
-                    <td><svg class="svg_icons" id="svg_song_time_icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16"> <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/></svg></td>
-                    <td><img src="media/{{music.cover_image}}" alt=""></td>
-                    <td>{{music.title}}</td>
-                    <td>{{music.artiste}}</td>
-                    <td>{{music.album_name}}</td>
-                    <td>{{music.time_length}}</td>
-                </tr>
+                <div class="row" data-id="{{ music.id }}" data-title="{{ music.title }}" data-album="{{ music.album_name }}" data-artist="{{ music.artiste }}" data-colors="{{ music.image_colors }}" data-img="media/{{music.cover_image}}">
+                    <svg class="icon" id="play" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16"> <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/></svg>
+                    <img src="media/{{music.cover_image}}" alt="">
+                    <div>{{music.title}}</div>
+                    <div>{{music.artiste}}</div>
+                    <div>{{music.album_name}}</div>
+                    <div id="time">{{music.time_length}}</div>
+                </div>
             {% endfor %}
-        </tbody> 
-    </table>
+        </div> 
+    </div>
 </div>
 
 
@@ -59,48 +57,7 @@
 </div>
 
 
-<div class="tabela_lista_playlist">
-    <table><h3 class="Your_Playlists">Your Playlists:</h3>
-    <tr>
-        <th>NUME</th>
-        <th>SONGS NUMBER</th>
-    </tr>
 
-    {% for id, playlist in playlist_list.items %}
-    <tr>
-        <td>{{playlist.name}}</td>
-        <td>{{playlist.songs_count}}</td>
-    </tr>
-    {% endfor %}
-
-    </table>
-</div>
-
-
-<button onclick="window.location.href='{% url 'musics:logout_user' %}';">
-    not
-</button>
-
-
-{% include 'button_with_form_page_blueprint.html' with form_name='add_song_form' open_b="Add Song" close_b="Close" %}
-
-{% include 'button_with_form_page_blueprint.html' with form_name='add_playlist_form' open_b="Add Playlist" close_b="Close" %}
-
-{% include 'button_with_form_page_blueprint.html' with form_name='logout_form' open_b="Logout" close_b="Cancel" %}
-
-<h4> You are logged in as <span>{{ request.user }}</span></h4>
-
-<button onclick="window.location.href='{% url 'musics:logout_user' %}';">
-    Logout
-</button>
-
-{% if request.user.is_staff %}
-<button onclick="window.location.href='{{'admin' }}';">
-    ADMIN INTERFACE
-</button>
-{% endif %}
-
-
-<div class="space">
+<div id="space">
     SOME SPACE
 </div>

@@ -1,2 +1,44 @@
 $green:rgb(22, 224, 107);
-$gray: #373737;
+$gray: #707070;
+$gold: rgb(255,215,0);
+$dark-gray:rgb(14, 14, 14);
+$light-gray:rgb(226,226,226);
+
+$black:'CircularStd Black';
+$bold:'CircularStd Bold';
+$book:'CircularStd Book';
+$mediu:'CircularStd Medium';
+$light:'CircularStd Light';
+
+@mixin scrollbar($color, $background-color) {
+    scrollbar-color: $color $background-color;
+    scrollbar-width:thin;
+    &::-webkit-scrollbar-track{
+        background-color:$background-color;
+    }
+
+    &::-webkit-scrollbar{
+        width: 8px;
+        background-color: transparent;
+        padding: 0;
+    }
+
+    &::-webkit-scrollbar-thumb{
+        background-color: $color;
+    }
+    &::-webkit-scrollbar-track-piece{
+        display: none;
+    }
+    &::-webkit-scrollbar-corner{
+        display: none;
+    }
+}
+@mixin slider($height,$range-color,$ball-color,$ball-size){
+    transition: 0.2s ease;
+    #range{
+
+    }
+    #ball{
+
+    }
+}

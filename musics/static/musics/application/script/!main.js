@@ -13,20 +13,20 @@ class View{
   }
 
   // se da display la div-ul clasei din care se apeleaza
-  static async display(with_fetch=false, url_param=""){
+  static async switch(with_fetch=false, url_param=""){
 
     // mai intai se ascunde div-ul clasei vechi
-    try{View.#active_view.hide();}catch(e){}
+    try{View.#active_view.hide();}catch(e){};
     
-
     // actualizam clasa activa
     View.#active_view = this;
 
     if (with_fetch){
       // daca fetch este true, dam fetch si inseram continutul div-ului
       this.div.innerHTML = await (await fetch(this.url+url_param)).text();
+
       // by default doar prima data se da fetch cand apasam pe un link
-      this.empty = false;
+      this.empty = true;
       // de fiecare data cand cand dam fetch, rulam sau mai rulam odata setupul clasei
       this.setup();
     }
@@ -38,7 +38,7 @@ class View{
   // link = cand apesi se da display
   // parametrul fetch depinde de atributa clasei "empty", empty devine false cand sa realizat primul fetch al clasei
   static make_link(elements){
-    elements.forEach(query => document.querySelectorAll(query).forEach(e => e.onclick = _ => this.display(with_fetch=this.empty,e.dataset.url_param)))
+    elements.forEach(query => document.querySelectorAll(query).forEach(e => e.onclick = _ => this.switch(with_fetch=this.empty,e.dataset.url_param)))
   }
 
 }
@@ -92,9 +92,4 @@ function pop_up_div(event,childs){
 
   body.appendChild(div);
 
-}
-
-
-async function update_menu_playlists(){
-  await fetch()
 }

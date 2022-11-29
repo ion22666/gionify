@@ -139,7 +139,7 @@ MEDIA_ROOT= BASE_DIR/'media_root'
 
 STATICFILES_DIRS=[
     "api/static",
-    "static/",
+    "static",
 ]
 
 

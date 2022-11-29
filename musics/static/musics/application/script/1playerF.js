@@ -1,6 +1,4 @@
-
-// functions
-// format time for music
+console.log("se executa playerul");
 const formatTime=secs=>{
     let min = Math.floor((secs % 3600) / 60); 
     let sec = Math.floor(secs % 60)
@@ -26,7 +24,7 @@ function update_liked_icon(){
 // cand un se shimba src-ul , se incepe de la inceput audioul , dar cu pauza
 // setSRC() va folosi mereu letiabila grobala musicIndex , pentru a determina care pisa sa se ruleze din lista de obiecte musics, care a fost citita din codul HTML unde a fost plasata de catre django
 function setSRC(was_paused){
-    update_liked_icon();
+    // update_liked_icon();
     fetch(`/media/${musics[musicIndex].audio_file}`)
     // Retrieve its body as ReadableStream
     .then((response) => {
@@ -54,29 +52,29 @@ function setSRC(was_paused){
     // Create an object URL for the response
     .then((response) => response.blob())
     .then((blob) => URL.createObjectURL(blob))
-    .then((url) => {player.src = url;if(was_paused != true){playOrPause()}})
+    .then((url) => {audio.src = url;if(was_paused != true){playOrPause()}})
     .catch(error=>{console.log(error)})
   
-    song_title.textContent=musics[musicIndex].title
-    artist.textContent=musics[musicIndex].artiste 
-    manage_recently_played(musics[musicIndex].id)
-    song_img.setAttribute('src',`/media/${musics[musicIndex].cover_image}`)
-    if(musics[musicIndex].album_name=="Single"){
-        album.innerHTML='<span>Single</span>'
-    }
-    else{
-        album.innerHTML= '<span>' + musics[musicIndex].album_name + ' ' +  'album</span>'
-    }
+    // song_title.textContent=musics[musicIndex].title
+    // artist.textContent=musics[musicIndex].artiste 
+    // manage_recently_played(musics[musicIndex].id)
+    // song_img.setAttribute('src',`/media/${musics[musicIndex].cover_image}`)
+    // if(musics[musicIndex].album_name=="Single"){
+    //     album.innerHTML='<span>Single</span>'
+    // }
+    // else{
+    //     album.innerHTML= '<span>' + musics[musicIndex].album_name + ' ' +  'album</span>'
+    // }
 }
 
 
 //shimba play cu pause si invers
 const playOrPause=()=>{
-  if (player.paused){
-      player.play()
+  if (audio.paused){
+      audio.play()
   }
   else{
-    player.pause()
+    audio.pause()
   }
 }
   
@@ -117,83 +115,129 @@ function manage_recently_played(new_played_id){
 
 
 // tag de tip audio poate oferi mereu timpul curent, astfel aflam cate % din intreg audioul sau rulat, si facem ca bara de muzica sa fie la aceasi ratie
-function update_player(){
-  let input = document.getElementById("progress_input")
-  temp = player.currentTime
- 
-  input.value = (isNaN(player.duration)) ? 0:(player.currentTime/player.duration) * input.max; 
+progress_bar = document.querySelector("#player #range");
+progress_container = document.querySelector("#player #progress");
+function update_progress_bar(){
+  progress_bar.style.width = (audio.currentTime/audio.duration*100).toString() + "%";
+  if (audio.currentTime==audio.duration){
+    audio.play();
+    document.querySelector("#player #next").click();
+  }
+};
+audio.ontimeupdate = update_progress_bar;
 
-  if (player.currentTime==player.duration){
-    player.play();
-    document.getElementById('next').click();
+
+function update_audio(e){
+  ratio = e.clientX/window.innerWidth;
+  progress_bar.style.width = (ratio*100).toString()+"%";
+  audio.currentTime = audio.duration * ratio;
+};
+
+progress_container.onclick = update_audio;
+active_mouse = false;
+progress_container.onmousedown = (e)=>{
+  active_mouse = true;
+  audio.ontimeupdate = null;
+  
+  setTimeout(_=>{if(active_mouse)progress_bar.classList.add("moving")},100);
+
+  progress_bar.style.width = (e.clientX/window.innerWidth*100).toString()+"%";
+  document.onmousemove = (e)=>{
+    progress_bar.style.width = (e.clientX/window.innerWidth*100).toString()+"%";
+  };
+
+  document.onmouseup = (e)=>{
+    active_mouse = false;
+    audio.ontimeupdate = update_progress_bar;
+    update_audio(e);
+    document.onmousemove = null;
+    document.onmouseup = null;
+    progress_bar.classList.remove("moving");
   }
 }
-player.ontimeupdate = update_player
 
-document.getElementById("progress_input").oninput = ()=>{player.ontimeupdate = null;};
-document.getElementById("progress_input").onchange = (e)=>{
-  player.ontimeupdate = update_player;
-  player.currentTime = player.duration * (e.target.value/e.target.max)
-}
-
-// cand mouseul este in nautrul imaginii, iconita de inchide este vizibila
-document.querySelector('.song_img').addEventListener('mouseover',()=>{close_img.style.display = 'block'})
-document.querySelector('.song_img').addEventListener('mouseout',()=>{close_img.style.display = 'none'})
-// cand mouseul este inafara imaginii, iconita de inchide este invizibila
-document.querySelector('.close_img').addEventListener('mouseover',()=>{close_img.style.display = 'block'})
-document.querySelector('.close_img').addEventListener('mouseout',()=>{close_img.style.display = 'none'})
-
-
-function show_hide_img(){
-    if(document.querySelector('.song_img_container').style.height == '0px'){
-      document.querySelector('.song_img_container').style.height = '15vw'
-      close_img.style.transform = 'translateY(0%)';
-      open_img.style.display = 'none'
-    }
-    else{
-      document.querySelector('.song_img_container').style.height = '0px'
-      open_img.style.display = 'block'
-      close_img.style.transform = 'translateY(-100%)';
-    }
-}
-close_img.onclick = show_hide_img
-open_img.onclick = show_hide_img
-
-// cand se da play la muzica, inonita de pause/play se schimba singura
-player.addEventListener("play",()=>{
-    $('#svg_pause').show();
-    $('#svg_play').hide();
-})
-player.addEventListener("pause",()=>{
-    $('#svg_pause').hide();
-    $('#svg_play').show();
-})
 
 // punem si noi la inceput primul src de la index 0, true adica paused=true
 setSRC(true)
 
 // implicit va fi cu pauza
-player.pause()
+audio.pause()
 
 // eventlisteners
-// butonul cu clasa play are doua iconite suprapuse, cand dam click pe el, una disapre si alta apare in dependenta daca playerul ruleza sau nu
+// butonul cu clasa play are doua iconite suprapuse, cand dam click pe el, una disapre si alta apare in dependenta daca audioul ruleza sau nu
 
 // cand are loc o incarcare de metadata, adica cand se introduce un src, sectiunea 'duration' , va primi valoarea lungimii acelei piese incaracate
-// player-ul este un tag de tip audio, si doar el poate avea proprietatea .duration
-player.addEventListener('loadedmetadata',()=>{duration.textContent=formatTime(player.duration)})
+// audio-ul este un tag de tip audio, si doar el poate avea proprietatea .duration
+audio.onloadedmetadata = ()=>{
+  document.querySelector("#player #total_time").textContent=formatTime(audio.duration);
+}
 
 
-// adauga sau elimina piesa de la favorite cand apesi pe inimioara,
-document.getElementById('is_liked_song').addEventListener('click',()=>{
-  let to_add = false
-  if(document.getElementById('svg_liked_song').style.display != 'block'){
-      to_add = true
+play_icon = document.querySelector("#player #play");
+pause_icon = document.querySelector("#player #pause");
+
+play_icon.onclick = _=> audio.play();
+
+pause_icon.onclick = _=> audio.pause();
+
+audio.onplay = _=>{
+  play_icon.classList.add("hide");
+  pause_icon.classList.remove("hide");
+}
+audio.onpause = _=>{
+  pause_icon.classList.add("hide");
+  play_icon.classList.remove("hide");
+}
+
+document.querySelector("#player #picture #close").onclick = _=>{
+  document.querySelector("#player #picture").classList.add("close");
+  document.querySelector("#player #mini_picture").classList.remove("close");
+};
+
+document.querySelector("#player #mini_picture #open").onclick = _=>{
+  document.querySelector("#player #mini_picture").classList.add("close");
+  document.querySelector("#player #picture").classList.remove("close");
+};
+
+volume_container = document.querySelector("#player #volume");
+volume_bar = document.querySelector("#player #volume #range");
+volume_number = document.querySelector("#player #volume #number");
+
+volume_icon = "medium";
+function update_volume(e){
+  ratio = (e.clientX - volume_container.offsetLeft) / volume_container.offsetWidth;
+  ratio = (ratio<0)?0:(ratio>1) ? 1 : ratio;
+  volume_bar.style.width = (ratio*100).toString()+"%";
+  volume_number.innerText = Math.floor(ratio*100);
+  audio.volume = ratio;
+  update_volume_icon(ratio);
+};
+function update_volume_icon(r){
+  icon = (r==0)?"mute":(r<0.33)?"low":(r<0.66)?"medium":"full";
+  if(icon!=volume_icon){
+    document.querySelector("#player #volume #"+volume_icon).classList.add("hide");
+    document.querySelector("#player #volume #"+icon).classList.remove("hide");
+    volume_icon=icon;
+  };
+};
+
+volume_bar.style.width = (audio.volume*100).toString()+"%";
+volume_number.innerText = Math.floor(audio.volume*100);
+update_volume_icon(audio.volume);
+
+volume_container.onclick = update_volume;
+
+volume_container.onmousedown = (e)=>{
+  active_mouse = true;
+  setTimeout(_=>{if(active_mouse)volume_bar.classList.add("moving")},100);
+
+
+  document.onmousemove = update_volume;
+
+  document.onmouseup = _=>{
+    active_mouse = false;
+    document.onmousemove = null;
+    document.onmouseup = null;
+    volume_bar.classList.remove("moving");
   }
-  add_or_remove_to_playlist(to_add,musics[musicIndex].id,main_playlist_id)
-      .then((response)=>{
-          playlists = response['get_playlist_list']
-          update_liked_icon()
-      })
-      .catch((error)=>{console.log(error)})
-
-})
+}

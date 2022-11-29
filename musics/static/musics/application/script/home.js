@@ -9,27 +9,25 @@ class HomeView extends View{
 
     static {
         super.make_link([
-            '#home_page_button',
+            '#menu #home',
         ])
     }
 
     static change_release_song(){
         
-        let current_row = (document.querySelector("#new_releases table tbody").children)[this.row_index];
-        document.querySelector("#new_releases #title").innerHTML = `${current_row.dataset.title} <div id="album">${current_row.dataset.album}</div>`;
-        document.querySelector("#new_releases #artist").textContent = current_row.dataset.artist;
+        let current_row = (document.querySelector("#body #home #new_releases #tbody").children)[this.row_index];
+        document.querySelector("#body #home #new_releases #title").innerHTML = `${current_row.dataset.title} <div id="album">${current_row.dataset.album}</div>`;
+        document.querySelector("#body #new_releases #artist").textContent = current_row.dataset.artist;
 
-        document.getElementById('new_releases_img').src = current_row.children[1].firstChild.src;
+        document.querySelector('#body #home #new_releases img').src = current_row.dataset.img;
         let list = JSON.parse(current_row.dataset.colors.replace(/'/g, '"'))
-        document.getElementById('new_releases').style.background = `linear-gradient(90deg, rgba(${list[0]},1) 0%, rgba(${list[1]},1) 50%, rgba(${list[2]},1) 100%)`;    
+        document.querySelector('#body #home #new_releases').style.background = `linear-gradient(90deg, rgba(${list[0]},1) 0%, rgba(${list[1]},1) 50%, rgba(${list[2]},1) 100%)`;    
     }
     
     static setup(){
         this.change_release_song(this.row_index)
-        document.getElementById('next_release_song').onclick = _=>{this.row_index-=1;this.change_release_song()}
-        document.getElementById('prev_release_song').onclick = _=>{this.row_index+=1;this.change_release_song()}
-    }
-    static{
-        this.display(super.with_fetch=true);
+        document.querySelector('#body #home #new_releases #next').onclick = _=>{this.row_index-=1;this.change_release_song()}
+        document.querySelector('#body #home #new_releases #prev').onclick = _=>{this.row_index+=1;this.change_release_song()}
     }
 }
+HomeView.switch(with_fetch=true);

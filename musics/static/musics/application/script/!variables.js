@@ -7,7 +7,7 @@ var urls=JSON.parse(document.getElementById('url_patterns').textContent)
 
 
 // music players elemente
-var player = document.querySelector('.audio_player')
+var audio = document.querySelector('.audio_player')
 var play=document.querySelector('.playing')
 var currentTime=document.querySelector('.currentTime')
 var duration=document.querySelector('.duration')

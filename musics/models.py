@@ -8,6 +8,8 @@ from django.apps import AppConfig
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 from colorthief import ColorThief
+from django.core.files.storage import FileSystemStorage
+import random
 
 class Music(models.Model):
     default_auto_field = 'django.db.models.AutoField'
@@ -56,6 +58,12 @@ class Playlist(models.Model):
     default_auto_field = 'django.db.models.AutoField'
     name=models.CharField(max_length=400)
     user_id=models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,null=False,blank=False)
+
+    cover_image=models.FileField(storage=FileSystemStorage(location=settings.MEDIA_ROOT),upload_to='music_images/',validators=[validate_is_img],default='playlist_img/default-playlist-img'+str(random.randint(1, 5))+'.png')
+    image_colors = models.CharField(max_length=500,default='["0,0,0","0,0,0","0,0,0"]')
+    def save(self,*args, **kwargs):
+        self.image_colors = list(map(lambda x:",".join(list(map(lambda x:str(x),x))),ColorThief(self.cover_image).get_palette(color_count=2)))
+        return super().save(*args, **kwargs)
 
 class Playlist_group(models.Model):
     default_auto_field = 'django.db.models.AutoField'
