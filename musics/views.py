@@ -201,7 +201,8 @@ def playlist(request,playlist_id=None):
 
     if request.method == "GET" and playlist_id == None:
         # obiectele FormModel din django nu face nimic altceva decat sa construiasca un html form ( doar continutul, tagul form tre sal punem singuri)
-        html_form = loader.render_to_string(request, template_name='app/forms/playlist_form.html', context={'form':AddPlaylistForm()})
+        n = len(Playlist.objects.filter(user_id=request.user))
+        html_form = loader.render_to_string('app/forms/playlist_form.html',{'form':AddPlaylistForm(),"playlists_count":n},request)
         return HttpResponse(status=200,content = html_form)
 
     if request.method == "POST" and request.POST:
@@ -211,7 +212,7 @@ def playlist(request,playlist_id=None):
             if not request.user.is_authenticated:
                 return HttpResponse(status=401,content=json.dumps({'message':'User in not authenticated'}))
             instance = Playlist(**form_data.cleaned_data,user_id=request.user)
-            # instance.save()
+            instance.save()
             print("sa salvat")
             return HttpResponse(status=201, content=json.dumps({'message': "Playlist Created"}))
         else:

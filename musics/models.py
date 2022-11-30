@@ -11,6 +11,7 @@ from colorthief import ColorThief
 from django.core.files.storage import FileSystemStorage
 import random
 
+
 class Music(models.Model):
     default_auto_field = 'django.db.models.AutoField'
     title=models.CharField(max_length=500)
@@ -54,12 +55,16 @@ class Album(models.Model):
     def __str__(self):
         return self.name
 
+
+def random_img():
+    return 'playlist_img/default-playlist-img'+str(random.randint(1, 5))+'.png'
+    
 class Playlist(models.Model):
     default_auto_field = 'django.db.models.AutoField'
     name=models.CharField(max_length=400)
     user_id=models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,null=False,blank=False)
 
-    cover_image=models.FileField(storage=FileSystemStorage(location=settings.MEDIA_ROOT),upload_to='music_images/',validators=[validate_is_img],default='playlist_img/default-playlist-img'+str(random.randint(1, 5))+'.png')
+    cover_image=models.FileField(storage=FileSystemStorage(location=settings.MEDIA_ROOT),upload_to='music_images/',validators=[validate_is_img],default=random_img)
     image_colors = models.CharField(max_length=500,default='["0,0,0","0,0,0","0,0,0"]')
     def save(self,*args, **kwargs):
         self.image_colors = list(map(lambda x:",".join(list(map(lambda x:str(x),x))),ColorThief(self.cover_image).get_palette(color_count=2)))

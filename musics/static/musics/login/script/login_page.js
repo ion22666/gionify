@@ -6,7 +6,7 @@
 // 4. cream functia fetch
 function main(){
      async function send_login_request(event){
-        event.preventDefault()
+        event.preventDefault();
         let form_data = new FormData(this)
         let http_respose = await fetch('login/',{
             method:'POST',
