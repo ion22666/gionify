@@ -18,6 +18,6 @@ urlpatterns = [
     path('liked/',views.liked_songs_view,name='liked_page'),
     path('home/',views.home_page_view,name='home_page'),
     path('profile/<user_name>/',views.profile_page_view,name='profile_page'),
-    path('add_to_playlist/',views.add_to_playlist_view,name='add_to_playlist_url'),
+    path('playlist_group/',views.playlist_group,name='playlist_group'),
     path('remove_from_playlist/',views.remove_from_playlist_view,name='remove_from_playlist_url'),
 ]

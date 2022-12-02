@@ -1,25 +1,27 @@
 class View{
   static #active_view;
+  static #active_element;
 
 
   // ascunde div-ul clasei din care este apelata aceasta functie
-  static hide(){
+  static hide(element){
     this.div.classList.add("hide");
-    this.main_link.classList.remove("active");
+    element.classList.remove("active");
   }
-  static dispaly(){
+  static dispaly(element){
     this.div.classList.remove("hide");
-    this.main_link.classList.add("active");
+    element.classList.add("active");
   }
 
   // se da display la div-ul clasei din care se apeleaza
-  static async switch(with_fetch=false, url_param=""){
+  static async switch(with_fetch=false, url_param="",element){
 
     // mai intai se ascunde div-ul clasei vechi
-    try{View.#active_view.hide();}catch(e){};
+    try{View.#active_view.hide(View.#active_element);}catch(e){};
     
     // actualizam clasa activa
     View.#active_view = this;
+    View.#active_element = element;
 
     if (with_fetch){
       // daca fetch este true, dam fetch si inseram continutul div-ului
@@ -31,14 +33,14 @@ class View{
       this.setup();
     }
 
-    this.dispaly();
+    this.dispaly(element);
   }
 
   // creaza link pentru fiecare element inclus in lista
   // link = cand apesi se da display
   // parametrul fetch depinde de atributa clasei "empty", empty devine false cand sa realizat primul fetch al clasei
   static make_link(elements){
-    elements.forEach(query => document.querySelectorAll(query).forEach(e => e.onclick = _ => this.switch(with_fetch=this.empty,e.dataset.url_param)))
+    elements.forEach(query => document.querySelectorAll(query).forEach(e => e.onclick = _ => this.switch(super.with_fetch=this.empty,super.url_param=e.dataset.url_param,super.element=e)))
   }
 
 }
@@ -104,25 +106,30 @@ async function add_or_remove_to_playlist(add,song_id,playlist_id,token){
 
 
 function pop_up_div(event,childs){
-  let div = document.createElement('div');
-  let body = document.getElementById('main_menu');
-  div.class = "pop_up_div";
-  div.style.top = event.offsetY;
-  div.style.left = event.offsetX;
+    let div = document.createElement("div");
+    let app = document.querySelector("#app");
+    div.class = "pop_up_div";
+    div.style.top = event.offsetY;
+    div.style.left = event.offsetX;
 
-  setTimeout(() => {
-    window.onclick = e => {
-      if(!div.contains(e.target)){
-        body.removeChild(div);
-        window.onclick = null;
-      }
-    }
-  }, 260);
-  
-  childs.forEach(element => {
-    div.appendChild(element);
-  });
+    setTimeout(() => {
+        document.onclick = e => {
+            if(e.target != div){
+                app.removeChild(div);
+                document.onclick = null;
+            }
+        }
+    }, 260);
 
-  body.appendChild(div);
+    childs.forEach(child => {
+        div.appendChild(child);
+    });
 
+    app.appendChild(div);
 }
+
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+  }

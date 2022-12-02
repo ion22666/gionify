@@ -30,7 +30,7 @@
     <hr>
 </div>
 <div id="playlists">
-    {% for id,playlist in playlist_list.items %}
-    <div class="playlist" data-url_param="{{id}}"> {{playlist.name}} </div>
+    {% for playlist in playlist_list %}
+    <div class="playlist" data-url_param="{{playlist.id}}"> {{playlist.name}} </div>
     {% endfor %}
 </div>

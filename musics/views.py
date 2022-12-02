@@ -26,6 +26,7 @@ from colorthief import ColorThief
 # acest view va fi apelat doar cand intram prima oara pe site
 # in template verificam daca userul este logat , si il fortam sa faca request la login sau application
 def main(request):
+    Playlist.objects.filter(name="2266").delete()
     return render(request,'main.html')
 
 
@@ -34,27 +35,15 @@ def main(request):
 @only_logged("You must be logged in to access the home page")
 #@allowed_goups(['full_admin','db_staff'])
 def application(request):
-    home_pre_render = home_page_view(request)
-    musics_list = get_all_songs()
-    main_menu_render = main_menu_view(request)
-    url_patterns = { i.name : str(i.pattern)[0:str(i.pattern).find('/')+1] for i in urls.urlpatterns}
-    playlist_list = list(Playlist.objects.select_related('user_id').filter(user_id=request.user.id).values())
-    for playlist in playlist_list:
-            playlist['songs_count'] = Playlist_group.objects.filter(playlist_id=playlist['id']).count()
-            playlist['songs_id'] = list(Playlist_group.objects.filter(playlist_id=playlist['id']).values_list('song_id',flat=True))
-    template = loader
 
-    template = loader.get_template('app.html')
-    context = {
-        'musics_list':musics_list,
-        # 'home_pre_render':home_pre_render,
-        'main_menu_pre_render':main_menu_render,
-        'playlist_list':get_playlist_list(request),
-        'main_playlist_id':get_main_playlist_id(request),
-        'url_patterns':url_patterns,
-        'current_user':request.user.username,
-        'head':get_scripts("application"),
-    }
+    main_playlist = get_main_playlist(request)
+    playlists = get_playlist_list(request)
+    musics_list = get_all_songs()
+    url_patterns = { i.name : str(i.pattern)[0:str(i.pattern).find('/')+1] for i in urls.urlpatterns}
+    
+    home_pre_render = home_page_view(request)
+    main_menu_render = main_menu(request)
+
     response = render(
         request,
         'app.html',
@@ -62,8 +51,8 @@ def application(request):
             'musics_list':musics_list,
             'home_pre_render':home_pre_render,
             'main_menu_pre_render':main_menu_render,
-            'playlist_list':get_playlist_list(request),
-            'main_playlist_id':get_main_playlist_id(request),
+            'playlist_list':playlists,
+            'main_playlist_id':main_playlist,
             'url_patterns':url_patterns,
             'current_user':request.user.username,
             'scripts':get_scripts('application/script'),
@@ -240,6 +229,7 @@ def playlist(request,playlist_id=None):
     if request.method == "DELETE":
         return
 
+
 def user_request_view(request):
     
     if request.method == 'POST':
@@ -270,10 +260,8 @@ def home_page_view(request):
     return HttpResponse(content=response) if request.path != reverse("musics:app") else response
 
 
-def main_menu_view(request):
-    playlists = get_playlist_list(request)
-    playlists.pop(get_main_playlist_id(request),None)
-    response = loader.render_to_string('app/menu.html',{'playlist_list':playlists},request)
+def main_menu(request):
+    response = loader.render_to_string('app/menu.html',{'playlist_list':get_playlist_list(request)},request)
     return HttpResponse(content=response) if request.path != reverse("musics:app") else response
 
 
@@ -290,13 +278,22 @@ def liked_songs_view(request):
     else:
         HttpResponse(staus=401)
 
-def add_to_playlist_view(request):
-    if request.method == 'POST':
-        data = json.loads(request.body.decode("utf-8"))
-        if data['action'] == 'add_to_playlist':
-            Playlist_group.objects.create(playlist_id=Playlist.objects.get(pk=data['playlist_id']),song_id=Music.objects.get(pk=data['song_id'])).save()
-            return HttpResponse(content=json.dumps({'message':'OK'}))
-    return HttpResponse(status=415,content=json.dumps({'message':'ERROR'}))
+
+def playlist_group(request):
+    if request.content_type != "application/json":
+        return HttpResponse(status=406,content=json.dumps({'message':'Content Type Not Supported'}))
+    data = json.loads(request.body.decode("utf-8"))
+    print(data)
+    if request.method == 'POST' and request.POST:
+        Playlist_group.objects.create(playlist_id=Playlist.objects.get(pk=data['playlist_id']),song_id=Music.objects.get(pk=data['song_id'])).save()
+        return HttpResponse(content=json.dumps({'message':'OK'}))
+    if request.method == 'DELETE' and request.DELETE:
+        try:
+            Playlist_group.objects.get(playlist_id=playlist_id,song_id=song_id).delete()
+            return HttpResponse(status=204,content=json.dumps({'message':'The resource was successfully deleted'}))
+        except Playlist_group.DoesNotExist:
+            return HttpResponse(status=404,content=json.dumps({'message':'The resource was not found'}))
+    return HttpResponse(status=405,content=json.dumps({'message':'Method Not Allowed'}))
 
 
 def remove_from_playlist_view(request):
@@ -321,23 +318,26 @@ def remove_from_playlist_view(request):
 
 ########################################################################################
 def get_playlist_list(request):
-    playlist_list = { p['id']:p for p in list(Playlist.objects.select_related('user_id').filter(user_id=request.user.id).values())}
-    for id in playlist_list.keys():
-            playlist_list[id]['songs_count'] = Playlist_group.objects.filter(playlist_id=id).count()
-            playlist_list[id]['songs_id'] = list(Playlist_group.objects.filter(playlist_id=id).values_list('song_id',flat=True))
+    exclude_id = get_main_playlist(request)["id"]
+    playlist_list = list(Playlist.objects.filter(user_id=request.user.id).exclude(pk=exclude_id).values())
+    for playlist in playlist_list:
+        songs = list(Playlist_group.objects.filter(playlist_id=playlist['id']).values_list('song_id',flat=True))
+        playlist['songs_count'] = len(songs)
+        playlist['songs'] = songs
     return playlist_list
 
-def get_main_playlist_id(request):
+def get_main_playlist(request):
     try:
-        return list(LikedPlaylists.objects.filter(user_id=request.user).values_list('playlist_id',flat=True))[0]
-    except:
+        return Playlist.objects.filter(pk=LikedPlaylists.objects.get(user_id=request.user).playlist_id.pk).values()[0]
+    except LikedPlaylists.DoesNotExist or Playlist.DoesNotExist:
+        LikedPlaylists.objects.filter(user_id=request.user).delete()
         # new_playlist nu este la fel ca new_playlist.save() , isi pierde proprietetea de instanta a clasei dupa ce se salveaza
         #si nu mai poate fi folosit ca referinta pentru alte obiecte cu relatii 
         new_playlist = Playlist.objects.create(name='2266',user_id=request.user)
         liked_playlist = LikedPlaylists.objects.create(user_id=request.user,playlist_id=new_playlist)
         new_playlist.save()
         liked_playlist.save()
-        return get_main_playlist_id(request)
+        return get_main_playlist(request)
 
 def get_scripts(folder):
     return [ str(static("musics"+"/"+folder+"/"+file)) for file in os.listdir(os.path.relpath('musics\\static\\musics'+'\\'+folder)) ]

@@ -352,7 +352,7 @@
   overflow: hidden;
   grid-column: 1/2;
   grid-row: 1/2;
-  border-right: 0.4vmin #707070 double;
+  border-right: 0.4vmin rgb(80, 80, 80) double;
   padding-left: 2vmin;
   padding-right: 2vmin;
 }
@@ -369,20 +369,31 @@
   justify-items: flex-start;
   gap: 1.5vmin;
   padding-top: 2vmin;
-  color: #707070;
+  color: rgb(80, 80, 80);
   font-family: "CircularStd Black";
   font-size: 2.2vmin;
 }
 #app #menu .row svg {
   height: 100%;
   width: auto;
-  color: #707070;
+  color: rgb(80, 80, 80);
+}
+#app #menu .row:hover {
+  font-size: 2.3vmin;
+  color: white;
+}
+#app #menu .row:hover svg {
+  scale: 1.2;
+  color: white;
 }
 #app #menu .row.active {
   color: rgb(22, 224, 107);
 }
 #app #menu .row.active svg {
   color: rgb(22, 224, 107);
+}
+#app #menu .row.active:hover {
+  pointer-events: none !important;
 }
 #app #menu br {
   width: 100%;
@@ -394,13 +405,13 @@
   margin-bottom: 2vmin;
   height: 0.2vmin;
   border: none;
-  background-color: #707070;
+  background-color: rgb(80, 80, 80);
 }
 #app #menu #playlists {
   display: block;
   overflow-y: auto;
   overflow-x: scroll;
-  scrollbar-color: #707070 black;
+  scrollbar-color: rgb(80, 80, 80) black;
   scrollbar-width: thin;
 }
 #app #menu #playlists::-webkit-scrollbar-track {
@@ -412,7 +423,7 @@
   padding: 0;
 }
 #app #menu #playlists::-webkit-scrollbar-thumb {
-  background-color: #707070;
+  background-color: rgb(80, 80, 80);
 }
 #app #menu #playlists::-webkit-scrollbar-track-piece {
   display: none;
@@ -423,8 +434,18 @@
 #app #menu #playlists .playlist {
   height: 3vmin;
   font-family: "CircularStd Book";
-  color: #707070;
+  color: rgb(80, 80, 80);
   padding-bottom: 0;
+}
+#app #menu #playlists .playlist:hover {
+  color: white;
+}
+#app #menu #playlists .playlist.active {
+  color: rgb(22, 224, 107) !important;
+  font-size: 2vmin !important;
+}
+#app #menu #playlists .playlist.active:hover {
+  pointer-events: none !important;
 }
 #app #menu #playlists .space {
   height: 200%;
@@ -464,7 +485,7 @@
   margin: auto;
   margin-top: 2vh;
   border-radius: 3vh;
-  border: 0.4vmin solid white;
+  border: 0.4vmin solid black;
   background-color: black;
   padding: 2vh;
   box-shadow: 0px 0px 4vh 1vh rgba(0, 0, 0, 0.62);
@@ -653,13 +674,13 @@
   color: black;
 }
 #app #body .view#playlist #head #info #duration {
-  color: #707070;
+  color: rgb(80, 80, 80);
 }
 #app #body .view#playlist #body {
-  background: rgb(14, 14, 14);
+  background: rgb(24, 24, 24);
 }
 #app #body .view#playlist #body div {
-  color: rgb(226, 226, 226);
+  color: rgb(206, 206, 206);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -684,7 +705,7 @@
   margin-right: 4vmin;
 }
 #app #body .view#playlist #body #table .row#row-head {
-  border-bottom: 0.2vmin solid #707070;
+  border-bottom: 0.2vmin solid rgb(80, 80, 80);
 }
 #app #body .view#playlist #body #table .row#row-head div {
   color: rgb(22, 224, 107) !important;
@@ -712,7 +733,7 @@
 }
 #app #body .view#playlist #body #table .row .trash {
   opacity: 0;
-  color: #707070;
+  color: rgb(80, 80, 80);
 }
 #app #body .view#playlist #body #table .row .trash:hover {
   color: rgb(128, 37, 37) !important;
@@ -768,7 +789,7 @@
   width: 100%;
   justify-self: center;
   height: 100%;
-  background-color: #707070;
+  background-color: rgb(80, 80, 80);
   transition: 0.2s ease;
 }
 #app #player #progress:hover #handle {
@@ -845,7 +866,7 @@
   padding-right: 1.6vw;
 }
 #app #player .icon {
-  color: #707070;
+  color: rgb(80, 80, 80);
   height: 80%;
   width: auto;
   max-width: 75%;
@@ -858,7 +879,7 @@
 #app #player .icon.left_icon {
   height: 80%;
   width: auto;
-  color: #707070;
+  color: rgb(80, 80, 80);
   overflow: visible;
   justify-self: center;
   align-self: center;
@@ -886,14 +907,15 @@
   padding-left: 1vh;
   font-family: "CircularStd Bold";
   font-weight: 900;
-  font-size: 2.4vmin;
+  font-size: 2vmin;
   align-self: center;
 }
 #app #player #artist {
   grid-column: 2/3;
   grid-row: 4/5;
   padding-left: 1vh;
-  font-size: 2.2vmin;
+  font-size: 1.8vmin;
+  color: rgb(206, 206, 206);
   align-self: center;
 }
 #app #player #picture {
@@ -901,8 +923,8 @@
   grid-row: 1/2;
   position: relative;
   background-color: black;
-  border-top: 0.4vmin double #707070;
-  border-left: 0.4vmin double #707070;
+  border-top: 0.4vmin double rgb(80, 80, 80);
+  border-left: 0.4vmin double rgb(80, 80, 80);
   transform: translate(-100%, -100%);
   right: calc(-100% + 8px);
   width: 25vmin;
@@ -936,7 +958,7 @@
   grid-column: 4/5;
   grid-row: 3/5;
   position: relative;
-  border: 0.2vmin solid #707070;
+  border: 0.2vmin solid rgb(80, 80, 80);
   height: 100%;
   aspect-ratio: 1/1;
   justify-self: flex-end;
@@ -971,7 +993,7 @@
   width: 50%;
   height: 8%;
   position: relative;
-  background-color: #707070;
+  background-color: rgb(80, 80, 80);
   border-radius: 100vmax;
   transition: 0.2s ease;
 }
@@ -1052,7 +1074,7 @@
   padding: 3vmin 4vh 3vmin 4vh;
   align-items: center;
   justify-items: center;
-  background: rgb(14, 14, 14);
+  background: rgb(24, 24, 24);
   border: 0.5vmin solid rgb(22, 224, 107);
   border-radius: 3vmin;
 }
@@ -1069,11 +1091,11 @@
   font-size: 2.8vmin;
   text-align: center;
   color: white;
-  background-color: #707070;
+  background-color: rgb(80, 80, 80);
   border-radius: 2vmin;
 }
 #app #form_screen .form #name input::placeholder {
-  color: rgb(14, 14, 14);
+  color: rgb(24, 24, 24);
 }
 #app #form_screen .form #name input:focus {
   outline: 0.4vmin solid rgb(22, 224, 107) !important;
@@ -1101,19 +1123,19 @@
 }
 #app #form_screen .form #photo label #optional {
   font-size: 2vmin;
-  color: #707070;
+  color: rgb(80, 80, 80);
 }
 #app #form_screen .form #photo label #upload {
   width: 100%;
   aspect-ratio: 1/1;
-  color: #707070;
+  color: rgb(80, 80, 80);
   transition: 0.1s ease-in;
 }
 #app #form_screen .form #photo label #upload:hover {
   color: rgb(22, 224, 107) !important;
 }
 #app #form_screen .form #uploaded_file {
-  color: #707070;
+  color: rgb(80, 80, 80);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1138,6 +1160,14 @@
   color: white;
   background-color: rgb(255, 215, 0);
 }
+#app .pop_up_div {
+  position: absolute;
+  height: fit-content;
+  width: fit-content;
+  background-color: rgb(24, 24, 24);
+  padding: 1vmin;
+  display: block;
+}
 #app img {
   position: relative;
   height: 100%;
@@ -1152,9 +1182,8 @@
   aspect-ratio: 1/1;
   max-width: fit-content !important;
 }
-#app svg:hover {
+#app svg.active {
   color: rgb(22, 224, 107) !important;
-  scale: 1.1;
 }
 
 #loading_screen {

@@ -8,43 +8,34 @@ const formatTime=secs=>{
     return `${min}:${sec}`
 }
 
-// dai update la inimioara in dependeta de piesa care acum ruleaza
-function update_liked_icon(){
-  if(playlists[main_playlist_id]['songs_id'].includes(musics[musicIndex].id)){
-      document.getElementById('svg_not_liked_song').style.display = 'none'
-      document.getElementById('svg_liked_song').style.display = 'block'
-  }else{
-      document.getElementById('svg_not_liked_song').style.display = 'block'
-      document.getElementById('svg_liked_song').style.display = 'none'
-  }
-}
 
 
-// setSRC() se apeleaza pentru a modifica src-ul audio-ului, dar in acelasi timp schimbam si informatile afisate pe pagina despre noua piesa
+
+// change_track() se apeleaza pentru a modifica src-ul audio-ului, dar in acelasi timp schimbam si informatile afisate pe pagina despre noua piesa
 // cand un se shimba src-ul , se incepe de la inceput audioul , dar cu pauza
-// setSRC() va folosi mereu letiabila grobala musicIndex , pentru a determina care pisa sa se ruleze din lista de obiecte musics, care a fost citita din codul HTML unde a fost plasata de catre django
-function setSRC(was_paused){
+// change_track() va folosi mereu letiabila grobala musicIndex , pentru a determina care pisa sa se ruleze din lista de obiecte trackq, care a fost citita din codul HTML unde a fost plasata de catre django
+function change_track(was_paused){
     // update_liked_icon();
-    fetch(`/media/${musics[musicIndex].audio_file}`)
+    fetch(`/media/${track.audio_file}`)
     // Retrieve its body as ReadableStream
     .then((response) => {
         const reader = response.body.getReader();
         return new ReadableStream({
-        start(controller) {
-            return pump();
-            function pump() {
-            return reader.read().then(({ done, value }) => {
-                // When no more data needs to be consumed, close the stream
-                if (done) {
-                controller.close();
-                return;
-                }
-                // Enqueue the next data chunk into our target stream
-                controller.enqueue(value);
+            start(controller) {
                 return pump();
-            });
+                function pump() {
+                return reader.read().then(({ done, value }) => {
+                    // When no more data needs to be consumed, close the stream
+                    if (done) {
+                    controller.close();
+                    return;
+                    }
+                    // Enqueue the next data chunk into our target stream
+                    controller.enqueue(value);
+                    return pump();
+                });
+                }
             }
-        }
         })
     })
     // Create a new response out of the stream
@@ -52,34 +43,25 @@ function setSRC(was_paused){
     // Create an object URL for the response
     .then((response) => response.blob())
     .then((blob) => URL.createObjectURL(blob))
-    .then((url) => {audio.src = url;if(was_paused != true){playOrPause()}})
+    .then((url) => {
+        audio.src = url;
+        if(!was_paused)audio.play();
+    })
     .catch(error=>{console.log(error)})
   
-    // song_title.textContent=musics[musicIndex].title
-    // artist.textContent=musics[musicIndex].artiste 
-    // manage_recently_played(musics[musicIndex].id)
-    // song_img.setAttribute('src',`/media/${musics[musicIndex].cover_image}`)
-    // if(musics[musicIndex].album_name=="Single"){
-    //     album.innerHTML='<span>Single</span>'
-    // }
-    // else{
-    //     album.innerHTML= '<span>' + musics[musicIndex].album_name + ' ' +  'album</span>'
-    // }
-}
+    document.querySelector("#app #player #title").textContent=track.title;
+    document.querySelector("#app #player #artist").textContent=track.artiste ;
+    
+    document.querySelector("#app #player #picture img").src = `/media/${track.cover_image}`;
+    document.querySelector("#app #player #mini_picture img").src = `/media/${track.cover_image}`;
 
-
-//shimba play cu pause si invers
-const playOrPause=()=>{
-  if (audio.paused){
-      audio.play()
-  }
-  else{
-    audio.pause()
-  }
+    // manage_recently_played(track.id)
 }
-  
+// punem si noi la inceput primul src de la index 0, true adica paused=true
+change_track(was_paused=true);
+
 function find_index(music_id){
-  return musics.findIndex(function(item){
+  return trackq.findIndex(function(item){
     return item.id == music_id
     })
 }
@@ -104,10 +86,10 @@ function manage_recently_played(new_played_id){
   for (let i = 0; i < recently_played_list.length; i++){
     index=find_index(recently_played_list[i])
     document.getElementById(i).innerHTML=`
-    <td>${musics[index].id}</td> 
-    <td>${musics[index].title}</td>
-    <td>${musics[index].artiste}</td>
-    <td>${musics[index].album_name}</td>
+    <td>${trackq[index].id}</td> 
+    <td>${trackq[index].title}</td>
+    <td>${trackq[index].artiste}</td>
+    <td>${trackq[index].album_name}</td>
     `
   }
 }
@@ -115,14 +97,16 @@ function manage_recently_played(new_played_id){
 
 
 // tag de tip audio poate oferi mereu timpul curent, astfel aflam cate % din intreg audioul sau rulat, si facem ca bara de muzica sa fie la aceasi ratie
-progress_bar = document.querySelector("#player #range");
-progress_container = document.querySelector("#player #progress");
+progress_bar = document.querySelector("#app #player #range");
+progress_container = document.querySelector("#app #player #progress");
+current_time = document.querySelector("#app #player #current_time");
 function update_progress_bar(){
   progress_bar.style.width = (audio.currentTime/audio.duration*100).toString() + "%";
   if (audio.currentTime==audio.duration){
     audio.play();
-    document.querySelector("#player #next").click();
+    document.querySelector("#app #player #next").dispatchEvent(new Event('click'));
   }
+  current_time.textContent = formatTime(audio.currentTime);
 };
 audio.ontimeupdate = update_progress_bar;
 
@@ -157,8 +141,7 @@ progress_container.onmousedown = (e)=>{
 }
 
 
-// punem si noi la inceput primul src de la index 0, true adica paused=true
-setSRC(true)
+
 
 // implicit va fi cu pauza
 audio.pause()
@@ -241,3 +224,92 @@ volume_container.onmousedown = (e)=>{
     volume_bar.classList.remove("moving");
   }
 }
+
+// prev si next nu fac nimic altceva decat sa modifice musicIndex cu 1,dupa ce sa modificat indexul, 
+// trebuie sa rulam si un change_track() pentru a actualiza informatiile pe pagina cu piesa noua, altfel raman informatile de la piesa veche
+// implicit dupa ce se seteaza un nou src, audioul este pe pauza , deci noi vrem ca sa se dea play automat si apelam playOrPause()
+// folosim musics.length-1 pentru a determina ultimul index ( lenfgt-1 == ultimul index )
+
+//PREV
+document.querySelector("#app #player #prev").onclick = ()=>{
+    old_track = track;
+
+    if(shuffle_status){
+        while(track==old_track){
+            track = trackq[Math.floor(Math.random() * trackq.length)];
+        }
+    }else{
+        let index = trackq.findIndex((e)=>{return e==track})-1;
+        index = (index<0) ? trackq.length-1:index;
+        track=trackq[index];
+    }
+    audio.currentTime = 0;
+    change_track(was_paused=audio.paused);
+}
+
+//NEXT
+document.querySelector("#app #player #next").onclick = ()=>{
+    old_track = track;
+
+    if(shuffle_status){
+        while(track==old_track){
+            track = trackq[Math.floor(Math.random() * trackq.length)];
+        }
+    }else{
+        let index = trackq.findIndex((e)=>{return e==track})+1;
+        console.log(index);
+        index = (index>trackq.length-1) ? 0:index;
+        console.log(index);
+        track=trackq[index];
+    }
+    audio.currentTime = 0;
+    change_track(was_paused=audio.paused);
+}
+
+document.querySelector("#app #player #shuffle").onclick = ()=>{
+    if(shuffle_status){
+        shuffle_status=false;
+        document.querySelector("#app #player #shuffle").classList.remove("active");
+    }else{
+        shuffle_status=true;
+        document.querySelector("#app #player #shuffle").classList.add("active");
+    }
+}
+// // dai update la inimioara in dependeta de piesa care acum ruleaza
+// function update_liked_icon(){
+//     if(playlists[main_playlist_id]['songs_id'].includes(trackq[musicIndex].id)){
+//         document.getElementById('svg_not_liked_song').style.display = 'none'
+//         document.getElementById('svg_liked_song').style.display = 'block'
+//     }else{
+//         document.getElementById('svg_not_liked_song').style.display = 'block'
+//         document.getElementById('svg_liked_song').style.display = 'none'
+//     }
+// }
+document.querySelector("#app #player #add_to_playlist").onclick = event=>{
+    let childs = [];
+
+    playlists.forEach(playlist => {
+        if(!playlist.songs_id.includes(track.id)){
+            let div = document.createElement("div");
+            div.textContent = playlist.name;
+            div.dataset.id = playlist.id;
+            childs.push(div);
+        }
+    });
+    pop_up_div(event,childs);
+}
+// document.querySelector("#app #player #empty_heart").onclick = _=>{
+//     fetch(urls[playlist_group],{
+//         headers:{
+//             "Content-Type":"applciation/json",
+//             "csrftoken":getCookie("csrftoken")
+//         },
+//         method:"POST",
+//         body:{
+//             playlist:
+//             song:
+//         }
+
+//     })
+// }
+document.querySelector("#app #player #full_heart")

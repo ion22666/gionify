@@ -1,7 +1,6 @@
 class HomeView extends View{
     static div = document.querySelector("#body #home");
     static url = urls["home_page"];
-    static main_link = document.querySelector("#menu #home");
     static empty = true;
 
     static row_index = 0;
@@ -30,4 +29,4 @@ class HomeView extends View{
         document.querySelector('#body #home #new_releases #prev').onclick = _=>{this.row_index+=1;this.change_release_song()}
     }
 }
-HomeView.switch(with_fetch=true);
+HomeView.switch(with_fetch=true,url_param="",element=document.querySelector("#app #menu #home"));
