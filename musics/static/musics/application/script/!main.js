@@ -1,3 +1,4 @@
+
 class View{
   static #active_view;
   static #active_element;
@@ -104,28 +105,25 @@ async function add_or_remove_to_playlist(add,song_id,playlist_id,token){
   }
 }
 
-
-function pop_up_div(event,childs){
+function create_popup_menu(event,id=""){
     let div = document.createElement("div");
-    let app = document.querySelector("#app");
-    div.class = "pop_up_div";
-    div.style.top = event.offsetY;
-    div.style.left = event.offsetX;
-
+    div.className = "pop_up_div";
+    div.id = id;
+    div.style.top =  (event.clientY).toString() +"px";
+    div.style.left = (event.clientX).toString() +"px";
     setTimeout(() => {
-        document.onclick = e => {
-            if(e.target != div){
-                app.removeChild(div);
-                document.onclick = null;
-            }
-        }
+        document.onclick = e => (e.target == document.querySelector("#app #popup_screen")) ? delete_popup_menu(div):void(0);
     }, 260);
-
-    childs.forEach(child => {
-        div.appendChild(child);
-    });
-
-    app.appendChild(div);
+    return div;
+}
+function append_popup_menu(div){
+    document.querySelector("#app #popup_screen").appendChild(div);
+    document.querySelector("#app #popup_screen").classList.remove("hide");
+}
+function delete_popup_menu(div){
+    document.querySelector("#app #popup_screen").removeChild(div);
+    document.querySelector("#app #popup_screen").classList.add("hide");
+    document.onclick = null;
 }
 
 function getCookie(name) {

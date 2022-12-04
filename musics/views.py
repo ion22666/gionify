@@ -283,15 +283,21 @@ def playlist_group(request):
     if request.content_type != "application/json":
         return HttpResponse(status=406,content=json.dumps({'message':'Content Type Not Supported'}))
     data = json.loads(request.body.decode("utf-8"))
-    print(data)
-    if request.method == 'POST' and request.POST:
-        Playlist_group.objects.create(playlist_id=Playlist.objects.get(pk=data['playlist_id']),song_id=Music.objects.get(pk=data['song_id'])).save()
-        return HttpResponse(content=json.dumps({'message':'OK'}))
-    if request.method == 'DELETE' and request.DELETE:
+    if request.method == 'POST':
         try:
-            Playlist_group.objects.get(playlist_id=playlist_id,song_id=song_id).delete()
-            return HttpResponse(status=204,content=json.dumps({'message':'The resource was successfully deleted'}))
+            Playlist_group.objects.get(playlist_id=Playlist.objects.get(pk=data['playlist']),song_id=Music.objects.get(pk=data['song']))
+            return HttpResponse(content=json.dumps({'message':"The resource didn't even exist"}))
         except Playlist_group.DoesNotExist:
+            Playlist_group.objects.create(playlist_id=Playlist.objects.get(pk=data['playlist']),song_id=Music.objects.get(pk=data['song'])).save()
+            return HttpResponse(content=json.dumps({'message':'The resource was successfully created'}))
+        else:
+            return HttpResponse(content=json.dumps({'message':'Unknown problem'}))
+    if request.method == 'DELETE':
+        instance = Playlist_group.objects.filter(playlist_id=data['playlist'],song_id=data['song'])
+        if instance:
+            instance.delete()
+            return HttpResponse(status=204,content=json.dumps({'message':'The resource was successfully deleted'}))
+        else:
             return HttpResponse(status=404,content=json.dumps({'message':'The resource was not found'}))
     return HttpResponse(status=405,content=json.dumps({'message':'Method Not Allowed'}))
 

@@ -8,7 +8,27 @@ const formatTime=secs=>{
     return `${min}:${sec}`
 }
 
-
+const [add_to_playlist,remove_from_playlist] = (_=>{
+    let f = (method)=>{
+        return async(playlist,song)=>{
+            try{
+                return await fetch(urls.playlist_group,{
+                    headers:{
+                        "Content-Type":"application/json",
+                        "X-CSRFToken":getCookie("csrftoken")
+                    },
+                    method:method,
+                    body:JSON.stringify({
+                        playlist : playlist,
+                        song : song
+                    })
+            
+                })
+            }catch(e){return e}
+        }
+    }
+    return [f("POST"),f("DELETE")]
+})();
 
 
 // change_track() se apeleaza pentru a modifica src-ul audio-ului, dar in acelasi timp schimbam si informatile afisate pe pagina despre noua piesa
@@ -47,7 +67,7 @@ function change_track(was_paused){
         audio.src = url;
         if(!was_paused)audio.play();
     })
-    .catch(error=>{console.log(error)})
+    .catch(error=>{alert(error)})
   
     document.querySelector("#app #player #title").textContent=track.title;
     document.querySelector("#app #player #artist").textContent=track.artiste ;
@@ -55,10 +75,11 @@ function change_track(was_paused){
     document.querySelector("#app #player #picture img").src = `/media/${track.cover_image}`;
     document.querySelector("#app #player #mini_picture img").src = `/media/${track.cover_image}`;
 
-    // manage_recently_played(track.id)
+    // if(PlaylistView.active)PlaylistView.update_active();
+    PlaylistView.update_active()
 }
-// punem si noi la inceput primul src de la index 0, true adica paused=true
-change_track(was_paused=true);
+
+audio.volume = 0.2;
 
 function find_index(music_id){
   return trackq.findIndex(function(item){
@@ -257,9 +278,9 @@ document.querySelector("#app #player #next").onclick = ()=>{
         }
     }else{
         let index = trackq.findIndex((e)=>{return e==track})+1;
-        console.log(index);
+
         index = (index>trackq.length-1) ? 0:index;
-        console.log(index);
+
         track=trackq[index];
     }
     audio.currentTime = 0;
@@ -286,30 +307,51 @@ document.querySelector("#app #player #shuffle").onclick = ()=>{
 //     }
 // }
 document.querySelector("#app #player #add_to_playlist").onclick = event=>{
-    let childs = [];
+    let menu = create_popup_menu(event,"add_to_playlist");
+    
+    let pl_obj = [];
+    let searchInput = document.createElement("input");
+    searchInput.id = "playlist_search_input";
+    searchInput.placeholder = "Search";
+    searchInput.oninput = (e)=>{
+        pl_obj.forEach(obj=>{
+            //toggle(token, force), If force is included, turns the toggle into a one way-only operation. If set to false, then token will only be removed, but not added. If set to true, then token will only be added, but not removed. 
+            obj.div.classList.toggle("hide",!obj.name.toLowerCase().includes(e.target.value.toLowerCase()))
+        })
+    };
+    menu.appendChild(searchInput);
+
+    let text_div = document.createElement("div");
+    text_div.innerHTML = "select a playlist";
+    text_div.id = "select_a_playlist";
+    menu.appendChild(text_div);
+
+    let block = document.createElement("div");
+    block.className = "block";
+    
 
     playlists.forEach(playlist => {
-        if(!playlist.songs_id.includes(track.id)){
+        if(!playlist.songs.includes(track.id)){
             let div = document.createElement("div");
             div.textContent = playlist.name;
-            div.dataset.id = playlist.id;
-            childs.push(div);
+            div.className = "playlist";
+            div.onclick = _=>{
+                add_to_playlist(playlist.id,track.id)
+                .then(_=>delete_popup_menu(menu))
+                .catch(e=>alert(e))
+            };
+            block.appendChild(div);
+            pl_obj.push({"name":playlist.name,"div":div})
         }
     });
-    pop_up_div(event,childs);
+    menu.appendChild(block);
+    append_popup_menu(menu);
 }
-// document.querySelector("#app #player #empty_heart").onclick = _=>{
-//     fetch(urls[playlist_group],{
-//         headers:{
-//             "Content-Type":"applciation/json",
-//             "csrftoken":getCookie("csrftoken")
-//         },
-//         method:"POST",
-//         body:{
-//             playlist:
-//             song:
-//         }
 
-//     })
-// }
-document.querySelector("#app #player #full_heart")
+document.querySelector("#app #player #empty_heart").onclick = _=> {
+    add_to_playlist(main_playlist.id,track.id);
+}
+document.querySelector("#app #player #full_heart").onclick = _=> {
+    remove_from_playlist(main_playlist.id,track.id);
+}
+
