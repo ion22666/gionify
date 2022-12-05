@@ -29,7 +29,7 @@ class View{
       this.div.innerHTML = await (await fetch(this.url+url_param)).text();
 
       // by default doar prima data se da fetch cand apasam pe un link
-      this.empty = true;
+      this.empty = false;
       // de fiecare data cand cand dam fetch, rulam sau mai rulam odata setupul clasei
       this.setup();
     }
@@ -41,7 +41,7 @@ class View{
   // link = cand apesi se da display
   // parametrul fetch depinde de atributa clasei "empty", empty devine false cand sa realizat primul fetch al clasei
   static make_link(elements){
-    elements.forEach(query => document.querySelectorAll(query).forEach(e => e.onclick = _ => this.switch(super.with_fetch=this.empty,super.url_param=e.dataset.url_param,super.element=e)))
+    elements.forEach(query => document.querySelectorAll(query).forEach(e => e.onclick = _ => this.switch(super.with_fetch = (e.dataset.url_param)? true : this.empty, super.url_param=e.dataset.url_param,super.element=e)))
   }
 
 }
@@ -81,29 +81,6 @@ class Form{
 }
 
 
-// pure function
-async function add_or_remove_to_playlist(add,song_id,playlist_id,token){
-  try{
-    let response = await fetch(
-      urls['user_request_url'],
-      {
-        method:'POST',
-        headers: {'X-CSRFToken': token},
-        body:JSON.stringify(
-          {
-          'add':add,
-          'song_id':song_id,
-          'playlist_id':playlist_id
-          }
-        )
-      }
-    );
-    let json_response = await response.json();
-    return json_response;
-  }catch(e){
-    alert(e)
-  }
-}
 
 function create_popup_menu(event,id=""){
     let div = document.createElement("div");
@@ -130,4 +107,39 @@ function getCookie(name) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) return parts.pop().split(';').shift();
-  }
+}
+const [add_to_playlist,remove_from_playlist] = (_=>{
+    let f = (method)=>{
+        return async(playlist,song)=>{
+            try{
+                return await fetch(urls.playlist_group,{
+                    headers:{
+                        "Content-Type":"application/json",
+                        "X-CSRFToken":getCookie("csrftoken")
+                    },
+                    method:method,
+                    body:JSON.stringify({
+                        playlist : playlist,
+                        song : song
+                    })
+            
+                })
+            }catch(e){return e}
+        }
+    }
+    return [f("POST"),f("DELETE")]
+})();
+
+async function delete_playlist(playlist){
+    return await fetch(urls.playlist,{
+        headers:{
+            "Content-Type":"application/json",
+            "X-CSRFToken":getCookie("csrftoken")
+        },
+        method:"DELETE",
+        body:JSON.stringify({
+            playlist : playlist
+        })
+    })
+}
+HTMLElement.prototype.press = function(){this.dispatchEvent(new Event("click"))}

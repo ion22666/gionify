@@ -13,7 +13,6 @@ class CreatePlaylistForm extends Form{
         }
         let name_input = document.querySelector("#app #form_screen #playlist #id_name")
         document.querySelector("#app #form_screen #playlist input[type=submit]").onclick = _ =>{
-            console.log('aaaa');
             if(name_input.value == "")name_input.value=name_input.placeholder;
         }
     }

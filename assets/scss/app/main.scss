@@ -102,6 +102,7 @@ $player-picture:25vmin;
                 &.active{
                     color: $green !important;
                     font-size: 2vmin !important;
+                    pointer-events: none !important;
                     &:hover{
                         pointer-events: none !important;
                     }
@@ -359,8 +360,50 @@ $player-picture:25vmin;
                         text-overflow: ellipsis;
                     }
                     #space{
-                        height: 4vmin;
-                        width: 100%;
+                        height: 6vmin;
+                        width: auto;
+
+                        display: grid;
+                        grid-template: 100%/1.5fr 2fr 9fr 9fr 9fr 2fr 2fr 2fr;
+                        justify-items: center;
+                        align-items: center;
+                        box-sizing: border-box;
+                        margin: 0vmin 4vmin 0vmin 4vmin;
+                        padding-top: 1vmin;
+                        #play,#pause{
+                            grid-row: 1/2;
+                            grid-column: 1/3;
+                            color:white;
+                            &:hover{
+                                color:$green !important;
+                                &:active{
+                                    color:$gold !important;
+                                }
+                            }
+                            transition: 0.2s ease;
+                        }
+                        .hidden{
+                            height: 0;
+                        }
+                        #delete{
+                            grid-row: 1/2;
+                            grid-column: 6/8;
+
+                            height: 60%;
+                            justify-self: flex-end;
+                            color:rgba(255,255,255,0.3);
+                            &:hover{
+                                color: rgb(128, 37, 37) !important;
+                                &:active{
+                                    color: rgb(255, 0, 0) !important;
+                                }
+                            }
+                        }
+                        &:hover{
+                            #delete{
+                                color:rgba(255,255,255,1);
+                            }
+                        }
                     }
                     #table{
                         width: 100%;
@@ -391,8 +434,7 @@ $player-picture:25vmin;
                                     grid-column: 2/4;
                                 }
                                 border-bottom: 0.2vmin solid $gray;
-                                
-                                
+                                padding-top: 0 !important;
                             }
                             .icon{
                                 opacity: 0;

@@ -187,14 +187,14 @@ def manage_song(request,song_id):
 
 
 def playlist(request,playlist_id=None):
-
+    
     if request.method == "GET" and playlist_id == None:
         # obiectele FormModel din django nu face nimic altceva decat sa construiasca un html form ( doar continutul, tagul form tre sal punem singuri)
         n = len(Playlist.objects.filter(user_id=request.user))
         html_form = loader.render_to_string('app/forms/playlist_form.html',{'form':AddPlaylistForm(),"playlists_count":n},request)
         return HttpResponse(status=200,content = html_form)
 
-    if request.method == "POST" and request.POST:
+    if request.method == "POST":
         # obiectele FormModel de asemenea se folosesc pentru a colecta datele din request, le verifica si le atribuie frumos in field-uri de care ne trebe noua
         form_data=AddPlaylistForm(request.POST,request.FILES)
         if form_data.is_valid():
@@ -207,12 +207,12 @@ def playlist(request,playlist_id=None):
         else:
             return HttpResponse(status=406, content=json.dumps({'message': "Invalid data"}))
 
-    try:
-        playlist = Playlist.objects.get(pk=playlist_id)
-    except Playlist.DoesNotExist:
-        return HttpResponse(status=404, content=json.dumps({'message': "Playlist Does Not Exist"}))
-
     if request.method == "GET":
+        try:
+            playlist = Playlist.objects.get(pk=playlist_id)
+        except Playlist.DoesNotExist:
+            return HttpResponse(status=404, content=json.dumps({'message': "Playlist Does Not Exist"}))
+
         songs = []
         for song in Playlist_group.objects.filter(playlist_id=playlist):
             songs.append(song.song_id)
@@ -224,11 +224,25 @@ def playlist(request,playlist_id=None):
         response = loader.render_to_string('app/views/playlist.html', {'playlist':playlist,'songs':songs,'total_duration':total_duration},request)
         return HttpResponse(content=response)
     
+    if request.content_type != "application/json":
+        return HttpResponse(status=406,content=json.dumps({'message':'Content Type Not Supported'}))
+    data = json.loads(request.body.decode("utf-8"))
+
     if request.method == "PUT":
         return
+    
     if request.method == "DELETE":
-        return
+        
+        try:
+            playlist = Playlist.objects.get(pk=data["playlist"])
+        except Playlist.DoesNotExist:
+            return HttpResponse(status=404, content=json.dumps({'message': "Playlist Does Not Exist"}))
 
+        if playlist.user_id == request.user:
+            playlist.delete()
+            return HttpResponse(status=204,content=json.dumps({'message':'The resource was successfully deleted'}))
+        else:
+            return HttpResponse(status=403,content=json.dumps({'message':'You are not the playlist owner'}))
 
 def user_request_view(request):
     

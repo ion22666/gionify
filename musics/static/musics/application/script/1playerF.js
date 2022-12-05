@@ -8,27 +8,7 @@ const formatTime=secs=>{
     return `${min}:${sec}`
 }
 
-const [add_to_playlist,remove_from_playlist] = (_=>{
-    let f = (method)=>{
-        return async(playlist,song)=>{
-            try{
-                return await fetch(urls.playlist_group,{
-                    headers:{
-                        "Content-Type":"application/json",
-                        "X-CSRFToken":getCookie("csrftoken")
-                    },
-                    method:method,
-                    body:JSON.stringify({
-                        playlist : playlist,
-                        song : song
-                    })
-            
-                })
-            }catch(e){return e}
-        }
-    }
-    return [f("POST"),f("DELETE")]
-})();
+
 
 
 // change_track() se apeleaza pentru a modifica src-ul audio-ului, dar in acelasi timp schimbam si informatile afisate pe pagina despre noua piesa
