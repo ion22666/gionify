@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.contrib import messages  
-
+from django.middleware.csrf import CsrfViewMiddleware
 
 # -------------------------------------------------
 
@@ -33,6 +33,7 @@ def logged_not_allowed(why_message):
 def only_logged(why_message):
     def decorator(view_func):
         def wrapper_func(request, *args, **kwargs):
+            print(view_func," not logged")
             if not request.user.is_authenticated:
                 messages.info(request,why_message)
                 return redirect(request.build_absolute_uri('musics:main'))
@@ -69,3 +70,14 @@ def admin_only(view_func):
 			return view_func(request, *args, **kwargs)
 
 	return wrapper_function
+
+def dirrect_not_allowed(view_func):
+    def wrapper_function(request, *args, **kwargs):
+        try:
+            if request.META['HTTP_REFERER']=="http://127.0.0.1:8000/":
+                return view_func(request, *args, **kwargs)
+            else:
+                return redirect(request.build_absolute_uri('musics:main'))
+        except:
+            return redirect(request.build_absolute_uri('musics:main'))
+    return wrapper_function

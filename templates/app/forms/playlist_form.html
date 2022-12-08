@@ -4,7 +4,7 @@
     <input type="submit" value="Submit">
 </form> {% endcomment %}
 
-<form class="form" id="playlist" method="post" enctype="multipart/form-data" action="">
+<form class="form" id="create_playlist" method="post" enctype="multipart/form-data" action="">
     {% csrf_token %}
     <div id="name">
         <input type="text" name="name" maxlength="400" required id="id_name" placeholder="My Playlist #{{playlists_count}}">

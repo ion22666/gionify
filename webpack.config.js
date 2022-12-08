@@ -2,16 +2,33 @@ const path = require('path');
 module.exports = {
     mode: "development",
     module: {
-      rules: [
-        {
-          test: /\.s[ac]ss$/i,
-          use: [{loader: 'file-loader',options: { outputPath: '.', name: '[name].css'}},"sass-loader"],
-        },
-      ],
+        rules: [
+            {
+                test: /\.s[ac]ss$/i,
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: { 
+                            outputPath: '.', 
+                            name: 'style/[name].css'
+                        }
+                    },
+                    "sass-loader"
+                ],
+            },
+        ],
     },
-    entry: path.resolve(__dirname, './assets/scss/main.scss'),
+    entry: {
+        "style/main.js":'./assets/scss/main.scss',
+        "script/output.js":'./assets/js/input.js',
+    },
     output: {
-        path: path.resolve(__dirname, './static/style'),
-        filename: 'core.js',
+        path: path.resolve(__dirname, './static'),
+        filename: '[name]',
+        iife: true,
     },
+    optimization: {
+        minimize: false,
+    },
+    devtool: false,
 };

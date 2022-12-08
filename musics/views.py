@@ -17,16 +17,20 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from . import urls
 from django.urls import reverse
-from .decorators import logged_not_allowed, allowed_goups, admin_only, only_logged
+from .decorators import logged_not_allowed, allowed_goups, admin_only, only_logged, dirrect_not_allowed
 from .form import AddMusicForm, ManageMusicForm, CreateUserForm, AddPlaylistForm
 from django.templatetags.static import static
 from colorthief import ColorThief
+from django.views.decorators.csrf import requires_csrf_token
+from django.http import JsonResponse
+
+
 
 
 # acest view va fi apelat doar cand intram prima oara pe site
 # in template verificam daca userul este logat , si il fortam sa faca request la login sau application
 def main(request):
-    Playlist.objects.filter(name="2266").delete()
+    print(request.user.is_authenticated)
     return render(request,'main.html')
 
 
@@ -66,13 +70,14 @@ def application(request):
 
 ## LOGIN PAGE
 # @logged_not_allowed("You're already logged in, you want to logout?")
-def login_user(request):
+@dirrect_not_allowed
+def login_page(request):
     if request.method == 'POST':
         print(request)
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(request,username=username,password=password)
-        print(user)
+        print(user," sa loggat")
         if user is not None:
             login(request,user)
             return HttpResponse(status=200)
@@ -87,8 +92,6 @@ def login_user(request):
         },
         request
     )
-    response['scripts'] = str(get_scripts('login/script'))
-    response['styles'] = str(get_scripts('login/style'))
     return response
 
 
@@ -118,8 +121,8 @@ def register_user(request):
 def profile_page_view(request,user_name):
     if str(request.user)!=user_name:
         return redirect('musics:home_page')
-    profile = UserProfile.objects.get(user_id=request.user.id)
-    #aparent cand un field este de foreigkey, acel fild va tine o valoare de tip obiect, deci vom pute scrie profile.user_id.id
+    profile = UserProfile.objects.get(user=request.user.id)
+    #aparent cand un field este de foreigkey, acel fild va tine o valoare de tip obiect, deci vom pute scrie profile.user.id
     print(profile.user.id)
     response = render(request,'app/views/profile.html',{'username':str(request.user),'picture':profile.picture})
     return HttpResponse(content=response)
@@ -141,12 +144,6 @@ def addSong(request):
             context={'form':form,},
             status=415,
         )
-
-    # if 'HTTP_REFERER' in request.META.keys() and request.META['HTTP_REFERER']=='http://127.0.0.1:8000/':
-    #     return render(request,'form_pages_content/add_song_form.html',{
-    #         'form':form,
-    # })
-    # return redirect("music:home_page")
 
 
 def delete_song(request,song_id):
@@ -187,10 +184,10 @@ def manage_song(request,song_id):
 
 
 def playlist(request,playlist_id=None):
-    
+    # if the url = is just .../playlist then we return a form for creating a playlsit
     if request.method == "GET" and playlist_id == None:
         # obiectele FormModel din django nu face nimic altceva decat sa construiasca un html form ( doar continutul, tagul form tre sal punem singuri)
-        n = len(Playlist.objects.filter(user_id=request.user))
+        n = len(Playlist.objects.filter(user=request.user))
         html_form = loader.render_to_string('app/forms/playlist_form.html',{'form':AddPlaylistForm(),"playlists_count":n},request)
         return HttpResponse(status=200,content = html_form)
 
@@ -200,7 +197,7 @@ def playlist(request,playlist_id=None):
         if form_data.is_valid():
             if not request.user.is_authenticated:
                 return HttpResponse(status=401,content=json.dumps({'message':'User in not authenticated'}))
-            instance = Playlist(**form_data.cleaned_data,user_id=request.user)
+            instance = Playlist(**form_data.cleaned_data,user=request.user)
             instance.save()
             print("sa salvat")
             return HttpResponse(status=201, content=json.dumps({'message': "Playlist Created"}))
@@ -214,8 +211,8 @@ def playlist(request,playlist_id=None):
             return HttpResponse(status=404, content=json.dumps({'message': "Playlist Does Not Exist"}))
 
         songs = []
-        for song in Playlist_group.objects.filter(playlist_id=playlist):
-            songs.append(song.song_id)
+        for song in Playlist_group.objects.filter(playlist=playlist):
+            songs.append(song.song)
         seconds = 0
         for song in songs:
             m,s = song.time_length.split(":")
@@ -238,11 +235,12 @@ def playlist(request,playlist_id=None):
         except Playlist.DoesNotExist:
             return HttpResponse(status=404, content=json.dumps({'message': "Playlist Does Not Exist"}))
 
-        if playlist.user_id == request.user:
+        if playlist.user == request.user:
             playlist.delete()
             return HttpResponse(status=204,content=json.dumps({'message':'The resource was successfully deleted'}))
         else:
             return HttpResponse(status=403,content=json.dumps({'message':'You are not the playlist owner'}))
+
 
 def user_request_view(request):
     
@@ -252,18 +250,18 @@ def user_request_view(request):
         playlist =Playlist.objects.get(pk=data['playlist_id'])
         if data['add']:
             try:
-                if Playlist_group.objects.get(song_id=song,playlist_id=playlist):
+                if Playlist_group.objects.get(song=song,playlist=playlist):
                     print('alredy exist')
                     return HttpResponse(status=400,content=json.dumps({'message': "alredy exist"}))
             except:
-                instance = Playlist_group.objects.create(song_id=song,playlist_id=playlist)
+                instance = Playlist_group.objects.create(son=song,playlist=playlist)
                 instance.save()
                 print('sa salvat')
                 return HttpResponse(status=201,content=json.dumps({'message': "sa salvat",'get_playlist_list':(get_playlist_list(request))}))
             
         else:
             print('sa sters')
-            Playlist_group.objects.filter(song_id=song,playlist_id=playlist).delete()
+            Playlist_group.objects.filter(song=song,playlist=playlist).delete()
             return HttpResponse(status=202,content=json.dumps({'message': "sa eliminat",'get_playlist_list':(get_playlist_list(request))}))
     else:
         return HttpResponse(status=405)
@@ -274,6 +272,34 @@ def home_page_view(request):
     return HttpResponse(content=response) if request.path != reverse("musics:app") else response
 
 
+def search(request):
+
+    # is the url don't have a get data, then return the search html view
+    if not request.GET:
+        return HttpResponse(status=200,content=loader.render_to_string("app/views/search.html",{},request))
+    try:
+        key = request.GET["key"]
+        value = request.GET["value"]
+    except:
+        return HttpResponse(status=406)
+
+    if key not in ["song","album","artist","playlist","profile"]:
+        return HttpResponse(status=406)
+
+    if key=="song":
+        return JsonResponse(list(Music.objects.filter(title__icontains = value).values()),safe=False)
+    if key=="artist":
+        return JsonResponse(list(Music.objects.filter(artiste__icontains = value).values()),safe=False)
+    if key=="album":
+        return JsonResponse(list(Album.objects.filter(name__icontains = value).values()),safe=False)
+    if key=="playlist":
+        return JsonResponse(list(Playlist.objects.filter(name__icontains = value).values()),safe=False)
+    if key=="profile":
+        return JsonResponse(list(UserProfile.objects.filter(title__icontains = value).values()),safe=False)
+
+    return HttpResponse(status=406,content=json.dumps({"message":"key not valid"}))
+    
+
 def main_menu(request):
     response = loader.render_to_string('app/menu.html',{'playlist_list':get_playlist_list(request)},request)
     return HttpResponse(content=response) if request.path != reverse("musics:app") else response
@@ -282,10 +308,10 @@ def main_menu(request):
 def liked_songs_view(request):
     if request.user.is_authenticated:
         try:#verificam daca in tabela LikedPlaylists exista vreun rand care sa contina id-ul userului
-            liked_playlist = LikedPlaylists.objects.get(user_id=request.user)
+            liked_playlist = LikedPlaylists.objects.get(user=request.user)
         except LikedPlaylists.DoesNotExist: # daca nu exista , cream un plailist nou si il folosim drept pentru liked_song playlist
             get_main_playlist_id()
-        liked_songs = Music.objects.filter(pk__in=list(Playlist_group.objects.filter(playlist_id=liked_playlist.playlist_id).values_list('song_id',flat=True)))
+        liked_songs = Music.objects.filter(pk__in=list(Playlist_group.objects.filter(playlist=liked_playlist.playlist_id).values_list('song_id',flat=True)))
         template = loader.get_template('app/views/liked.html')
         response = template.render({'songs':liked_songs,'playlist_id':liked_playlist.playlist_id})
         return HttpResponse(content=response)
@@ -299,15 +325,15 @@ def playlist_group(request):
     data = json.loads(request.body.decode("utf-8"))
     if request.method == 'POST':
         try:
-            Playlist_group.objects.get(playlist_id=Playlist.objects.get(pk=data['playlist']),song_id=Music.objects.get(pk=data['song']))
+            Playlist_group.objects.get(playlist=Playlist.objects.get(pk=data['playlist']),song=Music.objects.get(pk=data['song']))
             return HttpResponse(content=json.dumps({'message':"The resource didn't even exist"}))
         except Playlist_group.DoesNotExist:
-            Playlist_group.objects.create(playlist_id=Playlist.objects.get(pk=data['playlist']),song_id=Music.objects.get(pk=data['song'])).save()
+            Playlist_group.objects.create(playlist=Playlist.objects.get(pk=data['playlist']),song=Music.objects.get(pk=data['song'])).save()
             return HttpResponse(content=json.dumps({'message':'The resource was successfully created'}))
         else:
             return HttpResponse(content=json.dumps({'message':'Unknown problem'}))
     if request.method == 'DELETE':
-        instance = Playlist_group.objects.filter(playlist_id=data['playlist'],song_id=data['song'])
+        instance = Playlist_group.objects.filter(playlist=data['playlist'],song=data['song'])
         if instance:
             instance.delete()
             return HttpResponse(status=204,content=json.dumps({'message':'The resource was successfully deleted'}))
@@ -321,7 +347,7 @@ def remove_from_playlist_view(request):
         data = json.loads(request.body.decode("utf-8"))
         if data['action'] == 'remove_from_playlist':
             try:
-                Playlist_group.objects.filter(playlist_id=Playlist.objects.get(pk=data['playlist_id']),song_id=Music.objects.get(pk=data['song_id'])).delete()
+                Playlist_group.objects.filter(playlist=Playlist.objects.get(pk=data['playlist_id']),song=Music.objects.get(pk=data['song_id'])).delete()
                 return HttpResponse(content=json.dumps({'message':'OK'}))
             except Playlist_group.DoesNotExist:
                 pass
@@ -339,25 +365,31 @@ def remove_from_playlist_view(request):
 ########################################################################################
 def get_playlist_list(request):
     exclude_id = get_main_playlist(request)["id"]
-    playlist_list = list(Playlist.objects.filter(user_id=request.user.id).exclude(pk=exclude_id).values())
+    playlist_list = list(Playlist.objects.filter(user=request.user.id).exclude(pk=exclude_id).values())
     for playlist in playlist_list:
-        songs = list(Playlist_group.objects.filter(playlist_id=playlist['id']).values_list('song_id',flat=True))
+        songs = list(Playlist_group.objects.filter(playlist=playlist['id']).values_list('song_id',flat=True))
         playlist['songs_count'] = len(songs)
         playlist['songs'] = songs
     return playlist_list
 
 def get_main_playlist(request):
     try:
-        return Playlist.objects.filter(pk=LikedPlaylists.objects.get(user_id=request.user).playlist_id.pk).values()[0]
+        main_playlist = Playlist.objects.filter(pk=LikedPlaylists.objects.get(user=request.user).playlist.pk).values()[0]
+        songs = list(Playlist_group.objects.filter(playlist=main_playlist["id"]).values_list('song_id',flat=True))
+        main_playlist['songs_count'] = len(songs)
+        main_playlist['songs'] = songs
+        return main_playlist
     except LikedPlaylists.DoesNotExist or Playlist.DoesNotExist:
-        LikedPlaylists.objects.filter(user_id=request.user).delete()
+        LikedPlaylists.objects.filter(user=request.user).delete()
         # new_playlist nu este la fel ca new_playlist.save() , isi pierde proprietetea de instanta a clasei dupa ce se salveaza
         #si nu mai poate fi folosit ca referinta pentru alte obiecte cu relatii 
-        new_playlist = Playlist.objects.create(name='2266',user_id=request.user)
-        liked_playlist = LikedPlaylists.objects.create(user_id=request.user,playlist_id=new_playlist)
+        new_playlist = Playlist.objects.create(name='Liked Songs',user=request.user)
+        new_playlist.cover_image = "playlist_img/liked-playlist-img.png"
+        liked_playlist = LikedPlaylists.objects.create(user=request.user,playlist=new_playlist)
         new_playlist.save()
         liked_playlist.save()
         return get_main_playlist(request)
+
 
 def get_scripts(folder):
     return [ str(static("musics"+"/"+folder+"/"+file)) for file in os.listdir(os.path.relpath('musics\\static\\musics'+'\\'+folder)) ]

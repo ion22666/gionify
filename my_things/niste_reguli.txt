@@ -1,4 +1,4 @@
-1. La inceputul unui proiect, mereu de inceput cu baza de date , adica modelele. Mereu trebe inceput de la modele caci pe parcurs nu vom fi nevoiti sa mai facem schimbari.
+s1. La inceputul unui proiect, mereu de inceput cu baza de date , adica modelele. Mereu trebe inceput de la modele caci pe parcurs nu vom fi nevoiti sa mai facem schimbari.
 2.De construit medote pentru obiectele claselor, de exemplu as pute construi o metoda pentru user care sa genereze toate playlisturile sale sau piesele favorite.
 3. De folosot  reverse si numele url-urilor pentru a decalra un path
 4. same as 3

@@ -105,8 +105,8 @@
     .main {
         -webkit-animation: slide-in-elliptic-top-fwd 2.6s cubic-bezier(0.175, 0.885, 0.320, 1.275) both;
         animation: slide-in-elliptic-top-fwd 2.6s cubic-bezier(0.175, 0.885, 0.320, 1.275) both;
-        -webkit-animation-delay:1.5s;
-        animation-delay:1.5s;
+        -webkit-animation-delay:2s;
+        animation-delay:2s;
     }
     
     @-webkit-keyframes slide-in-elliptic-top-fwd {
