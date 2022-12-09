@@ -8,13 +8,19 @@ function update_player_heart(){
         document.querySelector("#app #player #full_heart").classList.add("hide");
     }
 }
+let old_track = null;
 module.exports = {
 
     // change_track() se apeleaza pentru a modifica src-ul audio-ului, dar in acelasi timp schimbam si informatile afisate pe pagina despre noua piesa
     // cand un se shimba src-ul , se incepe de la inceput audioul , dar cu pauza
     // change_track() va folosi mereu letiabila grobala musicIndex , pentru a determina care pisa sa se ruleze din lista de obiecte trackq, care a fost citita din codul HTML unde a fost plasata de catre django
     change_track(was_paused){
-        // update_liked_icon();
+        if(old_track?.id==g.track?.id){
+            (was_paused)?g.audio.pause():g.audio.play();
+            return
+        }
+        old_track = g.track;
+
         fetch(`/media/${g.track.audio_file}`)
         // Retrieve its body as ReadableStream
         .then((response) => {

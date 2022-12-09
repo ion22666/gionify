@@ -3,6 +3,9 @@
 @mixin style(){
     background-color: $dark-gray;
     // all dirct childs
+    display: grid;
+    grid-template: auto auto minmax(0,1fr)/100%;
+    overflow: hidden !important;
     > *{
         margin: 2vmin 2vmin 0 2vmin;
         display: block;
@@ -10,7 +13,7 @@
     #search_bar{
         display: grid;
         height: 3.5vmin;
-        width: 30%;
+        width: 25%;
         grid-template: 100% / minmax(0,1fr) minmax(0,4fr) minmax(0,1fr);
         justify-items: center;
         align-items: center;
@@ -65,6 +68,143 @@
         }
     }
     #results{
-        
+        overflow: hidden !important;
+        height: 100%;
+        .block_view{
+            overflow: hidden !important;
+            height: 100%;
+        }
+        #songs{
+
+            #empty{
+                @include absolute-center;
+                font-size: 2.5vmin;
+                color: white;
+                display: flex;
+                white-space: nowrap;
+                #sad{
+                    color: white;
+                    height: 2.5vmin;
+                    width: 2.5vmin;
+                }
+            }
+            #head{
+                border-bottom: 0.2vmin solid $green;
+                div,svg{
+                    color: white;
+                }
+                #title{
+                    grid-row: 1/2;
+                    grid-column:2/4;
+                }
+                #time{
+                }
+            }
+            #body{
+                width: 100%;
+                height: 100%;
+                overflow-y: auto;
+                overflow-x: hidden;
+                .row{
+                    div,svg{
+                        color: white;
+                    }
+                    #counter{
+                    }
+                    #play,#pause{
+                        visibility: hidden;
+                        margin-right: -7.5%;
+                    }
+                    img{
+                        height: 100%;
+                        aspect-ratio: 1/1;
+                        max-width: 100%;
+                        max-height: 100%;
+                    }
+                    #full_heart,#empty_heart{
+                        grid-row: 1/2;
+                        grid-column:6/7;
+                        height: 50%;
+                        visibility: hidden;
+                    }
+                    .icon:hover{
+                        color: $green !important;
+                    }
+                    &.active:not(.paused){
+                        div,svg{
+                            color: $green !important;
+                        }
+                        #counter{
+                            visibility: hidden !important;
+                        }
+                        #pause{
+                            visibility: visible !important;
+                        }
+                    }
+                    &.active.paused{
+                        div,svg{
+                            color: $green !important;
+                        }
+                        #counter{
+                            visibility: hidden !important;
+                        }
+                        #play{
+                            visibility: visible !important;
+                        }
+                    }
+                }
+                .row:hover{
+                    #counter{
+                        visibility: hidden !important;
+                    }
+                    #play{
+                        visibility: visible !important;
+                    }
+                    #empty_heart{
+                        visibility: visible !important;
+                    }
+                    &.active{
+                        &.paused{
+                            #pause:not(.paused){
+                                visibility: hidden !important;
+                            }
+                            #play:not(.paused){
+                                visibility: visible !important;
+                            }
+                        }
+                        &:not(.paused){
+                            #pause:not(.paused){
+                                visibility: visible !important;
+                            }
+                            #play:not(.paused){
+                                visibility: hidden !important;
+                            }
+                        }
+                    }
+                }
+            }
+            .row{
+                width: 100%;
+                height: 4vmin;
+                display: grid;
+                grid-template: 100%/MINMAX((1.5fr,2fr,9fr,9fr,9fr,2fr,2fr));
+                justify-items: flex-start;
+                align-items: center;
+                margin: 0 0 1vmin 0;
+                gap: 1vmin;
+                #counter,#play,#pause{
+                    grid-row: 1/2;
+                    grid-column:1/2; 
+                    justify-self: center;
+                }
+                svg{
+                    justify-self: center;
+                    height: 65%;
+                }
+                #time{
+                    justify-self: center;
+                }
+            }
+        }
     }
 }

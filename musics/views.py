@@ -287,7 +287,10 @@ def search(request):
         return HttpResponse(status=406)
 
     if key=="song":
-        return JsonResponse(list(Music.objects.filter(title__icontains = value).values()),safe=False)
+        songs = list(Music.objects.filter(title__icontains = value).values())
+        for song in songs:
+            song["album_name"] = Album.objects.get(pk=song["album_id"]).name if song["album_id"] else "Single"
+        return JsonResponse(songs,safe=False)
     if key=="artist":
         return JsonResponse(list(Music.objects.filter(artiste__icontains = value).values()),safe=False)
     if key=="album":

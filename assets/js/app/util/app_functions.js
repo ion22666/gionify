@@ -19,6 +19,10 @@ const [add_to_playlist,remove_from_playlist] = (_=>{
     return [f("POST"),f("DELETE")]
 })();
 
+function* generator(start=1){
+    yield start++;
+    yield* generator(start);
+};
 
 module.exports = {
     
@@ -99,7 +103,7 @@ module.exports = {
         };
     })(),
 
-
+    counter:generator,
 }
 
 

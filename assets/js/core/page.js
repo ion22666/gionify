@@ -42,7 +42,8 @@ class Page{
             await loading_screen.appear();
         }
 
-        if(old_page)old_page.hide();
+        // if old_page is not null or undefined then run old_page.hide()
+        old_page?.hide();
 
         if(with_fetch){
             let http_response = await fetch(new_page.url);
@@ -54,7 +55,7 @@ class Page{
             new_page.div.innerHTML = await http_response.text();
         }
 
-        if(old_page)old_page.delete_content();
+        old_page?.hide();
         window.active_page = new_page;
         new_page.setup();
         new_page.dispaly();

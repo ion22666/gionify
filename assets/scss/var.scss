@@ -21,7 +21,16 @@ $light:'CircularStd Light';
     overflow:hidden;
     white-space:nowrap;
 }
-
+@function MINMAX($values) {
+    @if not $values {
+        @return auto;
+    }
+    $output:null;
+    @each $value in $values{
+        $output: $output + minmax(0,$value);
+    }
+    @return $output;
+}
 @mixin scrollbar($color, $background-color) {
     scrollbar-color: $color $background-color;
     scrollbar-width:thin;

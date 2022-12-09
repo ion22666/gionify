@@ -131,7 +131,7 @@ class Playlist extends View{
         this.playlist_song_rows.forEach(row => {
             if(g.track.id == row.dataset.id){
                 this.active_row = row;
-                row.classList.add((g.paused) ? ("active","paused") : "active");
+                row.classList.add((g.audio.paused) ? ("active","paused") : "active");
                 return;
             }
             row.classList.remove("active","paused");
