@@ -18,11 +18,12 @@ from django.contrib.auth.models import User
 from . import urls
 from django.urls import reverse
 from .decorators import logged_not_allowed, allowed_goups, admin_only, only_logged, dirrect_not_allowed
-from .form import AddMusicForm, ManageMusicForm, CreateUserForm, AddPlaylistForm
+from .form import AddMusicForm, ManageMusicForm, CreateUserForm, AddPlaylistForm, ProfileForm
 from django.templatetags.static import static
 from colorthief import ColorThief
 from django.views.decorators.csrf import requires_csrf_token
 from django.http import JsonResponse
+from django.middleware.csrf import get_token
 
 
 
@@ -52,6 +53,7 @@ def application(request):
         request,
         'app.html',
         {
+            "user_id":request.user.pk,
             'musics_list':musics_list,
             'home_pre_render':home_pre_render,
             'main_menu_pre_render':main_menu_render,
@@ -118,14 +120,41 @@ def register_user(request):
     return render(request,'form_pages_content/register_user.html',{'form':form,})
 
 
-def profile_page_view(request,user_name):
-    if str(request.user)!=user_name:
-        return redirect('musics:home_page')
-    profile = UserProfile.objects.get(user=request.user.id)
-    #aparent cand un field este de foreigkey, acel fild va tine o valoare de tip obiect, deci vom pute scrie profile.user.id
-    print(profile.user.id)
-    response = render(request,'app/views/profile.html',{'username':str(request.user),'picture':profile.picture})
-    return HttpResponse(content=response)
+@only_logged("Only those logged in can logout")
+def profile(request,profile_id=None):
+    if profile_id == None:
+        return HttpResponse(content=loader.render_to_string("app/forms/profile_edit.html",{"profile":UserProfile.objects.get(user=request.user)},request))
+
+    try:
+        profile = UserProfile.objects.get(pk=profile_id)
+    except UserProfile.DoesNotExist:
+        return HttpResponse(status=404, content=json.dumps({'message': "Profile not found"}))
+            # UserProfile.objects.create(user=request.user).save()
+            # return profile(request)
+
+    if request.method == "GET": # return my profile
+        playlists = get_playlist_list(request)
+        response = loader.render_to_string('app/views/profile.html',{'profile':profile,"playlists":playlists},request)
+        return HttpResponse(status=200,content=response)
+
+    if request.method == "POST":
+        # obiectele FormModel de asemenea se folosesc pentru a colecta datele din request, le verifica si le atribuie frumos in field-uri de care ne trebe noua
+        
+        # try:
+        #     profile.picture = request.FILES["picture"]
+        # except:
+        #     pass
+        # try:
+        #     profile.name = request.POST["name"]
+        # except:
+        #     pass
+
+        form = ProfileForm(request.POST or None, request.FILES or None, instance=profile)
+        if form.is_valid():
+            profile.save()
+            return HttpResponse(status=201, content=json.dumps({'message': "Playlist Created"}))
+        return HttpResponse(status=406, content=json.dumps({'message': "Invalid data"}))
+
 
 @only_logged("Only those logged in can logout")
 def addSong(request):
@@ -308,20 +337,6 @@ def main_menu(request):
     return HttpResponse(content=response) if request.path != reverse("musics:app") else response
 
 
-def liked_songs_view(request):
-    if request.user.is_authenticated:
-        try:#verificam daca in tabela LikedPlaylists exista vreun rand care sa contina id-ul userului
-            liked_playlist = LikedPlaylists.objects.get(user=request.user)
-        except LikedPlaylists.DoesNotExist: # daca nu exista , cream un plailist nou si il folosim drept pentru liked_song playlist
-            get_main_playlist_id()
-        liked_songs = Music.objects.filter(pk__in=list(Playlist_group.objects.filter(playlist=liked_playlist.playlist_id).values_list('song_id',flat=True)))
-        template = loader.get_template('app/views/liked.html')
-        response = template.render({'songs':liked_songs,'playlist_id':liked_playlist.playlist_id})
-        return HttpResponse(content=response)
-    else:
-        HttpResponse(staus=401)
-
-
 def playlist_group(request):
     if request.content_type != "application/json":
         return HttpResponse(status=406,content=json.dumps({'message':'Content Type Not Supported'}))
@@ -405,3 +420,4 @@ def get_all_songs():
         else:
             music['album_name'] = Album.objects.get(pk=music['album_id']).name
     return songs
+

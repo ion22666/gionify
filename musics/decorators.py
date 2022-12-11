@@ -33,7 +33,6 @@ def logged_not_allowed(why_message):
 def only_logged(why_message):
     def decorator(view_func):
         def wrapper_func(request, *args, **kwargs):
-            print(view_func," not logged")
             if not request.user.is_authenticated:
                 messages.info(request,why_message)
                 return redirect(request.build_absolute_uri('musics:main'))

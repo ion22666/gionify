@@ -1,6 +1,6 @@
 from dataclasses import fields
 from django.forms import widgets
-from musics.models import Music, Playlist, Playlist_group
+from musics.models import Music, Playlist, Playlist_group,UserProfile
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -26,6 +26,14 @@ class AddPlaylistForm(forms.ModelForm):
         fields=[
             'name',
             'cover_image',
+        ]
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model=UserProfile
+        fields=[
+            'name',
+            'picture',
         ]
 
 

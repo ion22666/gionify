@@ -19,7 +19,7 @@ class App extends Page{
     static async setup(){
         // variables
         this.main_playlist=JSON.parse(document.getElementById('main_playlist_id').textContent);
-        this.current_user=JSON.parse(document.getElementById('current_user').textContent);
+        this.user_id=JSON.parse(document.getElementById('user_id').textContent);
         this.playlists=JSON.parse(document.getElementById('playlist_list').textContent);
         this.urls=JSON.parse(document.getElementById('url_patterns').textContent);
 
@@ -54,6 +54,7 @@ class App extends Page{
         this.home = __webpack_require__(/*! ./views/home */ "./assets/js/app/views/home.js");
         this.playlist = __webpack_require__(/*! ./views/playlist */ "./assets/js/app/views/playlist.js");
         this.search = __webpack_require__(/*! ./views/search */ "./assets/js/app/views/search.js");
+        this.profile = __webpack_require__(/*! ./views/profile */ "./assets/js/app/views/profile.js");
 
         this.home.switch(super.with_fetch=true,super.url_param="",super.element=document.querySelector("#app #menu #home"));
         
@@ -447,7 +448,7 @@ const g = window.app;
 
 async function setup(){
     
-    let popup_screen = g .popup_screen; // connect to popup_screen div
+    let popup_screen = g.popup_screen; // connect to popup_screen div
 
     popup_screen.self.innerHTML =  await (await fetch(g.urls.playlist)).text(); // fill the popup_screen with the form from server
 
@@ -464,14 +465,6 @@ async function setup(){
             return http_respose;
         }
 
-        document.onclick = (e)=>{
-            if(e.target == popup_screen.self){
-                popup_screen.hide_and_clean();
-                document.onclick = null;
-            }
-        }
-
-        
         var file_input = form.querySelector("#id_cover_image"); // the form input that require a file/img upload
         
         var selected_file_display = form.querySelector("#uploaded_file"); // the div that display the name of the selected file
@@ -603,7 +596,7 @@ module.exports = {
     popup_screen:(_=>{
 
         let popup_screen = document.querySelector("#app #popup_screen");
-        popup_screen.onmousemove = (e) => popup_screen.style.backdropFilter = (e.target == popup_screen) ? "brightness(1.3)" : "brightness(1)";
+        // popup_screen.onmousemove = (e) => popup_screen.style.backdropFilter = (e.target == popup_screen) ? "brightness(1.3)" : "brightness(1)";
         
         function create_div(id,event=None,center=false){
             let div = document.createElement("div");
@@ -620,12 +613,14 @@ module.exports = {
             return div;
         };
 
-        function display(background_color="rbga(0,0,0,0.75)"){
+        function display(background_color="rbga(0,0,0,0.8)"){
             popup_screen.style.backgroundColor = background_color;
             popup_screen.classList.remove("hide");
+            document.onclick = e =>{(e.target == popup_screen) && hide_and_clean()};
         };
 
         function hide(){
+            document.onclick = null;
             popup_screen.classList.add("hide");
         };
 
@@ -694,16 +689,9 @@ class View{
     // se da display la div-ul clasei din care se apeleaza
     static async switch(with_fetch=false, url_param="",element){
 
-        // mai intai se ascunde div-ul clasei vechi
-        try{window.app.active_view.hide(window.app.active_element);}catch(e){};
-
-        // actualizam clasa activa
-        window.app.active_view = this;
-        window.app.active_element = element;
-
         if (with_fetch){
             // daca fetch este true, dam fetch si inseram continutul div-ului
-            this.div.innerHTML = await (await fetch(this.url+((url_param)?(url_param+"/"):""))).text();
+            this.div.innerHTML = await (await fetch(this.url+((url_param)?(url_param):""))).text();
 
             // by default doar prima data se da fetch cand apasam pe un link
             this.empty = false;
@@ -711,7 +699,15 @@ class View{
             this.setup();
         }
         await window.wait_img(this.div);
+
+        // mai intai se ascunde div-ul clasei vechi
+        try{window.app.active_view.hide(window.app.active_element);}catch(e){};
+
         this.dispaly(element)
+
+        // actualizam clasa activa
+        window.app.active_view = this;
+        window.app.active_element = element;
     }
 
     // creaza link pentru fiecare element inclus in lista
@@ -756,7 +752,7 @@ class Home extends View{
 
         document.querySelector('#body #home #new_releases img').src = current_row.dataset.img;
         let list = JSON.parse(current_row.dataset.colors.replace(/'/g, '"'))
-        document.querySelector('#body #home #new_releases').style.background = `linear-gradient(90deg, rgba(${list[0]},1) 0%, rgba(${list[1]},1) 50%, rgba(${list[2]},1) 100%)`;    
+        document.querySelector('#body #home #new_releases').style.background = `linear-gradient(90deg, rgba(${list[0]},1) 0%, rgba(${list[2]},1) 100%)`;    
     }
     
     static setup(){
@@ -942,6 +938,38 @@ module.exports = Playlist;
 
 /***/ }),
 
+/***/ "./assets/js/app/views/profile.js":
+/*!****************************************!*\
+  !*** ./assets/js/app/views/profile.js ***!
+  \****************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+const View = __webpack_require__(/*! ../util/view */ "./assets/js/app/util/view.js");
+const create_profile_edit_form = __webpack_require__(/*! ./util/create_profile_edit_form */ "./assets/js/app/views/util/create_profile_edit_form.js");
+
+class Profile extends View{
+    static div = document.querySelector("#app #body #profile");
+    static main_link = document.querySelector("#app #menu #profile");
+    static url = window.app.urls.profile+window.app.user_id;
+    static empty = true;
+
+    static {
+        super.make_link([
+            '#menu #profile',
+        ])
+    };
+    static async setup(){
+        const edit_div = this.div.querySelector("#head #edit");
+        
+        edit_div.onclick = create_profile_edit_form;
+    }
+}
+
+
+module.exports = Profile;
+
+/***/ }),
+
 /***/ "./assets/js/app/views/search.js":
 /*!***************************************!*\
   !*** ./assets/js/app/views/search.js ***!
@@ -1012,6 +1040,71 @@ class Search extends View{
 }
 
 module.exports = Search;
+
+/***/ }),
+
+/***/ "./assets/js/app/views/util/create_profile_edit_form.js":
+/*!**************************************************************!*\
+  !*** ./assets/js/app/views/util/create_profile_edit_form.js ***!
+  \**************************************************************/
+/***/ ((module) => {
+
+async function setup(){
+    const g = window.app;
+    const popup_screen = g.popup_screen; // connect to popup_screen div
+    let old_username = document.querySelector("#app #body #profile #head #username");
+    let old_picture = document.querySelector("#app #body #profile #head img");
+    
+    popup_screen.self.innerHTML = await (await fetch(window.app.urls.profile)).text();
+
+    let form = popup_screen.self.querySelector("#edit_profile"); 
+
+    // form.querySelector("img").src = old_picture.src;
+    // form.querySelector("input[type=text]").value = old_username.textContent;
+    // form.querySelector("input[type=text]").placeholder = old_username.textContent;
+
+
+    document.querySelector("#app #popup_screen #close").onclick = _=>setTimeout(popup_screen.hide_and_clean,200) ;
+
+
+    // the setup for the uploading of the profile picture
+    {
+        let file_input = document.querySelector("#app #popup_screen label input[type=file]");
+        let img_element = document.querySelector("#app #popup_screen label img");
+
+        // The FileReader is part of the File API witch enables web applications to access files and their contents.
+        let reader = new FileReader();
+        
+        file_input.onchange = _=>file_input.files && reader.readAsDataURL(file_input.files[0]);
+
+        //evry time the reader object loads a file, this function will run
+        reader.onload = _=> img_element.src = reader.result;
+    }
+    // on form submit
+    {
+        form.onsubmit = async(event)=>{
+
+            event.preventDefault();
+            let form_data = new FormData(event.target)
+            if(form_data.get("name")!=old_username.textContent || form_data.get("picture").name){
+                let http_respose = await fetch(g.urls.profile+g.user_id,{method: "POST", body: form_data});
+                if(http_respose.status < 300){
+                    popup_screen.hide_and_clean();
+                    window.app.profile.switch(with_fetch=true,"",element=window.app.profile.main_link)
+                }else{
+                    console.error(http_respose);
+                }
+            }else{
+                popup_screen.hide_and_clean();
+            }
+        }
+    }
+    
+
+    popup_screen.display();
+}
+
+module.exports = setup;
 
 /***/ }),
 

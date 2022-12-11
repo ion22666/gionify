@@ -2,7 +2,7 @@ const g = window.app;
 
 async function setup(){
     
-    let popup_screen = g .popup_screen; // connect to popup_screen div
+    let popup_screen = g.popup_screen; // connect to popup_screen div
 
     popup_screen.self.innerHTML =  await (await fetch(g.urls.playlist)).text(); // fill the popup_screen with the form from server
 
@@ -19,14 +19,6 @@ async function setup(){
             return http_respose;
         }
 
-        document.onclick = (e)=>{
-            if(e.target == popup_screen.self){
-                popup_screen.hide_and_clean();
-                document.onclick = null;
-            }
-        }
-
-        
         var file_input = form.querySelector("#id_cover_image"); // the form input that require a file/img upload
         
         var selected_file_display = form.querySelector("#uploaded_file"); // the div that display the name of the selected file

@@ -10,7 +10,7 @@ class App extends Page{
     static async setup(){
         // variables
         this.main_playlist=JSON.parse(document.getElementById('main_playlist_id').textContent);
-        this.current_user=JSON.parse(document.getElementById('current_user').textContent);
+        this.user_id=JSON.parse(document.getElementById('user_id').textContent);
         this.playlists=JSON.parse(document.getElementById('playlist_list').textContent);
         this.urls=JSON.parse(document.getElementById('url_patterns').textContent);
 
@@ -45,6 +45,7 @@ class App extends Page{
         this.home = require("./views/home");
         this.playlist = require("./views/playlist");
         this.search = require("./views/search");
+        this.profile = require("./views/profile");
 
         this.home.switch(super.with_fetch=true,super.url_param="",super.element=document.querySelector("#app #menu #home"));
         

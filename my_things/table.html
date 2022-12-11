@@ -1,12 +1,24 @@
 
 <style>
-
+    label{
+        display: block;
+        height: 20vh;
+        width: 20vh;
+        background-color: red;
+    }
+    input{
+        display: none;
+    }
 </style>
 
-<div class="a"></div>
-
-
+<label>
+    <input type="file" name="" id="">
+</label>
 
 <script>
-
+    function f(){
+        console.log(document.onclick);
+        console.log("the label was clicked");
+    }
+    document.onclick = e =>{e.target == document.querySelector("label") && f()};
 </script>

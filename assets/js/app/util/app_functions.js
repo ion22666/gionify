@@ -58,7 +58,7 @@ module.exports = {
     popup_screen:(_=>{
 
         let popup_screen = document.querySelector("#app #popup_screen");
-        popup_screen.onmousemove = (e) => popup_screen.style.backdropFilter = (e.target == popup_screen) ? "brightness(1.3)" : "brightness(1)";
+        // popup_screen.onmousemove = (e) => popup_screen.style.backdropFilter = (e.target == popup_screen) ? "brightness(1.3)" : "brightness(1)";
         
         function create_div(id,event=None,center=false){
             let div = document.createElement("div");
@@ -75,12 +75,14 @@ module.exports = {
             return div;
         };
 
-        function display(background_color="rbga(0,0,0,0.75)"){
+        function display(background_color="rbga(0,0,0,0.8)"){
             popup_screen.style.backgroundColor = background_color;
             popup_screen.classList.remove("hide");
+            document.onclick = e =>{(e.target == popup_screen) && hide_and_clean()};
         };
 
         function hide(){
+            document.onclick = null;
             popup_screen.classList.add("hide");
         };
 

@@ -88,8 +88,8 @@ class LikedPlaylists(models.Model):
 class UserProfile(models.Model):
     default_auto_field = 'django.db.models.AutoField'
     user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,null=False,blank=False)
-    picture = models.FileField(upload_to='music_images/',validators=[validate_is_img])
-    name = models.CharField(max_length=400,default="User #"+str(random.randint(10000, 99999)))
+    picture = models.FileField(upload_to='music_images/', null=True, validators=[validate_is_img],default='profile_img/blank_profile.png')
+    name = models.CharField(max_length=400, null=True, default="User #"+str(random.randint(10000, 99999)))
 
     def __str__(self):
         return self.name

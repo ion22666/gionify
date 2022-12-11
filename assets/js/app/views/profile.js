@@ -1,14 +1,23 @@
-function profile_setup(){
-    function logout_user(){
-        fetch(urls['logout_user'],{
-            method:'POST',
-            headers: {'X-CSRFToken': csrftoken},
-        })
-            .then(response => {
-                if (response.redirected) {
-                    switch_PAGE('login/');
-                }
-            })
+const View = require("../util/view");
+const create_profile_edit_form = require("./util/create_profile_edit_form");
+
+class Profile extends View{
+    static div = document.querySelector("#app #body #profile");
+    static main_link = document.querySelector("#app #menu #profile");
+    static url = window.app.urls.profile+window.app.user_id;
+    static empty = true;
+
+    static {
+        super.make_link([
+            '#menu #profile',
+        ])
+    };
+    static async setup(){
+        const edit_div = this.div.querySelector("#head #edit");
+        
+        edit_div.onclick = create_profile_edit_form;
     }
-    document.getElementById("logout_button").addEventListener('click',logout_user);
 }
+
+
+module.exports = Profile;

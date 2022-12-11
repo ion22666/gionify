@@ -22,7 +22,7 @@ class Home extends View{
 
         document.querySelector('#body #home #new_releases img').src = current_row.dataset.img;
         let list = JSON.parse(current_row.dataset.colors.replace(/'/g, '"'))
-        document.querySelector('#body #home #new_releases').style.background = `linear-gradient(90deg, rgba(${list[0]},1) 0%, rgba(${list[1]},1) 50%, rgba(${list[2]},1) 100%)`;    
+        document.querySelector('#body #home #new_releases').style.background = `linear-gradient(90deg, rgba(${list[0]},1) 0%, rgba(${list[2]},1) 100%)`;    
     }
     
     static setup(){
