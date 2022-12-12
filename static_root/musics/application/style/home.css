@@ -1,0 +1,130 @@
+#new_releases{
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr)  minmax(0, 3fr);
+    grid-template-rows: minmax(0, 1fr)  3fr;
+    /* grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows:repeat(4, minmax(0, 1fr)); */
+    width: 95%;
+    min-width: 80%;
+    height: 30vh;
+    margin: auto;
+    margin-top: 2vh;
+    border-radius: 3vh;
+    background-color: black;
+    justify-items: center;
+    padding: 2vh;
+    -webkit-box-shadow: 0px 0px 4vh 1vh rgba(0,0,0,0.62);
+    -moz-box-shadow: 0px 0px 4vh 1vh rgba(0,0,0,0.62);
+    box-shadow: 0px 0px 4vh 1vh rgba(0,0,0,0.62);
+}
+
+#new_releases_title{
+    grid-column: 1/3;
+    grid-row: 1/2;
+    font-size: 2.5rem;
+    color:rgb(22, 224, 107);
+    justify-self: flex-start;
+}
+#prev_release_song,#next_release_song{
+    position: relative;
+    grid-column: 1/3;
+    grid-row: 1/2;
+    width: 4vh;
+    height: 4vh;
+    justify-self: flex-end;
+    color: white;
+}
+#next_release_song{
+    right: 10vh;
+}
+#prev_release_song{
+    right: 4vh;
+}
+#new_releases_img{
+    grid-column: 1/2;
+    grid-row: 2/3;
+    height: 100%;
+    aspect-ratio: 1/1;
+    -webkit-box-shadow: 8px -2px 12px 1px rgba(0,0,0,0.62);
+    -moz-box-shadow: 8px -2px 12px 1px rgba(0,0,0,0.62);
+    box-shadow: 8px -2px 12px 1px rgba(0,0,0,0.62);
+}
+#new_releases_songs_list{
+    display: block;
+    table-layout: fixed;
+    grid-column: 3/4;
+    grid-row: 1/3;
+    height: 100%;
+    width: 100%;
+    background: transparent;
+}
+#new_releases_songs_list thead,#new_releases_songs_list tbody{
+    background: rgba(0,0,0,0.5);
+    margin:0;
+}
+#new_releases_songs_list thead{
+    display: block;
+    width: 100%;
+    border-bottom: 1px solid gray;
+}
+
+#new_releases_songs_list tbody{
+    display: block;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 82%;
+    width: 100%;
+}
+#new_releases_songs_list tr{
+    width: 100%;
+    display: grid;
+    grid-template-columns: minmax(0,1fr) minmax(0,1fr) minmax(0,4fr) minmax(0,4fr) minmax(0,2fr) minmax(0,1fr);
+    justify-items: flex-start;
+    align-items: center;
+}
+#new_releases_songs_list img{
+    width: 4vh;
+    height: 4vh;
+}
+
+#new_releases #title{
+    justify-self:flex-start ;
+    align-self:flex-start ;
+    grid-column: 2/3;
+    grid-row: 2/3;
+    font-size: 2rem;
+}
+#new_releases #album{
+    color: gray;
+    font-size: 1.2rem;
+}
+#new_releases #artist{
+    justify-self:flex-start ;
+    align-self:flex-end ; 
+    grid-column: 2/3;
+    grid-row: 2/3;
+    color: aqua;
+    font-size: 1.2rem
+}
+
+tbody::-webkit-scrollbar-track
+{
+	border: 1px solid black;
+	background-color:black;
+}
+
+tbody::-webkit-scrollbar
+{
+	width: 8px;
+	background-color: transparent;
+}
+
+tbody::-webkit-scrollbar-thumb
+{
+	background-color: rgb(22, 224, 107);
+}
+
+tbody{
+  scrollbar-color: rgb(22, 224, 107) black;
+  scrollbar-width:thin;
+}

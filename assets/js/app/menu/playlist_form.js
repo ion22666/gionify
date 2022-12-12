@@ -14,6 +14,11 @@ async function setup(){
             let form_data = new FormData(event.target)
             let http_respose = await fetch(g.urls.playlist,{method: "POST", body: form_data});
             if(http_respose.status < 300){
+                let div = document.createElement("div");
+                let json_respose = await http_respose.json();
+                div.innerHTML = `<div class="playlist" data-url_param="${json_respose.playlist.id}">${json_respose.playlist.name}</div>`;
+                document.querySelector("#app #menu #playlists").appendChild(div);
+                window.app.playlist.make_link(['#menu .playlist']);
                 popup_screen.hide_and_clean();
             }
             return http_respose;

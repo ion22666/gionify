@@ -3,11 +3,11 @@ class View{
     // ascunde div-ul clasei din care este apelata aceasta functie
     static hide(element){
         this.div.classList.add("hide");
-        element.classList.remove("active");
+        element&&element.classList.remove("active");
     }
     static dispaly(element){
         this.div.classList.remove("hide");
-        element.classList.add("active");
+        element&&element.classList.add("active");
     }
 
     // se da display la div-ul clasei din care se apeleaza
@@ -37,7 +37,7 @@ class View{
     // creaza link pentru fiecare element inclus in lista
     // link = cand apesi se da display
     // parametrul fetch depinde de atributa clasei "empty", empty devine false cand sa realizat primul fetch al clasei
-    static make_link(elements){
+    static make_link(elements,element=null){
         elements.forEach(query => document.querySelectorAll(query).forEach(e => e.onclick = _ => this.switch(super.with_fetch = (e.dataset.url_param)? true : this.empty, super.url_param=e.dataset.url_param,super.element=e)))
     }
 }

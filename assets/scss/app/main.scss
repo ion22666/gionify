@@ -340,6 +340,23 @@ $player-picture:25vmin;
                         grid-row: 2/3;
                         font-size: 1.8 vmin;
                         align-self:flex-end;
+                        align-items: center;
+                        display: flex;
+                        #user_img{
+                            height: 2.5vmin;
+                            width: 2.5vmin;
+                            border-radius: 50%;
+                            box-shadow: 0.5vmin 0.5vmin 2vmin 0.5vmin black;
+                        }
+                        #user{
+                            color: white;
+                            &:hover{
+                                color:$green !important;
+                                &:active{
+                                    color:$gold !important;
+                                }
+                            }
+                        }
                         #songs{
                             color: black;
                         }
@@ -347,7 +364,6 @@ $player-picture:25vmin;
                             color:$gray;
                         }
                     }
-                    
                 }
                 #body{
                     background: $dark-gray;
@@ -597,6 +613,17 @@ $player-picture:25vmin;
             
         }
     }
+    #options{
+        grid-column: 2/3;
+        grid-row: 1/2;
+
+        justify-self: flex-end;
+        background-color: #000;
+        z-index: 10;
+
+        height: 4vmin;
+        width: 10vmin;
+    }
     #player{
         grid-column: 1/3;
         grid-row: 2/3;
@@ -619,6 +646,7 @@ $player-picture:25vmin;
             justify-self: center;
             height: 100%;
             background-color: $progress-bar-color;
+            box-shadow: 0 0 1vmin 0.1vmin #424242;
             
             // border-right: calc($progress-handle / 2) solid $progress-bar-color;
             transition: 0.2s ease;

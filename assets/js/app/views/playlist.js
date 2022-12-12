@@ -124,6 +124,11 @@ class Playlist extends View{
             }
         });
 
+        let user_div = this.div.querySelector("#user");
+        user_div.onclick = _=>{
+            g.profile.switch(super.with_fetch=true,super.url_param=user_div.dataset.id,super.element=(user_div.dataset.id==g.profile_id)?g.profile.main_link:null);
+        }
+
         if(this.active==this.on_screen)this.update_icons(); // update the big play icon if active = on_screen
     }
 

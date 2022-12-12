@@ -53,7 +53,7 @@ def application(request):
         request,
         'app.html',
         {
-            "user_id":request.user.pk,
+            "profile_id":UserProfile.objects.get(user=request.user).pk,
             'musics_list':musics_list,
             'home_pre_render':home_pre_render,
             'main_menu_pre_render':main_menu_render,
@@ -228,8 +228,7 @@ def playlist(request,playlist_id=None):
                 return HttpResponse(status=401,content=json.dumps({'message':'User in not authenticated'}))
             instance = Playlist(**form_data.cleaned_data,user=request.user)
             instance.save()
-            print("sa salvat")
-            return HttpResponse(status=201, content=json.dumps({'message': "Playlist Created"}))
+            return HttpResponse(status=201, content=json.dumps({'message': "Playlist Created",'playlist': {"id":instance.id,"name":instance.name}}))
         else:
             return HttpResponse(status=406, content=json.dumps({'message': "Invalid data"}))
 
@@ -247,7 +246,8 @@ def playlist(request,playlist_id=None):
             m,s = song.time_length.split(":")
             seconds += (int(m)*60) + int(s)
         total_duration = str(seconds//3600)+" hr " if seconds//3600>0 else str(seconds//60)+" min" if seconds//60>0 else ""
-        response = loader.render_to_string('app/views/playlist.html', {'playlist':playlist,'songs':songs,'total_duration':total_duration},request)
+        profile = UserProfile.objects.get(user=playlist.user)
+        response = loader.render_to_string('app/views/playlist.html', {'playlist':playlist,'songs':songs,"profile":profile,'total_duration':total_duration},request)
         return HttpResponse(content=response)
     
     if request.content_type != "application/json":
@@ -333,7 +333,7 @@ def search(request):
     
 
 def main_menu(request):
-    response = loader.render_to_string('app/menu.html',{'playlist_list':get_playlist_list(request)},request)
+    response = loader.render_to_string('app/menu.html',{'playlist_list':get_playlist_list(request),"profile":UserProfile.objects.get(user=request.user)},request)
     return HttpResponse(content=response) if request.path != reverse("musics:app") else response
 
 

@@ -36,10 +36,10 @@ async function setup(){
             event.preventDefault();
             let form_data = new FormData(event.target)
             if(form_data.get("name")!=old_username.textContent || form_data.get("picture").name){
-                let http_respose = await fetch(g.urls.profile+g.user_id,{method: "POST", body: form_data});
+                let http_respose = await fetch(g.urls.profile+g.profile_id,{method: "POST", body: form_data});
                 if(http_respose.status < 300){
                     popup_screen.hide_and_clean();
-                    window.app.profile.switch(with_fetch=true,"",element=window.app.profile.main_link)
+                    window.app.profile.switch(with_fetch=true,url_param=window.app.profile_id,element=window.app.profile.main_link)
                 }else{
                     console.error(http_respose);
                 }

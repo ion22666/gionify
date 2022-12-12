@@ -15,7 +15,7 @@
         grid-column-gap: 2vmin;
         margin: 0;
         padding: 2vmin;
-        background: linear-gradient(0deg, rgba(38,38,38,1) 0%, rgba(0,0,0,1) 100%);
+        background: linear-gradient(0deg, $green -100%, #000 100%);
         border-bottom: 0.4vmin double $gray;
         img,#edit{
             grid-row: 1/4;

@@ -16,9 +16,18 @@
 </label>
 
 <script>
-    function f(){
-        console.log(document.onclick);
-        console.log("the label was clicked");
+    var a = 1;
+    let b = 2;
+    const c = 3;
+
+    function log1(){
+        for (let index = 0; index < arguments.length; index++) {
+            console.log("-----------------",index,"-----------------");
+            console.log(arguments[index]);
+            
+        }
     }
-    document.onclick = e =>{e.target == document.querySelector("label") && f()};
+
+
+    log1()
 </script>

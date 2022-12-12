@@ -2,7 +2,7 @@
 <div id="head" data-colors="{{ playlist.image_colors }}" data-id="{{ playlist.id }}">
     <img src="media/{{ playlist.cover_image }}" alt="">
     <div id="title">{{ playlist.name }}</div>
-    <div id="info"> <span id="songs">{{ songs |length}} songs </span><span id="duration">{% if total_duration %},{{ total_duration }}{% endif %}</span> </div>
+    <div id="info"><img id="user_img" src="media/{{ profile.picture }}" alt=""> <span id="user" data-id="{{profile.id}}">&#160;{{ profile.name }}</span> <span id="songs">&#160;·&#160;{{ songs |length}} songs </span><span id="duration">{% if total_duration %}&#160;·&#160;{{ total_duration }}{% endif %}</span> </div>
 </div>
 
 <div id="body">
