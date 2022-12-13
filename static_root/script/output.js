@@ -57,16 +57,18 @@ class App extends Page{
         this.profile = __webpack_require__(/*! ./views/profile */ "./assets/js/app/views/profile.js");
 
         this.home.switch(super.with_fetch=true,super.url_param="",super.element=document.querySelector("#app #menu #home"));
-        
-        this.audio.pause();
-        this.audio.volume = 0.2;
 
+        // menu setup
+        __webpack_require__(/*! ./menu/menu */ "./assets/js/app/menu/menu.js")();
+        
         // player setup
         __webpack_require__(/*! ./audio/player_setup */ "./assets/js/app/audio/player_setup.js")();
         this.change_track(this.track);
 
-        // menu setup
-        __webpack_require__(/*! ./menu/menu */ "./assets/js/app/menu/menu.js")();
+        
+
+        this.audio.pause();
+        this.audio.volume = 0.2;
     };
 }
 
@@ -96,50 +98,60 @@ module.exports = {
     // change_track() se apeleaza pentru a modifica src-ul audio-ului, dar in acelasi timp schimbam si informatile afisate pe pagina despre noua piesa
     // cand un se shimba src-ul , se incepe de la inceput audioul , dar cu pauza
     // change_track() va folosi mereu letiabila grobala musicIndex , pentru a determina care pisa sa se ruleze din lista de obiecte trackq, care a fost citita din codul HTML unde a fost plasata de catre django
-    change_track(was_paused){
+    async change_track(was_paused){
         if(old_track?.id==g.track?.id){
             (was_paused)?g.audio.pause():g.audio.play();
             return
         }
         old_track = g.track;
+        
+        g.audio.src = `https://giovanni2266.pythonanywhere.com//media/${g.track.audio_file}`;
+        document.body.style.cursor = "wait";
+        await new Promise(resolve=>{
+            g.audio.oncanplay = resolve;
+        })
+        document.body.style.cursor = "auto";
 
-        fetch(`/media/${g.track.audio_file}`)
-        // Retrieve its body as ReadableStream
-        .then((response) => {
-            const reader = response.body.getReader();
-            return new ReadableStream({
-                start(controller) {
-                    return pump();
-                    function pump() {
-                    return reader.read().then(({ done, value }) => {
-                        // When no more data needs to be consumed, close the stream
-                        if (done) {
-                        controller.close();
-                        return;
-                        }
-                        // Enqueue the next data chunk into our target stream
-                        controller.enqueue(value);
-                        return pump();
-                    });
-                    }
-                }
-            })
-        })
-        // Create a new response out of the stream
-        .then((stream) => new Response(stream))
-        // Create an object URL for the response
-        .then((response) => response.blob())
-        .then((blob) => URL.createObjectURL(blob))
-        .then((url) => {
-            g.audio.src = url;
-            if(!was_paused) g.audio.play();
-        })
-        .catch(error=>{alert(error)})
-    
+
+        if(!was_paused) g.audio.play();
+        
+        // fetch(`/media/${g.track.audio_file}`)
+        // // Retrieve its body as ReadableStream
+        // .then((response) => {
+        //     const reader = response.body.getReader();
+        //     return new ReadableStream({
+        //         start(controller) {
+        //             return pump();
+        //             function pump() {
+        //             return reader.read().then(({ done, value }) => {
+        //                 // When no more data needs to be consumed, close the stream
+        //                 if (done) {
+        //                 controller.close();
+        //                 return;
+        //                 }
+        //                 // Enqueue the next data chunk into our target stream
+        //                 controller.enqueue(value);
+        //                 return pump();
+        //             });
+        //             }
+        //         }
+        //     })
+        // })
+        // // Create a new response out of the stream
+        // .then((stream) => new Response(stream))
+        // // Create an object URL for the response
+        // .then((response) => response.blob())
+        // .then((blob) => URL.createObjectURL(blob))
+        // .then((url) => {
+        //     g.audio.src = url;
+        //     if(!was_paused) g.audio.play();
+        // })
+        // .catch(error=>{alert(error)})
+        
         document.querySelector("#app #player #title").textContent = g.track.title;
         document.querySelector("#app #player #artist").textContent = g.track.artiste ;
         
-        document.querySelector("#app #player #picture img").src = `/media/${ g.track.cover_image }`;
+        document.querySelector("#app #menu #picture img").src = `/media/${ g.track.cover_image }`;
         document.querySelector("#app #player #mini_picture img").src = `/media/${ g.track.cover_image }`;
 
         // if( g.playlist.active) g.playlist.update_active();
@@ -241,14 +253,14 @@ module.exports = ()=>{
         play_icon.classList.remove("hide");
     }
 
-    document.querySelector("#player #picture #close").onclick = _=>{
-        document.querySelector("#player #picture").classList.add("close");
+    document.querySelector("#menu #picture #close").onclick = _=>{
+        document.querySelector("#menu #picture").classList.add("close");
         document.querySelector("#player #mini_picture").classList.remove("close");
     };
       
     document.querySelector("#player #mini_picture #open").onclick = _=>{
         document.querySelector("#player #mini_picture").classList.add("close");
-        document.querySelector("#player #picture").classList.remove("close");
+        document.querySelector("#menu #picture").classList.remove("close");
     };
 
     // input an event , bassed on his location we update the volume value
@@ -272,10 +284,10 @@ module.exports = ()=>{
         };
     };
     // when something change the volume, we update the icon and bar
-    audio.onvolumechange = _ =>{
+    g.audio.addEventListener("volumechange", _ =>{
         update_volume_icon(audio.volume);
         update_volume_bar(audio.volume);
-    }
+    })
 
     // add  onclick function for the volume bar container
     volume_container.onclick = update_volume_by_click;
@@ -431,6 +443,7 @@ const g = window.app;
 function setup(){
     document.querySelector("#app #menu #create_playlist").onclick = create_playlist_form_setup;
     document.querySelector("#app #menu #liked").onclick = _=>g.playlist.switch(with_fetch=true, url_param=g.main_playlist.id,element=document.querySelector("#app #menu #liked"));
+
 }
 
 
@@ -1380,6 +1393,7 @@ window.active_page = null;
 window.wait_img = (element)=>{return Promise.all(Array.from(element.querySelectorAll("img")).filter(img => !img.complete).map(img => new Promise(resolve => { img.onload = img.onerror = resolve; })))},
 
 window.app = __webpack_require__(/*! ./app/app */ "./assets/js/app/app.js");
+console.log("ceva");
 window.login = __webpack_require__(/*! ./login/login */ "./assets/js/login/login.js")
 
 HTMLElement.prototype.press = function(){this.dispatchEvent(new Event("click"))};
