@@ -48,16 +48,18 @@ class App extends Page{
         this.profile = require("./views/profile");
 
         this.home.switch(super.with_fetch=true,super.url_param="",super.element=document.querySelector("#app #menu #home"));
-        
-        this.audio.pause();
-        this.audio.volume = 0.2;
 
+        // menu setup
+        require("./menu/menu")();
+        
         // player setup
         require("./audio/player_setup")();
         this.change_track(this.track);
 
-        // menu setup
-        require("./menu/menu")();
+        
+
+        this.audio.pause();
+        this.audio.volume = 0.2;
     };
 }
 

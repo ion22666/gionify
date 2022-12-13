@@ -28,18 +28,20 @@ $player-picture:25vmin;
     #menu{
         display: grid;
         grid-template-columns: auto;
-        grid-template-rows: auto 1fr;
+        grid-template-rows: auto 1fr auto;
         overflow: hidden;
         grid-column: 1/2;
         grid-row: 1/2;
         border-right:  0.4vmin $gray double;
-        padding-left: 2vmin;
-        padding-right: 2vmin;
         .block{
             display: block;
             height: 100%;
             width: 100%;
+            padding-left: 2vmin;
+            padding-right: 2vmin;
+            box-sizing: border-box;
         }
+        
         .row{
             display: grid;
             grid-template-columns: $menu_rows_height 1fr;
@@ -92,6 +94,8 @@ $player-picture:25vmin;
             overflow-y: auto;
             overflow-x: scroll;
             @include scrollbar($gray,black);
+            margin-left: 2vmin;
+            margin-right: 2vmin;
             .playlist{
                 
                 height: 3vmin;
@@ -113,6 +117,47 @@ $player-picture:25vmin;
             }
             .space{
                 height: 200%;
+            }
+        }
+        #picture{
+            grid-column: 1/2;
+            grid-row: 3/4;
+            background-color: black;
+
+            width: 100%;
+            height: $menu_width;
+            transition: 1s ease;
+            box-sizing: border-box;
+            z-index: 1 !important;
+            overflow: hidden;
+            img{
+                width: 100%;
+            }
+            &.close{
+                border: none;
+                height: 0px !important;
+            }
+            *{
+                z-index: 1 !important;
+            }
+            &:hover{
+                #close{
+                    visibility: visible;
+                }
+            }
+            #close{
+                position: absolute;
+                top: 4%;
+                left: 4%;
+                height: 10%;
+                width: 10%;
+                visibility: hidden;
+                color:$gray;
+                &:hover{
+                    color: $green !important;
+                    transform: scale(1.2);
+                    transform-origin:center;
+                }
             }
         }
         
@@ -631,7 +676,7 @@ $player-picture:25vmin;
 
         display: grid;
         grid-auto-flow: row;
-        grid-template-columns: minmax(0,0.25fr) 1fr 3fr 1fr minmax(0,0.25fr);
+        grid-template-columns: minmax(0,0.25fr) auto minmax(0,1fr) minmax(0,3fr) minmax(0,1fr) minmax(0,0.25fr);
         grid-template-rows: minmax(0,1fr) minmax(0,2fr) minmax(0,5fr) minmax(0,5fr) minmax(0,2fr);
         z-index: 2;
         *{
@@ -726,7 +771,7 @@ $player-picture:25vmin;
         }
 
         .block{
-            grid-column: 3/4;
+            grid-column: 4/5;
             grid-row: 3/5;
             display: flex;
             justify-content:center;
@@ -788,7 +833,7 @@ $player-picture:25vmin;
             }
         }
         #title{
-            grid-column: 2/3;
+            grid-column: 3/4;
             grid-row: 3/4;
 
             padding-left: 1vh;
@@ -798,61 +843,22 @@ $player-picture:25vmin;
             align-self: center;
         }
         #artist{
-            grid-column: 2/3;
+            grid-column: 3/4;
             grid-row: 4/5;
             padding-left: 1vh;
             font-size: 1.8vmin;
             color: $light-gray;
             align-self: center;
         }
-        #picture{
-            grid-column: 5/6;
-            grid-row: 1/2;
-            position: relative;
-            background-color: black;
-            border-top: 0.4vmin double $gray;
-            border-left: 0.4vmin double $gray;
-            transform: translate(-100%,-100%);
-            right: calc(-100% + 0px);
-            width: $player-picture;
-            height: $player-picture;
-            transition: 1s;
-            box-sizing: border-box;
-            z-index: 1 !important;
-            overflow: hidden;
-            img{
-                width: 100%;
-            }
-            &.close{
-                border: none;
-                height: 0px;
-            }
-            *{
-                z-index: 1 !important;
-            }
-            &:hover{
-                #close{
-                    visibility: visible;
-                }
-            }
-            #close{
-                position: absolute;
-                top: 4%;
-                left: 4%;
-                height: 10%;
-                width: 10%;
-                visibility: hidden;
-            }
-        }
         #mini_picture{
-            grid-column: 4/5;
+            grid-column: 2/3;
             grid-row: 3/5;
 
             position: relative;
             border: 0.2vmin solid $gray;
             height: 100%;
             aspect-ratio: 1 / 1;
-            justify-self: flex-end;
+            justify-self: flex-start;
             align-self: center;
 
             &.close{
@@ -881,7 +887,7 @@ $player-picture:25vmin;
             }
         }
         #volume{
-            grid-column: 4/5;
+            grid-column: 5/6;
             grid-row: 3/5;
 
             align-self: center;

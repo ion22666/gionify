@@ -72,7 +72,7 @@ def application(request):
 
 ## LOGIN PAGE
 # @logged_not_allowed("You're already logged in, you want to logout?")
-@dirrect_not_allowed
+# @dirrect_not_allowed
 def login_page(request):
     if request.method == 'POST':
         print(request)
@@ -89,7 +89,6 @@ def login_page(request):
         request,
         'login.html',
         {
-            'scripts':get_scripts('login'),
             'url_patterns': { i.name : str(i.pattern)[0:str(i.pattern).find('/')+1] for i in urls.urlpatterns},
         },
         request
@@ -156,10 +155,11 @@ def profile(request,profile_id=None):
         return HttpResponse(status=406, content=json.dumps({'message': "Invalid data"}))
 
 
-@only_logged("Only those logged in can logout")
+@only_logged("")
 def addSong(request):
     form=AddMusicForm()
     if request.POST:
+        print("aaaaaaaaaaaaaaa")
         form=AddMusicForm(request.POST,request.FILES)
         if form.is_valid():
             instance = form.save(commit=False)

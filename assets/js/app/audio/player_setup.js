@@ -75,14 +75,14 @@ module.exports = ()=>{
         play_icon.classList.remove("hide");
     }
 
-    document.querySelector("#player #picture #close").onclick = _=>{
-        document.querySelector("#player #picture").classList.add("close");
+    document.querySelector("#menu #picture #close").onclick = _=>{
+        document.querySelector("#menu #picture").classList.add("close");
         document.querySelector("#player #mini_picture").classList.remove("close");
     };
       
     document.querySelector("#player #mini_picture #open").onclick = _=>{
         document.querySelector("#player #mini_picture").classList.add("close");
-        document.querySelector("#player #picture").classList.remove("close");
+        document.querySelector("#menu #picture").classList.remove("close");
     };
 
     // input an event , bassed on his location we update the volume value
@@ -106,10 +106,10 @@ module.exports = ()=>{
         };
     };
     // when something change the volume, we update the icon and bar
-    audio.onvolumechange = _ =>{
+    g.audio.addEventListener("volumechange", _ =>{
         update_volume_icon(audio.volume);
         update_volume_bar(audio.volume);
-    }
+    })
 
     // add  onclick function for the volume bar container
     volume_container.onclick = update_volume_by_click;
