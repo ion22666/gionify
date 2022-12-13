@@ -61,12 +61,8 @@ def application(request):
             'main_playlist_id':main_playlist,
             'url_patterns':url_patterns,
             'current_user':request.user.username,
-            'scripts':get_scripts('application/script'),
-            'styles':get_scripts('application/style')
         }
     )
-    response['scripts'] = str(get_scripts('application/script'))
-    response['styles'] = str(get_scripts('application/style'))
     return response
 
 
