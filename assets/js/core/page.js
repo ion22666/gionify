@@ -62,6 +62,7 @@ class Page{
         await window.wait_img(new_page.div);
         await loading_screen.disappear();
         loading_screen.hide();
+        __webpack_module_cache__ = {};
     }
 }
 

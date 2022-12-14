@@ -2,7 +2,7 @@
 @use './search';
 @use './profile';
 
-$player_height: 10vh;
+$player_height: 10vmin;
 $menu_width: 30vmin;
 
 $menu_rows_height: 3.5vmin;
@@ -29,10 +29,67 @@ $player-picture:25vmin;
         display: grid;
         grid-template-columns: auto;
         grid-template-rows: auto 1fr auto;
-        overflow: hidden;
         grid-column: 1/2;
         grid-row: 1/2;
         border-right:  0.4vmin $gray double;
+        #options{
+            position: absolute;
+            top:0;
+            left:calc(100% + 0.4vmin);
+            background-color: #000;
+            height: fit-content;
+            width: fit-content;
+            z-index: 10;
+            border: 0.2vmin solid $gray;
+            border-left: none;
+            overflow: hidden;
+            > :first-child{
+                position: absolute;
+                top:0;
+                left: 100%;
+                transform: translateX(-100%);
+
+
+                box-sizing: border-box;
+                height: 3vmin;
+                width: 100%;
+                padding: 0.6vmin;
+                margin: 0;
+                color: $gray;
+                transition: 0.2s ease;
+                &:hover{
+                    color: #751d1d !important;
+                    &:active{
+                        color: red !important;
+                    }
+                }
+            }
+            .option-row{
+                margin: 2.2vmin 3vmin 2vmin 3vmin;
+                color: $gray;
+                font-size: 2.2vmin;
+                border-bottom: 0.1vmin solid $gray;
+                letter-spacing: 0.2vmin;
+                padding-bottom: 0.2vmin;
+                width: fit-content;
+                height: fit-content;
+                &:hover{
+                    color:$green !important;
+                }
+            }
+
+            transition: 0.4s ease;
+            // transform-origin: left;
+            &.close{
+                pointer-events: none !important;
+                // scale: 0 1;
+                transform: translateY(-100%);
+                margin: 0;
+                padding: 0;
+                border: 0 !important;
+            }
+
+        }
         .block{
             display: block;
             height: 100%;
@@ -41,7 +98,6 @@ $player-picture:25vmin;
             padding-right: 2vmin;
             box-sizing: border-box;
         }
-        
         .row{
             display: grid;
             grid-template-columns: $menu_rows_height 1fr;
@@ -75,7 +131,20 @@ $player-picture:25vmin;
                     color: $green;
                 }
             }
-            
+        }
+        #dots{
+            padding-top: 0.5vmin;
+            &.open{
+                svg{
+                    color: white !important;
+                    &:active{
+                        color: #751d1d !important;
+                    }
+                }
+            }
+        }
+        #profile{
+            padding-top: 0.5vmin;
         }
         br{
             width:100%;
@@ -658,17 +727,7 @@ $player-picture:25vmin;
             
         }
     }
-    #options{
-        grid-column: 2/3;
-        grid-row: 1/2;
 
-        justify-self: flex-end;
-        background-color: #000;
-        z-index: 10;
-
-        height: 4vmin;
-        width: 10vmin;
-    }
     #player{
         grid-column: 1/3;
         grid-row: 2/3;
@@ -676,7 +735,7 @@ $player-picture:25vmin;
 
         display: grid;
         grid-auto-flow: row;
-        grid-template-columns: minmax(0,0.25fr) auto minmax(0,1fr) minmax(0,3fr) minmax(0,1fr) minmax(0,0.25fr);
+        grid-template-columns: minmax(0, 5%) auto minmax(0, 1fr) minmax(0, 50%) minmax(0, 20%) minmax(0, 5%);
         grid-template-rows: minmax(0,1fr) minmax(0,2fr) minmax(0,5fr) minmax(0,5fr) minmax(0,2fr);
         z-index: 2;
         *{
@@ -684,7 +743,7 @@ $player-picture:25vmin;
         }
         color: white;
         #progress{
-            grid-column: 1/6;
+            grid-column: 1/7;
             grid-row: 1/2;
 
             width: 100%;
@@ -752,7 +811,7 @@ $player-picture:25vmin;
         }
         #current_time,#total_time{
             color: white;
-            font-size: 1.4vh;
+            font-size: 1.4vmin;
             
             align-self: center;
             margin-left: 15%;
@@ -760,7 +819,7 @@ $player-picture:25vmin;
             margin-top: 5%;
         }
         #total_time{
-            grid-column: 5/6;
+            grid-column: 6/7;
             grid-row: 2/3;
             justify-self: flex-end;
         }
@@ -855,17 +914,25 @@ $player-picture:25vmin;
             grid-row: 3/5;
 
             position: relative;
-            border: 0.2vmin solid $gray;
-            height: 100%;
+            max-height: 100%;
+            max-width: 100%;
+            width: calc($player_height / 15 * 10);
             aspect-ratio: 1 / 1;
             justify-self: flex-start;
             align-self: center;
-
+            img{
+                max-height: 100%;
+                max-width: 100%;
+                aspect-ratio: 1 / 1;
+            }
             &.close{
                 border: none;
                 height: 0;
+                width: 0;
+                
                 img{
                     height: 0;  
+                    width: 0;
                 }
             }
             &:hover{

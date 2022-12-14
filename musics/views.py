@@ -12,7 +12,7 @@ from django.middleware.csrf import CsrfViewMiddleware
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.signals import request_finished
 from django.contrib import messages  
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout as logout_user
 from django.conf import settings
 from django.contrib.auth.models import User
 from . import urls
@@ -81,23 +81,22 @@ def login_page(request):
             return HttpResponse(status=200)
         else:
             return HttpResponse(status=403,content=json.dumps({'error':'user not exists'}))
-    response = render(
-        request,
-        'login.html',
+    response = render(request,'login.html',
         {
             'url_patterns': { i.name : str(i.pattern)[0:str(i.pattern).find('/')+1] for i in urls.urlpatterns},
-        },
-        request
+        }
     )
     return response
 
 
 @only_logged("Only those logged in can logout")
-def logout_user(request):
+def logout(request):
     #if request.method == 'POST':
     if request.user.is_authenticated:
-        logout(request)
-        return redirect('musics:main')
+        logout_user(request)
+        return HttpResponse(status=200)
+    else:
+        return HttpResponse(status=400)
 
 
 @logged_not_allowed("You're already registered and logged in, you want to logout?")

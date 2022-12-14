@@ -1,82 +1,60 @@
 
+
 <style>
-    label{
-        display: block;
-        height: 20vh;
-        width: 20vh;
-        background-color: red;
-    }
-    input{
-        display: none;
-    }
+
 </style>
-<button id="a">Play</button>
-<button id="b">100</button>
-<button id="c">150</button>
-<button id="d">200</button>
-<button id="e">250</button>
-<button id="f">Skip</button>
+
+<!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  -->
 
 
-<audio src="https://giovanni2266.pythonanywhere.com/media/musics/Geoxor_-_Moonlight.mp3"></audio>
 
+<button>Play</button>
+
+
+<!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  -->
 
 <script>
-    audio = new Audio("https://giovanni2266.pythonanywhere.com/media/musics/Geoxor_-_Moonlight.mp3");
-    document.querySelector("audio").oncanplay = _=>console.log("poate");
-    document.querySelector("#a").onclick = _=>audio.play();
-    document.querySelector("#b").onclick = _=>document.querySelector("audio").currentTime = 100;
-    document.querySelector("#c").onclick = _=>document.querySelector("audio").currentTime = 150;
-    document.querySelector("#d").onclick = _=>document.querySelector("audio").currentTime = 200;
-    document.querySelector("#e").onclick = _=>document.querySelector("audio").currentTime = 250;
+ 
+    fetch("https://thepaciellogroup.github.io/AT-browser-tests/audio/jeffbob.mp3")
+    // Retrieve its body as ReadableStream
+    .then((response) => {
 
-    document.querySelector("#f").onclick = async _=>{
+        const reader = response.body.getReader();
 
-        new_audio = new Audio("https://giovanni2266.pythonanywhere.com/media/musics/Kai_Wachi__Fytch_-_After_All.mp3");
+        return new ReadableStream({
+            start: function(controller) {
 
-        await new Promise(resolve=>{
-            new_audio.oncanplay = resolve;
-        })
-        if(audio.src==new_audio.src)return;
-        audio.pause();
-        audio=new_audio;
-        audio.play()
-        return
-    }
-
-
-
-    fetch("https://giovanni2266.pythonanywhere.com/media/musics/Kai_Wachi__Fytch_-_After_All.mp3")
-        // Retrieve its body as ReadableStream
-        .then((response) => {
-            const reader = response.body.getReader();
-            return new ReadableStream({
-                start(controller) {
-                    return pump();
-                    function pump() {
-                    return reader.read().then(({ done, value }) => {
+                function pump() {
+                    return reader.read().then(async({ done, value }) => {
                         // When no more data needs to be consumed, close the stream
                         if (done) {
-                        controller.close();
-                        return;
+
+                            return;
                         }
                         // Enqueue the next data chunk into our target stream
-                        console.log(value);
+                        let b = await (await (new Response(value)) ).blob();
+                        let audio = new Audio(await (URL.createObjectURL(b)));
+                        document.querySelector("button").onclick = audio.play;
+                        await new Promise((resolve, reject) => {
+                            if(audio.paused)resolve();
+                        })
                         controller.enqueue(value);
                         return pump();
                     });
-                    }
                 }
-            })
+
+                return pump();
+            }
         })
-        // Create a new response out of the stream
-        .then((stream) => new Response(stream))
-        // Create an object URL for the response
-        .then((response) => response.blob())
-        .then((blob) => URL.createObjectURL(blob))
-        .then((url) => {
-            audio.src = url;
-            if(!was_paused) g.audio.play();
-        })
-        .catch(error=>{alert(error)})
+    })
+    // Create a new response out of the stream
+    .then((stream) => new Response(stream))
+    // Create an object URL for the response
+    .then((response) => response.blob())
+    .then((blob) => URL.createObjectURL(blob))
+    .then((url) => {
+        console.log(url);
+    })
+    .catch(error=>{alert(error)})
+
 </script>

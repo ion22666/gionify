@@ -4,7 +4,7 @@ const block = document.querySelector("#app #body #search #results");
 
 Results_Category_Setup = {
     "song":function(songs){
-        console.log(songs);
+
         const songs_block = block.querySelector("#songs");
         const counter = window.app.counter();
         if(!songs.length){

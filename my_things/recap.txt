@@ -14,7 +14,7 @@ cum am facut un request de fisier/resursa cu fetch():
     putem linistiti sa setam src-ul cu url-ul resursei, vom sti sigur ca resursa este 100% incarcata
 
 cum am creat POST request cu ajax avand niste fisiere:
-    pentru a folosi ajax, tre sa importam jquery, el trebe instalat da poti sa ii dai si import 
+    pentru a folosi ajax, tre sa importam jquery
     deci aparent "submit" este un eveniment global, 
     astfel putem sa scriem ca document.on(submit , provenind de la form-ul acesta , si se declanseaza functia asta)
     $(document).on('submit','#add_song_form',function(e){})

@@ -1,5 +1,4 @@
-/******/ (() => { // webpackBootstrap
-/******/ 	var __webpack_modules__ = ({
+/******/ var __webpack_modules__ = ({
 
 /***/ "./assets/js/app/app.js":
 /*!******************************!*\
@@ -38,8 +37,6 @@ class App extends Page{
 
         // general functions
         for (const [key, value] of Object.entries(__webpack_require__(/*! ./util/app_functions */ "./assets/js/app/util/app_functions.js"))){
-            console.log(this.key);
-            console.log(key, value);
             this[key] = value;
         }
 
@@ -49,12 +46,13 @@ class App extends Page{
         }
 
         // this.CreatePlaylistForm = require("./menu/CreatePlaylistForm");
-        
+
         // views
         this.home = __webpack_require__(/*! ./views/home */ "./assets/js/app/views/home.js");
         this.playlist = __webpack_require__(/*! ./views/playlist */ "./assets/js/app/views/playlist.js");
         this.search = __webpack_require__(/*! ./views/search */ "./assets/js/app/views/search.js");
         this.profile = __webpack_require__(/*! ./views/profile */ "./assets/js/app/views/profile.js");
+
 
         this.home.switch(super.with_fetch=true,super.url_param="",super.element=document.querySelector("#app #menu #home"));
 
@@ -441,6 +439,40 @@ module.exports = ()=>{
 const create_playlist_form_setup = __webpack_require__(/*! ./playlist_form */ "./assets/js/app/menu/playlist_form.js");
 const g = window.app;
 function setup(){
+
+    document.querySelector("#app #menu #dots").onclick = function(){
+        if(this.classList.contains("open")){
+            this.classList.remove("open");
+            document.querySelector("#app #menu #options").classList.add("close");
+        }else{
+            this.classList.add("open");
+            document.querySelector("#app #menu #options").classList.remove("close");
+        }
+        
+    }
+
+    document.querySelector("#app #menu #options #close").onclick = _=>{
+        document.querySelector("#app #menu #options").classList.add("close");
+    }
+
+    {
+        let menu = document.querySelector("#app #menu #options");
+        menu.row = function(string){
+            return this.querySelector(string);
+        }
+
+
+        menu.row("#logout").onclick = async _=>{
+            let http_response = await fetch(window.app.urls.logout);
+            if(http_response.status < 300){
+                window.login.switch();
+            }
+        }
+    }
+    
+
+
+
     document.querySelector("#app #menu #create_playlist").onclick = create_playlist_form_setup;
     document.querySelector("#app #menu #liked").onclick = _=>g.playlist.switch(with_fetch=true, url_param=g.main_playlist.id,element=document.querySelector("#app #menu #liked"));
 
@@ -519,7 +551,7 @@ class Form{
       let form = await(await fetch(this.url)).text();
       document.querySelector("#app #form_screen").innerHTML = form;
       document.querySelector("#app #form_screen .form").onsubmit = async(event)=>{
-          console.log(event);
+
           try{
               event.preventDefault();
               let form_data = new FormData(event.target)
@@ -539,7 +571,7 @@ class Form{
     }
   
     static make_link(elements){
-      console.log(this.dispaly);
+
       elements.forEach(query => document.querySelectorAll(query).forEach(e => e.onclick = _ => this.dispaly()));
     }
 }
@@ -557,7 +589,6 @@ module.exports = Form;
 const [add_to_playlist,remove_from_playlist] = (_=>{
     let f = (method)=>{
         return async(playlist,song)=>{
-            console.log("aaa");
             return await fetch(window.app.urls.playlist_group,{
                 headers:{
                     "Content-Type":"application/json",
@@ -708,7 +739,8 @@ class View{
     static async switch(with_fetch=false, url_param="",element){
 
         if (with_fetch){
-            // daca fetch este true, dam fetch si inseram continutul div-ului
+
+            // daca fetch este true, dam fetch si inseram continutul div-ului   
             this.div.innerHTML = await (await fetch(this.url+((url_param)?(url_param):""))).text();
 
             // by default doar prima data se da fetch cand apasam pe un link
@@ -1143,7 +1175,7 @@ const block = document.querySelector("#app #body #search #results");
 
 Results_Category_Setup = {
     "song":function(songs){
-        console.log(songs);
+
         const songs_block = block.querySelector("#songs");
         const counter = window.app.counter();
         if(!songs.length){
@@ -1303,6 +1335,7 @@ class Page{
         await window.wait_img(new_page.div);
         await loading_screen.disappear();
         loading_screen.hide();
+        __webpack_module_cache__ = {};
     }
 }
 
@@ -1356,32 +1389,32 @@ module.exports = Login;
 
 /***/ })
 
-/******/ 	});
+/******/ });
 /************************************************************************/
-/******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
-/******/ 	
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/ 		// Check if module is in cache
-/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
-/******/ 		if (cachedModule !== undefined) {
-/******/ 			return cachedModule.exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			// no module.id needed
-/******/ 			// no module.loaded needed
-/******/ 			exports: {}
-/******/ 		};
-/******/ 	
-/******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 	
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
+/******/ // The module cache
+/******/ var __webpack_module_cache__ = {};
+/******/ 
+/******/ // The require function
+/******/ function __webpack_require__(moduleId) {
+/******/ 	// Check if module is in cache
+/******/ 	var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 	if (cachedModule !== undefined) {
+/******/ 		return cachedModule.exports;
 /******/ 	}
-/******/ 	
+/******/ 	// Create a new module (and put it into the cache)
+/******/ 	var module = __webpack_module_cache__[moduleId] = {
+/******/ 		// no module.id needed
+/******/ 		// no module.loaded needed
+/******/ 		exports: {}
+/******/ 	};
+/******/ 
+/******/ 	// Execute the module function
+/******/ 	__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 
+/******/ 	// Return the exports of the module
+/******/ 	return module.exports;
+/******/ }
+/******/ 
 /************************************************************************/
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
@@ -1393,11 +1426,9 @@ window.active_page = null;
 window.wait_img = (element)=>{return Promise.all(Array.from(element.querySelectorAll("img")).filter(img => !img.complete).map(img => new Promise(resolve => { img.onload = img.onerror = resolve; })))},
 
 window.app = __webpack_require__(/*! ./app/app */ "./assets/js/app/app.js");
-console.log("ceva");
+
 window.login = __webpack_require__(/*! ./login/login */ "./assets/js/login/login.js")
 
 HTMLElement.prototype.press = function(){this.dispatchEvent(new Event("click"))};
 })();
 
-/******/ })()
-;

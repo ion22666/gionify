@@ -14,7 +14,8 @@ class View{
     static async switch(with_fetch=false, url_param="",element){
 
         if (with_fetch){
-            // daca fetch este true, dam fetch si inseram continutul div-ului
+
+            // daca fetch este true, dam fetch si inseram continutul div-ului   
             this.div.innerHTML = await (await fetch(this.url+((url_param)?(url_param):""))).text();
 
             // by default doar prima data se da fetch cand apasam pe un link

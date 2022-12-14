@@ -1,7 +1,6 @@
 const [add_to_playlist,remove_from_playlist] = (_=>{
     let f = (method)=>{
         return async(playlist,song)=>{
-            console.log("aaa");
             return await fetch(window.app.urls.playlist_group,{
                 headers:{
                     "Content-Type":"application/json",

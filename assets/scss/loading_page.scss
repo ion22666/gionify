@@ -1,7 +1,7 @@
 #loading_screen{
     box-sizing: border-box;
     opacity: 0;
-    z-index: 10;
+    z-index: 100;
     transition: 1s ease-in;
 }
 
@@ -14,7 +14,6 @@
 .bar {
     width: 10px;
     height: 70px;
-    background: #fff;
     display: inline-block;
     transform-origin: bottom center;
     border-top-right-radius: 20px;
@@ -54,7 +53,7 @@
     }
     50% {
         transform: scaleY(1);
-        background: yellowgreen;
+        background: $green;
     }
     100% {
         transform: scaleY(0.1);
@@ -83,4 +82,77 @@
     pointer-events: none;
 }
   
-  
+
+
+
+
+
+
+
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+// }
+
+// $loader-size:10vmin;
+
+// .loader {
+// animation: rotate 1s infinite;
+// height: calc($loader-size / (50 / 50));
+// width: calc($loader-size / (50 / 50));
+// }
+
+// .loader::before {
+// animation: ball1 1s infinite;
+// background-color: #fff;
+// box-shadow: calc($loader-size / (50 / 30)) 0 0 $green;
+// margin-bottom: calc($loader-size / (50 / 10));
+// }
+// .loader::after {
+// animation: ball2 1s infinite;
+// background-color: $green;
+// box-shadow: calc($loader-size / (50 / 30)) 0 0 #fff;
+// }
+// .loader::before, .loader::after {
+// border-radius: 50%;
+// content: "";
+// display: block;
+// height: calc($loader-size / (50 / 20));
+// width: calc($loader-size / (50 / 20));
+// }
+
+// @keyframes rotate {
+// 0% { transform: rotate(0deg) scale(0.8) }
+// 50% { transform: rotate(360deg) scale(1.2) }
+// 100% { transform: rotate(720deg) scale(0.8) }
+// }
+
+// @keyframes ball1 {
+// 0% {
+//     box-shadow: calc($loader-size / (50 / 30)) 0 0 $green;
+// }
+// 50% {
+//     box-shadow: 0 0 0 $green;
+//     margin-bottom: 0;
+//     transform: translate(calc($loader-size / (50 / 15)), calc($loader-size / (50 / 15)));
+// }
+// 100% {
+//     box-shadow: calc($loader-size / (50 / 30)) 0 0 $green;
+//     margin-bottom: calc($loader-size / (50 / 10));
+// }
+// }
+
+// @keyframes ball2 {
+// 0% {
+//     box-shadow: calc($loader-size / (50 / 30)) 0 0 #fff;
+// }
+// 50% {
+//     box-shadow: 0 0 0 #fff;
+//     margin-top: calc($loader-size / (50 / -20));
+//     transform: translate(calc($loader-size / (50 / 15)), calc($loader-size / (50 / 15)));
+// }
+// 100% {
+//     box-shadow: calc($loader-size / (50 / 30)) 0 0 #fff;
+//     margin-top: 0;
+// }
+// }

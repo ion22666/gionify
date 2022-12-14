@@ -8,7 +8,7 @@ class Form{
       let form = await(await fetch(this.url)).text();
       document.querySelector("#app #form_screen").innerHTML = form;
       document.querySelector("#app #form_screen .form").onsubmit = async(event)=>{
-          console.log(event);
+
           try{
               event.preventDefault();
               let form_data = new FormData(event.target)
@@ -28,7 +28,7 @@ class Form{
     }
   
     static make_link(elements){
-      console.log(this.dispaly);
+
       elements.forEach(query => document.querySelectorAll(query).forEach(e => e.onclick = _ => this.dispaly()));
     }
 }

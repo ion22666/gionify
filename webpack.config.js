@@ -21,14 +21,16 @@ module.exports = {
     entry: {
         "style/main.js":'./assets/scss/main.scss',
         "script/output.js":'./assets/js/input.js',
+        "script/test.js":'./assets/js/test.js',
     },
     output: {
         path: path.resolve(__dirname, './static'),
         filename: '[name]',
-        iife: true,
+        iife: false,
     },
     optimization: {
         minimize: false,
     },
     devtool: false,
+    cache: false,
 };

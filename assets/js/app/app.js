@@ -29,8 +29,6 @@ class App extends Page{
 
         // general functions
         for (const [key, value] of Object.entries(require("./util/app_functions"))){
-            console.log(this.key);
-            console.log(key, value);
             this[key] = value;
         }
 
@@ -40,12 +38,13 @@ class App extends Page{
         }
 
         // this.CreatePlaylistForm = require("./menu/CreatePlaylistForm");
-        
+
         // views
         this.home = require("./views/home");
         this.playlist = require("./views/playlist");
         this.search = require("./views/search");
         this.profile = require("./views/profile");
+
 
         this.home.switch(super.with_fetch=true,super.url_param="",super.element=document.querySelector("#app #menu #home"));
 
