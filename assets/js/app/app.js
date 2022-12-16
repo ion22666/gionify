@@ -44,6 +44,7 @@ class App extends Page{
         this.playlist = require("./views/playlist");
         this.search = require("./views/search");
         this.profile = require("./views/profile");
+        this.artist = require("./views/artist");
 
 
         this.home.switch(super.with_fetch=true,super.url_param="",super.element=document.querySelector("#app #menu #home"));

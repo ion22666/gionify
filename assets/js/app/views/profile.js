@@ -16,6 +16,15 @@ class Profile extends View{
         const edit_div = this.div.querySelector("#head #edit");
         
         edit_div.onclick = create_profile_edit_form;
+
+        this.div.querySelector("#head #go_to_artist").onclick = async function(){
+            console.log(this);
+            if(this.dataset.is_artist=="False"){
+                let r = await fetch(window.app.urls.artist+"?create=true");
+                if(r.status>300)return;
+            }
+            window.app.artist.switch(true,"",document.querySelector("#app #menu #block #profile"));
+        }
     }
 }
 

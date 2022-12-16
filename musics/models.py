@@ -67,7 +67,7 @@ class Playlist(models.Model):
     cover_image=models.FileField(storage=FileSystemStorage(location=settings.MEDIA_ROOT),upload_to='music_images/',validators=[validate_is_img],default=random_img)
     image_colors = models.CharField(max_length=500,default='["0,0,0","0,0,0","0,0,0"]')
     def save(self,*args, **kwargs):
-        self.image_colors = list(map(lambda x:",".join(list(map(lambda x:str(x),x))),ColorThief(self.cover_image).get_palette(color_count=2)))
+        self.image_colors = str(list(map(lambda x:",".join(list(map(lambda x:str(x),x))),ColorThief(self.cover_image).get_palette(color_count=2))))
         return super().save(*args, **kwargs)
     def __str__(self):
         return self.name
@@ -93,7 +93,38 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.name
-    
+
+class Artist(models.Model):
+    default_auto_field = 'django.db.models.AutoField'
+    user = models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,null=False,blank=False)
+    name = models.CharField(max_length=400, null=True, default="Artist #"+str(random.randint(10000, 99999)))
+    picture = models.FileField(upload_to='music_images/', null=True, validators=[validate_is_img],default='artist_img/default_artist.png')
+    background_picture = models.FileField(upload_to='music_images/', null=True, validators=[validate_is_img],default='artist_img/default_background.jpg')
+    image_colors = models.CharField(max_length=500,default='["0,0,0","0,0,0","0,0,0"]')
+
+    def save(self,*args, **kwargs):
+        self.image_colors = list(map(lambda x:",".join(list(map(lambda x:str(x),x))),ColorThief(self.background_picture).get_palette(color_count=2)))
+        return super().save(*args, **kwargs)
+    def __str__(self):
+        return self.name
+
+class SongArtistGroup(models.Model):
+    default_auto_field = 'django.db.models.AutoField'
+    artist = models.ForeignKey('Artist',on_delete=models.CASCADE,null=False,blank=False)
+    song = models.ForeignKey('Music',on_delete=models.CASCADE,null=False,blank=False)
+
+class AlbumArtistGroup(models.Model):
+    default_auto_field = 'django.db.models.AutoField'
+    artist = models.ForeignKey('Artist',on_delete=models.CASCADE,null=False,blank=False)
+    album = models.ForeignKey('Album',on_delete=models.CASCADE,null=False,blank=False)
+
+class AlbumSongGroup(models.Model):
+    default_auto_field = 'django.db.models.AutoField'
+    album = models.ForeignKey('Album',on_delete=models.CASCADE,null=False,blank=False)
+    song = models.ForeignKey('Music',on_delete=models.CASCADE,null=False,blank=False)
+
+
+
 def create_profile(sender,instance,created,**kwargs):
     if created:
         UserProfile.objects.create(user=instance)

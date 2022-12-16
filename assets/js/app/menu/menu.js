@@ -14,6 +14,7 @@ function setup(){
     }
 
     document.querySelector("#app #menu #options #close").onclick = _=>{
+        document.querySelector("#app #menu #dots").classList.remove("open");
         document.querySelector("#app #menu #options").classList.add("close");
     }
 
@@ -30,6 +31,17 @@ function setup(){
                 window.login.switch();
             }
         }
+        menu.row("#user_profile").onclick = _=>{
+            window.app.profile.switch(element=document.querySelector("#app #menu #block #profile"));
+            document.querySelector("#app #menu #dots").classList.remove("open");
+            document.querySelector("#app #menu #options").classList.add("close");
+        }
+        menu.row("#artist_profile").onclick = _=>{
+            window.app.artist.switch(element=document.querySelector("#app #menu #block #profile"));
+            document.querySelector("#app #menu #dots").classList.remove("open");
+            document.querySelector("#app #menu #options").classList.add("close");
+        }
+
     }
     
 

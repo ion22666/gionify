@@ -4,7 +4,7 @@ import os
 from django.core import serializers
 from django.template import Template, Context, loader
 from django.http import HttpResponse, HttpRequest
-from musics.models import Album, Music, Playlist, Playlist_group, LikedPlaylists, UserProfile
+from musics.models import Album, Music, Playlist, Playlist_group, LikedPlaylists, UserProfile, Artist
 from django.shortcuts import redirect, render, get_object_or_404
 from django.dispatch import receiver
 from django.views.generic.base import RedirectView
@@ -18,7 +18,7 @@ from django.contrib.auth.models import User
 from . import urls
 from django.urls import reverse
 from .decorators import logged_not_allowed, allowed_goups, admin_only, only_logged, dirrect_not_allowed
-from .form import AddMusicForm, ManageMusicForm, CreateUserForm, AddPlaylistForm, ProfileForm
+from .form import AddMusicForm, ManageMusicForm, CreateUserForm, AddPlaylistForm, ProfileForm, ArtistForm
 from django.templatetags.static import static
 from colorthief import ColorThief
 from django.views.decorators.csrf import requires_csrf_token
@@ -128,7 +128,12 @@ def profile(request,profile_id=None):
 
     if request.method == "GET": # return my profile
         playlists = get_playlist_list(request)
-        response = loader.render_to_string('app/views/profile.html',{'profile':profile,"playlists":playlists},request)
+        try:
+            Artist.objects.get(user=request.user)
+            is_artist = True
+        except Artist.DoesNotExist:
+            is_artist = False
+        response = loader.render_to_string('app/views/profile.html',{'profile':profile,"playlists":playlists,"is_artist":is_artist},request)
         return HttpResponse(status=200,content=response)
 
     if request.method == "POST":
@@ -266,31 +271,6 @@ def playlist(request,playlist_id=None):
             return HttpResponse(status=403,content=json.dumps({'message':'You are not the playlist owner'}))
 
 
-def user_request_view(request):
-    
-    if request.method == 'POST':
-        data = json.loads(request.body.decode("utf-8"))
-        song = Music.objects.get(pk=data['song_id'])
-        playlist =Playlist.objects.get(pk=data['playlist_id'])
-        if data['add']:
-            try:
-                if Playlist_group.objects.get(song=song,playlist=playlist):
-                    print('alredy exist')
-                    return HttpResponse(status=400,content=json.dumps({'message': "alredy exist"}))
-            except:
-                instance = Playlist_group.objects.create(son=song,playlist=playlist)
-                instance.save()
-                print('sa salvat')
-                return HttpResponse(status=201,content=json.dumps({'message': "sa salvat",'get_playlist_list':(get_playlist_list(request))}))
-            
-        else:
-            print('sa sters')
-            Playlist_group.objects.filter(song=song,playlist=playlist).delete()
-            return HttpResponse(status=202,content=json.dumps({'message': "sa eliminat",'get_playlist_list':(get_playlist_list(request))}))
-    else:
-        return HttpResponse(status=405)
-
-
 def home_page_view(request):
     response = loader.render_to_string('app/views/home.html',{'home_songs':get_all_songs(),'playlist_list':get_playlist_list(request)},request)
     return HttpResponse(content=response) if request.path != reverse("musics:app") else response
@@ -369,8 +349,37 @@ def remove_from_playlist_view(request):
     return HttpResponse(status=415,content=json.dumps({'message':'ERROR'}))
 
 
+def artist(request,artist_id=None):
+    if request.method == "GET":
+        try:
+            if artist_id:
+                artist = Artist.objects.get(pk=artist_id)
+            else:
+                artist = Artist.objects.get(user=request.user)
+        except Artist.DoesNotExist:
+            if request.GET.get("create",None):
+                try:
+                    artist = Artist.objects.get_or_create(user=request.user)[0]
+                except Artist.unique_error_message:
+                    return HttpResponse(status=406)
+            else:
+                return HttpResponse(status=404,content=json.dumps({'message':"Artist does not exist" if artist_id else "You don't have an artist profile"}))
+        response = loader.render_to_string("app/views/artist.html",{"artist":artist,"is_owner":artist.user==request.user},request)
+        artist.dominant_color = json.loads(artist.image_colors.replace("'",'"'))[0]
+        return HttpResponse(content=response)
 
+    if request.method == "POST":
 
+        try:
+            artist = Artist.objects.get(user=request.user)
+        except Artist.DoesNotExist:
+            return HttpResponse(status=404,content=json.dumps({'message':"You don't have an artist profile"}))
+
+        form = ArtistForm(request.POST or None, request.FILES or None, instance=artist)
+        if form.is_valid():
+            artist.save()
+            return HttpResponse(status=201, content=json.dumps({'message': ""}))
+        return HttpResponse(status=406, content=json.dumps({'message': "OK"}))
 
 
 

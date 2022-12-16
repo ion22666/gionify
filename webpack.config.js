@@ -21,7 +21,6 @@ module.exports = {
     entry: {
         "style/main.js":'./assets/scss/main.scss',
         "script/output.js":'./assets/js/input.js',
-        "script/test.js":'./assets/js/test.js',
     },
     output: {
         path: path.resolve(__dirname, './static'),

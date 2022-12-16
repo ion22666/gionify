@@ -1,0 +1,273 @@
+@use '../var' as *;
+
+@mixin style(){
+    background-color: $dark-gray;
+    header{
+        width: 100%;
+        height: 30vmin;
+        display: grid;
+        padding: 2vmin;
+        $verified_size:1.6vmin;
+        gap: 0.5vmin;
+        grid-template: 1fr auto auto auto / $verified_size auto 1fr;
+        > *{
+            color: white;
+        }
+        svg{
+            grid-column: 1/2 !important;
+            grid-row: 2/3 !important;
+            height: $verified_size;
+            justify-self: center;
+            align-self: center;
+            color: rgba(0,0,0,0.5);
+            &#not_verified{
+                color: red;
+                z-index: 2;
+            }
+        }
+        #verified{
+            grid-column: 2/3;
+            grid-row: 2/3;
+            font-size: $verified_size;
+            font-family: $book;
+        }
+        #name{
+            grid-column: 1/3;
+            grid-row: 3/4;
+            font-size: 10vmin;
+            font-family: $black;
+        }
+        #status{
+            grid-column: 1/3;
+            grid-row: 4/5;
+            font-size: 1.8vmin;
+            font-family: $book;
+        }
+    }
+    main{
+        height: fit-content;
+        min-height: 6vmin;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: 3vmin;
+        section{
+            display: grid;
+            grid-auto-flow: column;
+            width: fit-content;
+            height: fit-content;
+            margin-bottom: 3vmin;
+            gap: 3vmin;
+            #play,#pause,#dots{
+                color: white;
+                transition: 0.2s ease;
+                &:hover{
+                    color: $green;
+                    scale: 1.1;
+                    transform-origin:center;
+                    &:active{
+                        transform-origin: center;
+                        scale: 0.9;
+                    }
+                }
+            }
+            #play,#pause{
+                grid-column: 1/2;
+                grid-row: 1/2;
+                height: 5vmin;
+                -webkit-backface-visibility: hidden;         
+                backface-visibility: hidden;
+                &:not(.hidden){
+                    transition-delay: 0.2s;
+                }
+                &.hidden{
+                    transition-delay: 0s;
+                    pointer-events: none !important;
+                    scale:0;
+                }
+            }
+            #dots{
+                grid-column: 3/4;
+                grid-row: 1/2;
+                height: 5vmin;
+            }
+            #follow{
+                align-self: center;
+                padding: 0.5vmin 1vmin 0.5vmin 1vmin;
+                border: 0.3vmin solid $gray;
+                color: $light-gray;
+                border-radius: 100vmax;
+                background-color: black;
+                display: grid;
+                grid-auto-flow: column;
+                width: fit-content;
+                height: fit-content;
+                justify-items: center;
+                align-items: center;
+                align-content: center;
+                transition: 0.2s ease;
+                font-family: $black;
+                font-weight: 400;
+                svg{
+                    height:0vmin;
+                    color: $green;
+                    display: inline;
+                    transition: 0.2s ease;
+                    transform-origin: center;
+                }
+                div{
+                    text-align: center;
+                    height: fit-content;
+                    font-size: 2vmin;
+                }
+                &.followed{
+                    border-color: $green;
+                    color: white;
+                    color: $green;
+                    gap: 0.5vmin;
+                    svg{
+                        transition: 0.2s ease;
+                        height: 2vmin;
+                    }
+                    &:hover{
+                        border-color: crimson;
+                        color: crimson;
+                        padding: 0.5vmin 1.5vmin 0.5vmin 1.5vmin;
+                        svg{
+                            color: crimson;
+                        }
+                    }
+                }
+                &:active{
+                    transform-origin: center;
+                    scale: 0.9;
+                }
+                &:hover:not(.followed){
+                    scale: 1 !important;
+                    padding: 0.5vmin 1.5vmin 0.5vmin 1.5vmin;
+                    color: $green;
+                    border-color: $green;
+                }
+            }
+            
+        }
+        #block1{
+            display: flex;
+            height: fit-content;
+            width: 100%;
+            flex-flow: row;
+            #content{
+                flex:4;
+                #categories{
+                    width: fit-content;
+                    height: fit-content;
+                    display: flex;
+                    gap: 3vmin;
+                    align-items: center;
+                    box-shadow: 0 0.15vmin 0 0 $gray;
+                    padding: 0.1vmin;
+                    .category{
+                        height: 100%;
+                        text-align: center;
+                        font-size: 2.4vmin;
+                        font-family: $book;
+                        color: white;
+                        transition: 0.2s ease;
+                        letter-spacing: 0.15vmin;
+                        &.active{
+                            padding: 0 0.5vmin 0 0.5vmin;
+                            box-shadow: 0 0.3vmin 0 0 $green; 
+                            color: $green;
+                        }
+                    }
+                }
+            }
+            #artist_section{
+                flex:2;
+                border-left: 0.2vmin solid $gray;
+                height: fit-content;
+                $margin-left:2vmin;
+                #a{
+                    display: grid;
+                    grid-template: auto auto / minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);
+                    > *{
+                        height: 100%;
+                        width: 100%;
+                        color: $light-gray;
+                        border-right: 0.2vmin solid $gray;
+                        font-family: $book;
+                        text-align: left;
+                        padding-left: $margin-left;
+                        box-sizing: border-box;
+                    }
+                    #tracks,#nr_tracks{
+                        border-right: 0;
+                    }
+                    #followers,#following,#tracks{
+                        font-size: 1.8vmin;
+                    }
+                    #nr_followers,#nr_following,#nr_tracks{
+                        font-size: 3vmin;
+                    }
+                }
+                img{
+                    width: 30%;
+                    aspect-ratio: 1/1;
+                    height: auto;
+                    border-radius: 50%;
+                    margin-top: 2vmin;
+                    margin-left: $margin-left;
+                    transition: 0.26s ease;
+                    &:hover{
+                        width: 35%;
+                        aspect-ratio: 1/1;
+                        height: auto;
+                    }
+                }
+                #media_links{
+                    display: grid;
+                    height: fit-content;
+                    width: fit-content;
+                    
+                    $row-size:2.2vmin;
+                    grid-template: auto/ auto;
+                    margin-left: $margin-left;
+                    margin-top: $margin-left;
+                    gap: 0.5vmin;
+                    .row{
+                        display: flex;
+                        gap: 1.5vmin;
+                        width: fit-content;
+                        height: fit-content;
+                        > *{
+                            color: $light-gray;
+                            transition: 0.26s ease;
+                        }
+                        svg{
+                            height: $row-size;
+                            width: $row-size;
+                        }
+                        pre{
+                            font-size: $row-size;
+                            font-family: $book;
+                        }
+                        &:hover{
+                            > *{
+                                color: $green;
+                            }
+                            pre{
+                                padding-left: 1.5vmin;
+                            }
+                            &:active{
+                                > *{
+                                    scale: 0.95;
+                                    opacity: 0.6;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+}

@@ -1,6 +1,7 @@
 @use '../var' as *;
 @use './search';
 @use './profile';
+@use './artist';
 
 $player_height: 10vmin;
 $menu_width: 30vmin;
@@ -724,6 +725,10 @@ $player-picture:25vmin;
             &#search{
                 @include search.style();
             }
+
+            &#artist{
+                @include artist.style();
+            }
             
         }
     }
@@ -954,17 +959,18 @@ $player-picture:25vmin;
             }
         }
         #volume{
-            grid-column: 5/6;
+            grid-column: 5/7;
             grid-row: 3/5;
 
             align-self: center;
-            width: 50%;
+            width: 40%;
             height: 8%;
             position: relative;
             background-color: $progress-bar-color;
             border-radius: 100vmax;
             transition: 0.2s ease;
-            
+            justify-self: flex-end;
+            margin-right: 25%;
             &:hover{
                 #handle{
                     

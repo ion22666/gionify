@@ -1004,6 +1004,42 @@
   background: linear-gradient(0deg, rgb(22, 224, 107) -100%, #000 100%);
   border-bottom: 0.4vmin double rgb(80, 80, 80);
 }
+#app #body .view#profile #head #go_to_artist {
+  grid-row: 1/2;
+  grid-column: 2/3;
+  width: fit-content;
+  height: fit-content;
+  display: grid;
+  grid-template: auto/auto auto;
+  position: absolute;
+  background-color: white;
+  transition: 0.2s ease;
+  border-radius: 100vmax;
+  justify-self: flex-end;
+  align-self: flex-start;
+  gap: 0.5vmin;
+  padding: 0.5vmin;
+}
+#app #body .view#profile #head #go_to_artist:hover {
+  background-color: rgb(22, 224, 107);
+  transform-origin: center;
+  padding-right: 1vmin;
+}
+#app #body .view#profile #head #go_to_artist svg {
+  height: 2.4vmin;
+  grid-row: 1/2;
+  grid-column: 1/2;
+  max-height: 100%;
+  max-width: 100%;
+  aspect-ratio: 1/1;
+  color: black;
+}
+#app #body .view#profile #head #go_to_artist pre {
+  grid-row: 1/2;
+  grid-column: 2/3;
+  font-size: 2vmin;
+  color: black;
+}
 #app #body .view#profile #head img, #app #body .view#profile #head #edit {
   grid-row: 1/4;
   grid-column: 1/2;
@@ -1279,6 +1315,267 @@
 #app #body .view#search #results #songs .row #time {
   justify-self: center;
 }
+#app #body .view#artist {
+  background-color: rgb(12, 12, 12);
+}
+#app #body .view#artist header {
+  width: 100%;
+  height: 30vmin;
+  display: grid;
+  padding: 2vmin;
+  gap: 0.5vmin;
+  grid-template: 1fr auto auto auto/1.6vmin auto 1fr;
+}
+#app #body .view#artist header > * {
+  color: white;
+}
+#app #body .view#artist header svg {
+  grid-column: 1/2 !important;
+  grid-row: 2/3 !important;
+  height: 1.6vmin;
+  justify-self: center;
+  align-self: center;
+  color: rgba(0, 0, 0, 0.5);
+}
+#app #body .view#artist header svg#not_verified {
+  color: red;
+  z-index: 2;
+}
+#app #body .view#artist header #verified {
+  grid-column: 2/3;
+  grid-row: 2/3;
+  font-size: 1.6vmin;
+  font-family: "CircularStd Book";
+}
+#app #body .view#artist header #name {
+  grid-column: 1/3;
+  grid-row: 3/4;
+  font-size: 10vmin;
+  font-family: "CircularStd Black";
+}
+#app #body .view#artist header #status {
+  grid-column: 1/3;
+  grid-row: 4/5;
+  font-size: 1.8vmin;
+  font-family: "CircularStd Book";
+}
+#app #body .view#artist main {
+  height: fit-content;
+  min-height: 6vmin;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 3vmin;
+}
+#app #body .view#artist main section {
+  display: grid;
+  grid-auto-flow: column;
+  width: fit-content;
+  height: fit-content;
+  margin-bottom: 3vmin;
+  gap: 3vmin;
+}
+#app #body .view#artist main section #play, #app #body .view#artist main section #pause, #app #body .view#artist main section #dots {
+  color: white;
+  transition: 0.2s ease;
+}
+#app #body .view#artist main section #play:hover, #app #body .view#artist main section #pause:hover, #app #body .view#artist main section #dots:hover {
+  color: rgb(22, 224, 107);
+  scale: 1.1;
+  transform-origin: center;
+}
+#app #body .view#artist main section #play:hover:active, #app #body .view#artist main section #pause:hover:active, #app #body .view#artist main section #dots:hover:active {
+  transform-origin: center;
+  scale: 0.9;
+}
+#app #body .view#artist main section #play, #app #body .view#artist main section #pause {
+  grid-column: 1/2;
+  grid-row: 1/2;
+  height: 5vmin;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+#app #body .view#artist main section #play:not(.hidden), #app #body .view#artist main section #pause:not(.hidden) {
+  transition-delay: 0.2s;
+}
+#app #body .view#artist main section #play.hidden, #app #body .view#artist main section #pause.hidden {
+  transition-delay: 0s;
+  pointer-events: none !important;
+  scale: 0;
+}
+#app #body .view#artist main section #dots {
+  grid-column: 3/4;
+  grid-row: 1/2;
+  height: 5vmin;
+}
+#app #body .view#artist main section #follow {
+  align-self: center;
+  padding: 0.5vmin 1vmin 0.5vmin 1vmin;
+  border: 0.3vmin solid rgb(80, 80, 80);
+  color: rgb(206, 206, 206);
+  border-radius: 100vmax;
+  background-color: black;
+  display: grid;
+  grid-auto-flow: column;
+  width: fit-content;
+  height: fit-content;
+  justify-items: center;
+  align-items: center;
+  align-content: center;
+  transition: 0.2s ease;
+  font-family: "CircularStd Black";
+  font-weight: 400;
+}
+#app #body .view#artist main section #follow svg {
+  height: 0vmin;
+  color: rgb(22, 224, 107);
+  display: inline;
+  transition: 0.2s ease;
+  transform-origin: center;
+}
+#app #body .view#artist main section #follow div {
+  text-align: center;
+  height: fit-content;
+  font-size: 2vmin;
+}
+#app #body .view#artist main section #follow.followed {
+  border-color: rgb(22, 224, 107);
+  color: white;
+  color: rgb(22, 224, 107);
+  gap: 0.5vmin;
+}
+#app #body .view#artist main section #follow.followed svg {
+  transition: 0.2s ease;
+  height: 2vmin;
+}
+#app #body .view#artist main section #follow.followed:hover {
+  border-color: crimson;
+  color: crimson;
+  padding: 0.5vmin 1.5vmin 0.5vmin 1.5vmin;
+}
+#app #body .view#artist main section #follow.followed:hover svg {
+  color: crimson;
+}
+#app #body .view#artist main section #follow:active {
+  transform-origin: center;
+  scale: 0.9;
+}
+#app #body .view#artist main section #follow:hover:not(.followed) {
+  scale: 1 !important;
+  padding: 0.5vmin 1.5vmin 0.5vmin 1.5vmin;
+  color: rgb(22, 224, 107);
+  border-color: rgb(22, 224, 107);
+}
+#app #body .view#artist main #block1 {
+  display: flex;
+  height: fit-content;
+  width: 100%;
+  flex-flow: row;
+}
+#app #body .view#artist main #block1 #content {
+  flex: 4;
+}
+#app #body .view#artist main #block1 #content #categories {
+  width: fit-content;
+  height: fit-content;
+  display: flex;
+  gap: 3vmin;
+  align-items: center;
+  box-shadow: 0 0.15vmin 0 0 rgb(80, 80, 80);
+  padding: 0.1vmin;
+}
+#app #body .view#artist main #block1 #content #categories .category {
+  height: 100%;
+  text-align: center;
+  font-size: 2.4vmin;
+  font-family: "CircularStd Book";
+  color: white;
+  transition: 0.2s ease;
+  letter-spacing: 0.15vmin;
+}
+#app #body .view#artist main #block1 #content #categories .category.active {
+  padding: 0 0.5vmin 0 0.5vmin;
+  box-shadow: 0 0.3vmin 0 0 rgb(22, 224, 107);
+  color: rgb(22, 224, 107);
+}
+#app #body .view#artist main #block1 #artist_section {
+  flex: 2;
+  border-left: 0.2vmin solid rgb(80, 80, 80);
+  height: fit-content;
+}
+#app #body .view#artist main #block1 #artist_section #a {
+  display: grid;
+  grid-template: auto auto/minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+}
+#app #body .view#artist main #block1 #artist_section #a > * {
+  height: 100%;
+  width: 100%;
+  color: rgb(206, 206, 206);
+  border-right: 0.2vmin solid rgb(80, 80, 80);
+  font-family: "CircularStd Book";
+  text-align: left;
+  padding-left: 2vmin;
+  box-sizing: border-box;
+}
+#app #body .view#artist main #block1 #artist_section #a #tracks, #app #body .view#artist main #block1 #artist_section #a #nr_tracks {
+  border-right: 0;
+}
+#app #body .view#artist main #block1 #artist_section #a #followers, #app #body .view#artist main #block1 #artist_section #a #following, #app #body .view#artist main #block1 #artist_section #a #tracks {
+  font-size: 1.8vmin;
+}
+#app #body .view#artist main #block1 #artist_section #a #nr_followers, #app #body .view#artist main #block1 #artist_section #a #nr_following, #app #body .view#artist main #block1 #artist_section #a #nr_tracks {
+  font-size: 3vmin;
+}
+#app #body .view#artist main #block1 #artist_section img {
+  width: 30%;
+  aspect-ratio: 1/1;
+  height: auto;
+  border-radius: 50%;
+  margin-top: 2vmin;
+  margin-left: 2vmin;
+  transition: 0.26s ease;
+}
+#app #body .view#artist main #block1 #artist_section img:hover {
+  width: 35%;
+  aspect-ratio: 1/1;
+  height: auto;
+}
+#app #body .view#artist main #block1 #artist_section #media_links {
+  display: grid;
+  height: fit-content;
+  width: fit-content;
+  grid-template: auto/auto;
+  margin-left: 2vmin;
+  margin-top: 2vmin;
+  gap: 0.5vmin;
+}
+#app #body .view#artist main #block1 #artist_section #media_links .row {
+  display: flex;
+  gap: 1.5vmin;
+  width: fit-content;
+  height: fit-content;
+}
+#app #body .view#artist main #block1 #artist_section #media_links .row > * {
+  color: rgb(206, 206, 206);
+  transition: 0.26s ease;
+}
+#app #body .view#artist main #block1 #artist_section #media_links .row svg {
+  height: 2.2vmin;
+  width: 2.2vmin;
+}
+#app #body .view#artist main #block1 #artist_section #media_links .row pre {
+  font-size: 2.2vmin;
+  font-family: "CircularStd Book";
+}
+#app #body .view#artist main #block1 #artist_section #media_links .row:hover > * {
+  color: rgb(22, 224, 107);
+}
+#app #body .view#artist main #block1 #artist_section #media_links .row:hover pre {
+  padding-left: 1.5vmin;
+}
+#app #body .view#artist main #block1 #artist_section #media_links .row:hover:active > * {
+  scale: 0.95;
+  opacity: 0.6;
+}
 #app #player {
   grid-column: 1/3;
   grid-row: 2/3;
@@ -1472,15 +1769,17 @@
   transform: scale(1.2) rotate(180deg);
 }
 #app #player #volume {
-  grid-column: 5/6;
+  grid-column: 5/7;
   grid-row: 3/5;
   align-self: center;
-  width: 50%;
+  width: 40%;
   height: 8%;
   position: relative;
   background-color: rgb(80, 80, 80);
   border-radius: 100vmax;
   transition: 0.2s ease;
+  justify-self: flex-end;
+  margin-right: 25%;
 }
 #app #player #volume:hover #handle {
   background-color: rgb(22, 224, 107);
