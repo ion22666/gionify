@@ -104,7 +104,7 @@ module.exports = {
         }
         old_track = g.track;
         
-        g.audio.src = `https://giovanni2266.pythonanywhere.com//media/${g.track.audio_file}`;
+        g.audio.src = `media/${g.track.audio_file}`;
         document.body.style.cursor = "wait";
         await new Promise(resolve=>{
             g.audio.oncanplay = resolve;
@@ -1081,11 +1081,14 @@ class Profile extends View{
         edit_div.onclick = create_profile_edit_form;
 
         this.div.querySelector("#head #go_to_artist").onclick = async function(){
-            console.log(this);
+            
             if(this.dataset.is_artist=="False"){
+                document.body.style.cursor = "wait";
                 let r = await fetch(window.app.urls.artist+"?create=true");
+                document.body.style.cursor = "auto";
                 if(r.status>300)return;
             }
+            
             window.app.artist.switch(true,"",document.querySelector("#app #menu #block #profile"));
         }
     }

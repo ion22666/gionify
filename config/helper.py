@@ -1,25 +1,14 @@
-from mutagen.mp3 import MP3
-
-
-def get_audio_length(file):
-    audio = MP3(file)
-    return audio.info.length
-
 import os
+
 from django.utils.deprecation import MiddlewareMixin
 
 
 class RangesMiddleware(MiddlewareMixin):
     def process_response(self, request, response):
-        print(dir(response))
         if response.status_code != 200 or not hasattr(response, 'file_to_stream'):
             return response
         http_range = request.META.get('HTTP_RANGE')
-
         if not (http_range and http_range.startswith('bytes=') and http_range.count('-') == 1):
-            end = response['Content-Length']
-            response['Content-Range'] = f'bytes 0-{end}/{end}'
-            print(response['Content-Range'])
             return response
         if_range = request.META.get('HTTP_IF_RANGE')
         if if_range and if_range != response.get('Last-Modified') and if_range != response.get('ETag'):

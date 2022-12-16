@@ -76,11 +76,7 @@
                 height: 5vmin;
                 -webkit-backface-visibility: hidden;         
                 backface-visibility: hidden;
-                &:not(.hidden){
-                    transition-delay: 0.2s;
-                }
                 &.hidden{
-                    transition-delay: 0s;
                     pointer-events: none !important;
                     scale:0;
                 }

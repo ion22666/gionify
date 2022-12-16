@@ -1394,11 +1394,7 @@
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
 }
-#app #body .view#artist main section #play:not(.hidden), #app #body .view#artist main section #pause:not(.hidden) {
-  transition-delay: 0.2s;
-}
 #app #body .view#artist main section #play.hidden, #app #body .view#artist main section #pause.hidden {
-  transition-delay: 0s;
   pointer-events: none !important;
   scale: 0;
 }

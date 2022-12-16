@@ -1,52 +1,31 @@
 
 
 <style>
-    *{
-        margin: 0;
-        padding: 0;
-        border: 0;
-    }
-    .container{
-        display: grid;
-        grid-template: auto/ 8vmin 9fr;
-        width: fit-content;
-        height: fit-content;
-        background-color: bisque;
-        font-size: 8vmin;
-        position: relative;
-    }
-    svg{
-        position: absolute;
-        height: 100%;
-        max-width: 100%;
-        aspect-ratio: 1/1;
-        color: red;
-    }
-    pre{
-        grid-column: 2/3;
-    }
-    p{
-        grid-column: 2/3;
-    }
+
 </style>
 
 <!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  -->
-
-<pre>
-
-
-
-
-</pre>
-<div class="container">
-    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"  viewBox="0 0 16 16"> <path d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0 0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01.622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89 0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01-.622-.636zm.287 5.984-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708.708z"/> </svg>
-    <pre> Verified </pre>
-</div>
+<button>PLAY</button>
+<button>SKIP</button>
 
 
 <!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  -->
 
 <script>
- 
+    let audio = new Audio("https://giovanni2266.pythonanywhere.com//media/musics/The_First_Station_-_Lost_Control_128_kbps.mp3")
+    console.log(audio.buffered);
+    
+
+    let promise = new Promise((resolve, reject) => {
+       audio.oncanplaythrough = resolve;
+    })
+    
+
+    document.querySelectorAll("button")[0].onclick = async _=>{
+        await promise;
+        audio.play();
+    }
+    console.log(audio.buffered);
+    document.querySelectorAll("button")[1].onclick = _=> audio.currentTime=200;
 
 </script>
