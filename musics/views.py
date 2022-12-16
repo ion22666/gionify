@@ -365,7 +365,7 @@ def artist(request,artist_id=None):
             else:
                 return HttpResponse(status=404,content=json.dumps({'message':"Artist does not exist" if artist_id else "You don't have an artist profile"}))
         response = loader.render_to_string("app/views/artist.html",{"artist":artist,"is_owner":artist.user==request.user},request)
-        artist.dominant_color = json.loads(artist.image_colors.replace("'",'"'))[0]
+        artist.dominant_color = json.loads(str(artist.image_colors).replace("'",'"'))[0]
         return HttpResponse(content=response)
 
     if request.method == "POST":
