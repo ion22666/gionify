@@ -12,16 +12,29 @@ from django.core.files.storage import FileSystemStorage
 import random
 
 
+class Artist(models.Model):
+    default_auto_field = 'django.db.models.AutoField'
+    user = models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,null=False,blank=False)
+    name = models.CharField(max_length=400, null=True, default="Artist #"+str(random.randint(10000, 99999)))
+    picture = models.FileField(upload_to='music_images/', null=True, validators=[validate_is_img],default='artist_img/default_artist.png')
+    background_picture = models.FileField(upload_to='music_images/', null=True, validators=[validate_is_img],default='artist_img/default_background.jpg')
+    image_colors = models.CharField(max_length=500,default='["0,0,0","0,0,0","0,0,0"]')
+
+    def save(self,*args, **kwargs):
+        self.image_colors = list(map(lambda x:",".join(list(map(lambda x:str(x),x))),ColorThief(self.background_picture).get_palette(color_count=2)))
+        return super().save(*args, **kwargs)
+    def __str__(self):
+        return self.name
+
 class Music(models.Model):
     default_auto_field = 'django.db.models.AutoField'
     title=models.CharField(max_length=500)
-    artiste=models.CharField(max_length=500)
+    artist=models.ForeignKey(Artist, related_name='songs', on_delete=models.CASCADE,null=True,blank=True)
     album=models.ForeignKey('Album',on_delete=models.SET_NULL,null=True,blank=True)
     time_length=models.CharField(max_length=20,blank=True)
     audio_file=models.FileField(upload_to='musics/',validators=[validate_is_audio])
     cover_image=models.FileField(upload_to='music_images/',validators=[validate_is_img])
     image_colors = models.CharField(max_length=500,default='["0,0,0","0,0,0","0,0,0"]')
-    owner = models.ForeignKey(User, related_name='songs', on_delete=models.CASCADE,null=True,blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
     
     def save(self,*args, **kwargs):
@@ -94,19 +107,7 @@ class UserProfile(models.Model):
     def __str__(self):
         return self.name
 
-class Artist(models.Model):
-    default_auto_field = 'django.db.models.AutoField'
-    user = models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,null=False,blank=False)
-    name = models.CharField(max_length=400, null=True, default="Artist #"+str(random.randint(10000, 99999)))
-    picture = models.FileField(upload_to='music_images/', null=True, validators=[validate_is_img],default='artist_img/default_artist.png')
-    background_picture = models.FileField(upload_to='music_images/', null=True, validators=[validate_is_img],default='artist_img/default_background.jpg')
-    image_colors = models.CharField(max_length=500,default='["0,0,0","0,0,0","0,0,0"]')
 
-    def save(self,*args, **kwargs):
-        self.image_colors = list(map(lambda x:",".join(list(map(lambda x:str(x),x))),ColorThief(self.background_picture).get_palette(color_count=2)))
-        return super().save(*args, **kwargs)
-    def __str__(self):
-        return self.name
 
 class SongArtistGroup(models.Model):
     default_auto_field = 'django.db.models.AutoField'

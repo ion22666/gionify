@@ -36,7 +36,7 @@
                 </div>
                 <img src="media/{{ song.cover_image }}" alt="">
                 <div>{{song.title}}</div>
-                <div>{{song.artiste}}</div>
+                <div>{{song.artist.name}}</div>
                 <div>
                     {% if song.album %}
                         {{ song.album.name}}

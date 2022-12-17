@@ -1,31 +1,33 @@
 
 
 <style>
+    body{
+        position: relative;
+    }
+    img{
 
+        height: 20vh;
+        width: 20vh;
+        position: absolute;
+        margin: 1vmin;
+    }
+    img:hover{
+        filter: brightness(0.26);
+    }
+    div{
+        height: 10vh;
+        width: 10vh;
+        background-color: red;
+        position: absolute;
+        margin: 10vmin;
+    }
 </style>
 
 <!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  -->
-<button>PLAY</button>
-<button>SKIP</button>
-
-
+<img src="https://i1.sndcdn.com/artworks-ZN1SR2HiCR0wYTzk-0QzQGQ-t200x200.jpg" alt="">
+<div></div>
 <!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  --><!--  -->
 
 <script>
-    let audio = new Audio("https://giovanni2266.pythonanywhere.com//media/musics/The_First_Station_-_Lost_Control_128_kbps.mp3")
-    console.log(audio.buffered);
     
-
-    let promise = new Promise((resolve, reject) => {
-       audio.oncanplaythrough = resolve;
-    })
-    
-
-    document.querySelectorAll("button")[0].onclick = async _=>{
-        await promise;
-        audio.play();
-    }
-    console.log(audio.buffered);
-    document.querySelectorAll("button")[1].onclick = _=> audio.currentTime=200;
-
 </script>

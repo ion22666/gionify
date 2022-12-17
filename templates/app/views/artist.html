@@ -22,11 +22,39 @@
 
     <div id="block1">
         <div id="content">
+
             <div id="categories">
                 <div class="category active" id="all">All</div>
                 <div class="category" id="popular_tracks">Popular Tracks</div>
-                <div class="category" id="tracks">Tracks</div>
+                <div class="category" id="singles">Singles</div>
                 <div class="category" id="albums">Albums</div>
+            </div>
+
+            <div id="categories_body">
+                <div class="category_body active" id="all">
+                    {% for song in songs %}
+                        <div class="row">
+                            <img src="{{song.cover_image}}" alt="">
+                            <svg class="icon" id="play" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16"> <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/></svg>
+                            
+                            <div id="top">
+                                <pre id="song_name">{{artist.name}}-{{song.title}}</pre>
+                                <pre id="album_name">{% if song.album %}{{song.album.name}}{% else %}Single{% endif %}</pre>
+                                <pre id="time_ago">{% if song.time_ago %}{{song.time_ago}}{% else %}0{% endif %} ago</pre>
+                            </div>
+                            
+                            <div id="bottom">
+                                <pre id="likes"></pre>
+                                <pre id="copy_link"></pre>
+                                <pre id="more"></pre>
+                            </div>
+                            
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="category_body hide" id="popular_tracks"></div>
+                <div class="category_body hide" id="singles"></div>
+                <div class="category_body hide" id="albums"></div>
             </div>
         </div>
         <div id="artist_section">

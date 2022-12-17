@@ -24,7 +24,7 @@ from colorthief import ColorThief
 from django.views.decorators.csrf import requires_csrf_token
 from django.http import JsonResponse
 from django.middleware.csrf import get_token
-
+from .serializers import FlatJsonSerializer
 
 
 
@@ -293,10 +293,14 @@ def search(request):
     if key=="song":
         songs = list(Music.objects.filter(title__icontains = value).values())
         for song in songs:
-            song["album_name"] = Album.objects.get(pk=song["album_id"]).name if song["album_id"] else "Single"
+            song["album"] = Album.objects.filter(pk=song["album_id"]).values()[0] if song["album_id"] else None
+            del song["album_id"]
+            song["artist"] = Artist.objects.filter(pk=song["artist_id"]).values()[0]
+            del song["artist_id"]
         return JsonResponse(songs,safe=False)
     if key=="artist":
-        return JsonResponse(list(Music.objects.filter(artiste__icontains = value).values()),safe=False)
+        artists = list(Artist.objects.filter(name__icontains = value).values())
+        return JsonResponse(artists,safe=False)
     if key=="album":
         return JsonResponse(list(Album.objects.filter(name__icontains = value).values()),safe=False)
     if key=="playlist":
@@ -364,7 +368,8 @@ def artist(request,artist_id=None):
                     return HttpResponse(status=406)
             else:
                 return HttpResponse(status=404,content=json.dumps({'message':"Artist does not exist" if artist_id else "You don't have an artist profile"}))
-        response = loader.render_to_string("app/views/artist.html",{"artist":artist,"is_owner":artist.user==request.user},request)
+        songs = Music.objects.filter(artist=artist).values()
+        response = loader.render_to_string("app/views/artist.html",{"artist":artist,"is_owner":artist.user==request.user,"songs":songs},request)
         artist.dominant_color = json.loads(str(artist.image_colors).replace("'",'"'))[0]
         return HttpResponse(content=response)
 

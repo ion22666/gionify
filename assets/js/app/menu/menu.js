@@ -32,12 +32,12 @@ function setup(){
             }
         }
         menu.row("#user_profile").onclick = _=>{
-            window.app.profile.switch(element=document.querySelector("#app #menu #block #profile"));
+            window.app.profile.switch(with_fetch=true,element=document.querySelector("#app #menu #block #profile"));
             document.querySelector("#app #menu #dots").classList.remove("open");
             document.querySelector("#app #menu #options").classList.add("close");
         }
         menu.row("#artist_profile").onclick = _=>{
-            window.app.artist.switch(element=document.querySelector("#app #menu #block #profile"));
+            window.app.artist.switch(with_fetch=true,element=document.querySelector("#app #menu #block #profile"));
             document.querySelector("#app #menu #dots").classList.remove("open");
             document.querySelector("#app #menu #options").classList.add("close");
         }

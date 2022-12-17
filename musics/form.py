@@ -14,7 +14,7 @@ class AddMusicForm(forms.ModelForm):
         model=Music
         fields=[
             'title',
-            'artiste',
+            'artist',
            
             'audio_file',
             'cover_image',
@@ -53,7 +53,7 @@ class ManageMusicForm(forms.ModelForm):
         model=Music
         fields=[
             'title',
-            'artiste',
+            'artist',
            
             'audio_file',
             'cover_image',
