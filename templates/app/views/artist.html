@@ -1,3 +1,5 @@
+<meta name="artist_id" content="{{artist.id}}">
+
 <header style='background-image:url("media/{{artist.background_picture}}");'>
     <svg class="icon {% if verified %}hide{% endif %}" id="not_verified" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16"> <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/> </svg>
     <svg class="icon" id="verified" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16"> <path d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0 0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01.622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89 0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01-.622-.636zm.287 5.984-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708.708z"/> </svg>
@@ -31,22 +33,31 @@
             </div>
 
             <div id="categories_body">
-                <div class="category_body active" id="all">
+                <div class="category_body" id="all">
                     {% for song in songs %}
                         <div class="row">
-                            <img src="{{song.cover_image}}" alt="">
-                            <svg class="icon" id="play" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16"> <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/></svg>
+                            <img src="media/{{song.cover_image}}" alt="">
+                            <svg class="icon hide" id="play" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16"> <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/></svg>
                             
                             <div id="top">
-                                <pre id="song_name">{{artist.name}}-{{song.title}}</pre>
+                                <pre id="song_name">{{artist.name}} - {{song.title}}</pre>
                                 <pre id="album_name">{% if song.album %}{{song.album.name}}{% else %}Single{% endif %}</pre>
-                                <pre id="time_ago">{% if song.time_ago %}{{song.time_ago}}{% else %}0{% endif %} ago</pre>
+                                <pre id="time_ago">{% if song.time_ago %}{{song.time_ago}}{% else %}0y{% endif %} ago</pre>
                             </div>
                             
                             <div id="bottom">
-                                <pre id="likes"></pre>
-                                <pre id="copy_link"></pre>
-                                <pre id="more"></pre>
+                                <div id="likes">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16"> <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/> </svg>
+                                    <pre>0</pre>
+                                </div>
+                                <div id="copy_link">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16"> <path d="M6.354 5.5H4a3 3 0 0 0 0 6h3a3 3 0 0 0 2.83-4H9c-.086 0-.17.01-.25.031A2 2 0 0 1 7 10.5H4a2 2 0 1 1 0-4h1.535c.218-.376.495-.714.82-1z"/> <path d="M9 5.5a3 3 0 0 0-2.83 4h1.098A2 2 0 0 1 9 6.5h3a2 2 0 1 1 0 4h-1.535a4.02 4.02 0 0 1-.82 1H12a3 3 0 1 0 0-6H9z"/> </svg>
+                                    <pre>Copy Link</pre>
+                                </div>
+                                <div id="more">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16"> <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/> </svg>
+                                    <pre>More</pre>
+                                </div>
                             </div>
                             
                         </div>
@@ -66,7 +77,7 @@
 
                 <div id="nr_followers">0</div>
                 <div id="nr_following">0</div>
-                <div id="nr_tracks">0</div>
+                <div id="nr_tracks">{{artist.tracks_count}}</div>
             </div>
 
             <img src="media/{{artist.picture}}" alt="">

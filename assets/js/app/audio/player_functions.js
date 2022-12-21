@@ -28,7 +28,7 @@ module.exports = {
         })
         document.body.style.cursor = "auto";
 
-
+        
         if(!was_paused) g.audio.play();
         
         // fetch(`/media/${g.track.audio_file}`)
@@ -65,12 +65,13 @@ module.exports = {
         // .catch(error=>{alert(error)})
         
         document.querySelector("#app #player #title").textContent = g.track.title;
-        document.querySelector("#app #player #artist").textContent = g.track.artiste ;
+        document.querySelector("#app #player #artist").textContent = g.track.artist.name ;
         
         document.querySelector("#app #menu #picture img").src = `/media/${ g.track.cover_image }`;
         document.querySelector("#app #player #mini_picture img").src = `/media/${ g.track.cover_image }`;
 
         // if( g.playlist.active) g.playlist.update_active();
+
         g.playlist.update_active();
         update_player_heart();
     },

@@ -111,7 +111,7 @@ module.exports = {
         })
         document.body.style.cursor = "auto";
 
-
+        
         if(!was_paused) g.audio.play();
         
         // fetch(`/media/${g.track.audio_file}`)
@@ -148,12 +148,13 @@ module.exports = {
         // .catch(error=>{alert(error)})
         
         document.querySelector("#app #player #title").textContent = g.track.title;
-        document.querySelector("#app #player #artist").textContent = g.track.artiste ;
+        document.querySelector("#app #player #artist").textContent = g.track.artist.name ;
         
         document.querySelector("#app #menu #picture img").src = `/media/${ g.track.cover_image }`;
         document.querySelector("#app #player #mini_picture img").src = `/media/${ g.track.cover_image }`;
 
         // if( g.playlist.active) g.playlist.update_active();
+
         g.playlist.update_active();
         update_player_heart();
     },
@@ -792,6 +793,7 @@ module.exports = View;
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 const View = __webpack_require__(/*! ../util/view */ "./assets/js/app/util/view.js");
+const g = window.app;
 
 class Artist extends View{
     static div = document.querySelector("#app #body #artist");
@@ -801,30 +803,38 @@ class Artist extends View{
 
     static async setup(){
         const artist_view = this.div;
+        const artist_songs = await (await fetch(window.app.urls.artist+artist_view.querySelector("meta[name=artist_id]").content,{headers:{"Accept":"application/json"}})).json();
 
         artist_view.querySelector("main section #follow").onclick = function(){
             this.classList.toggle("followed")
         }
         
+
         let [play,pause]= artist_view.querySelectorAll("main section .icon")
 
         play.onclick = function(){
+            g.trackq = artist_songs;
+            g.track = artist_songs[0];
+            g.change_track(false);
             play.classList.add("hidden");
             pause.classList.remove("hidden");
         }
 
         pause.onclick = function(){
             play.classList.remove("hidden");
-            pause.classList.add("hidden");
+            pause.classList.add("hidden");   
         }
 
         let selected_category = artist_view.querySelector("#block1 #content #categories .category.active");
-        console.log(selected_category);
         artist_view.querySelectorAll("#block1 #content #categories .category").forEach(category=>{
             category.onclick = function(){
                 selected_category&&selected_category.classList.remove("active");
+                artist_view.querySelector("#block1 #content #categories_body #"+selected_category.id).classList.add("hide");
+
                 selected_category=category;
+
                 category.classList.add("active");
+                artist_view.querySelector("#block1 #content #categories_body #"+category.id).classList.remove("hide");
             }
         })
 
@@ -1286,7 +1296,7 @@ Results_Category_Setup = {
                 <img src="media/${song.cover_image}" alt="">
                 <div>${song.title}</div>
                 <div>${song.artist.name}</div>
-                <div>${song.album.name??"Single"}</div>
+                <div>${song.album?.name??"Single"}</div>
 
                 <svg class="icon hide" id="full_heart" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16"> <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/> </svg>
                 <svg class="icon" id="empty_heart" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16"> <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/> </svg>

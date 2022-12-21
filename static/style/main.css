@@ -1319,6 +1319,8 @@
   background-color: rgb(12, 12, 12);
 }
 #app #body .view#artist header {
+  background-position: center center;
+  background-size: cover;
   width: 100%;
   height: 30vmin;
   display: grid;
@@ -1464,7 +1466,7 @@
 #app #body .view#artist main #block1 {
   display: flex;
   height: fit-content;
-  gap: 4vmin;
+  gap: 3vmin;
   width: 100%;
   flex-flow: row;
 }
@@ -1497,6 +1499,8 @@
 #app #body .view#artist main #block1 #content #categories_body {
   height: fit-content;
   width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 #app #body .view#artist main #block1 #content #categories_body .category_body {
   height: fit-content;
@@ -1506,24 +1510,117 @@
   width: 100%;
   height: 10vmin;
   margin: 2vmin 0 2vmin 0;
-  background-color: #262626;
+  padding: 1vmin;
+  border-radius: 1vmin;
+  column-gap: 2vmin;
+  background-color: black;
+  box-sizing: border-box;
   display: grid;
   grid-template: 50% 50%/auto 1fr;
+  transition: 0.26s ease;
 }
 #app #body .view#artist main #block1 #content #categories_body .category_body .row img, #app #body .view#artist main #block1 #content #categories_body .category_body .row #play {
-  height: 10vmin;
-  width: 10vmin;
-  padding: 1vmin;
+  height: 8vmin;
+  width: 8vmin;
+  border-radius: 1vmin;
+  background-color: #1d1d1d;
   box-sizing: border-box;
   grid-row: 1/3;
   grid-column: 1/2;
 }
 #app #body .view#artist main #block1 #content #categories_body .category_body .row #top {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
+  align-items: first baseline;
+  gap: 1vmin;
+}
+#app #body .view#artist main #block1 #content #categories_body .category_body .row #top > * {
+  color: white;
+  font-family: "CircularStd Book";
+}
+#app #body .view#artist main #block1 #content #categories_body .category_body .row #top #song_name {
+  font-size: 2.8571428571vmin;
+}
+#app #body .view#artist main #block1 #content #categories_body .category_body .row #top #album_name {
+  color: rgb(71, 71, 71);
+  font-size: 2vmin;
+}
+#app #body .view#artist main #block1 #content #categories_body .category_body .row #top #time_ago {
+  margin-left: auto;
+  color: rgb(86, 86, 86);
+  font-size: 2vmin;
 }
 #app #body .view#artist main #block1 #content #categories_body .category_body .row #bottom {
   display: flex;
+  gap: 1.5vmin;
+  align-items: flex-end;
+}
+#app #body .view#artist main #block1 #content #categories_body .category_body .row #bottom > * {
+  display: flex;
+  height: 1.5vmin;
+  width: fit-content;
+  border-radius: 0.5vmin;
+  border: 0.3vmin solid white;
+  padding: 0.2vmin 1.2vmin 0.2vmin 1.2vmin;
+  gap: 0.5vmin;
+  justify-items: center;
+  justify-content: center;
+  align-items: center;
+  transition: 0.2s ease;
+}
+#app #body .view#artist main #block1 #content #categories_body .category_body .row #bottom > * pre {
+  color: white;
+  font-size: 1.5vmin;
+  font-family: "CircularStd Book";
+}
+#app #body .view#artist main #block1 #content #categories_body .category_body .row #bottom > * svg {
+  color: white;
+  height: 1.5vmin;
+  width: 1.5vmin;
+}
+#app #body .view#artist main #block1 #content #categories_body .category_body .row #bottom > *:hover {
+  border-color: rgb(22, 224, 107);
+  margin: 0 0.5vmin 0 0.5vmin;
+}
+#app #body .view#artist main #block1 #content #categories_body .category_body .row #bottom > *:hover > * {
+  color: rgb(22, 224, 107);
+}
+#app #body .view#artist main #block1 #content #categories_body .category_body .row #bottom > *:hover:active {
+  filter: brightness(0.7);
+}
+#app #body .view#artist main #block1 #content #categories_body .category_body .row:hover {
+  column-gap: 3vmin;
+  background-color: #242424;
+}
+#app #body .view#artist main #block1 #content #categories_body .category_body .row:hover * {
+  transition: 0.26s ease;
+}
+#app #body .view#artist main #block1 #content #categories_body .category_body .row:hover img {
+  filter: brightness(0.4);
+}
+#app #body .view#artist main #block1 #content #categories_body .category_body .row:hover #play {
+  color: white;
+  display: block !important;
+  background-color: transparent;
+}
+#app #body .view#artist main #block1 #content #categories_body .category_body .row:hover #play * {
+  scale: 0.65;
+  transform-origin: center;
+}
+#app #body .view#artist main #block1 #content #categories_body .category_body .row:hover #play:hover {
+  color: rgb(22, 224, 107);
+}
+#app #body .view#artist main #block1 #content #categories_body .category_body .row:hover #play:hover * {
+  scale: 0.75;
+  transform-origin: center;
+}
+#app #body .view#artist main #block1 #content #categories_body .category_body .row:hover #play:hover:active {
+  transition: none;
+  filter: brightness(0.6);
+}
+#app #body .view#artist main #block1 #content #categories_body .category_body .row:hover #play:hover:active * {
+  scale: 0.65 !important;
+  transform-origin: center;
 }
 #app #body .view#artist main #block1 #artist_section {
   flex: 2;

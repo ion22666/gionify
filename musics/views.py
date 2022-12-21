@@ -368,10 +368,25 @@ def artist(request,artist_id=None):
                     return HttpResponse(status=406)
             else:
                 return HttpResponse(status=404,content=json.dumps({'message':"Artist does not exist" if artist_id else "You don't have an artist profile"}))
-        songs = Music.objects.filter(artist=artist).values()
-        response = loader.render_to_string("app/views/artist.html",{"artist":artist,"is_owner":artist.user==request.user,"songs":songs},request)
-        artist.dominant_color = json.loads(str(artist.image_colors).replace("'",'"'))[0]
-        return HttpResponse(content=response)
+        songs = Music.objects.filter(artist=artist)
+
+        if not request.headers.get("Accept",None) or request.headers["Accept"] in ["","*","*/*","text/html"]:
+            artist.dominant_color = json.loads(str(artist.image_colors).replace("'",'"'))[0]
+            artist.tracks_count = songs.__len__
+            response = loader.render_to_string("app/views/artist.html",{"artist":artist,"is_owner":artist.user==request.user,"songs":songs},request)
+            return HttpResponse(content=response)
+        elif request.headers["Accept"] == "application/json":
+            songs = list(songs.values())
+            for song in songs:
+                if song["album_id"]:
+                    song["album"] = Album.objects.filter(pk=song["album_id"]).values()[0]
+                del song["album_id"]
+                song["artist"] = Artist.objects.filter(pk=song["artist_id"]).values()[0]
+                del song["artist_id"]
+            return JsonResponse(songs,safe=False)
+        
+        else:
+            return HttpResponse(status=406)
 
     if request.method == "POST":
 
@@ -422,11 +437,11 @@ def get_scripts(folder):
     return [ str(static("musics"+"/"+folder+"/"+file)) for file in os.listdir(os.path.relpath('musics\\static\\musics'+'\\'+folder)) ]
 
 def get_all_songs():
-    songs = list(Music.objects.select_related('album').all().values())
-    for music in songs:
-        if music['album_id'] == None:
-            music['album_name'] = 'Single'
-        else:
-            music['album_name'] = Album.objects.get(pk=music['album_id']).name
-    return songs
+    songs = Music.objects.select_related('album').all().values()
+    for song in songs:
+        song["album"] = Album.objects.filter(pk=song["album_id"]).values()[0] if song["album_id"] else None
+        del song["album_id"]
+        song["artist"] = Artist.objects.filter(pk=song["artist_id"]).values()[0]
+        del song["artist_id"]
+    return list(songs)
 
