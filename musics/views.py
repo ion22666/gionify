@@ -444,4 +444,3 @@ def get_all_songs():
         song["artist"] = Artist.objects.filter(pk=song["artist_id"]).values()[0]
         del song["artist_id"]
     return list(songs)
-
