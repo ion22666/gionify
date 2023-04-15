@@ -101,17 +101,23 @@ def logout(request):
 
 @logged_not_allowed("You're already registered and logged in, you want to logout?")
 def register_user(request):
-
-    form = CreateUserForm()
-    if request.POST:
+    if request.method == 'POST':
         form = CreateUserForm(request.POST)
         if form.is_valid():
-            form.save() 
-            user_name = form.cleaned_data.get('username')
-            messages.success(request,'Sa creat bine',user_name)
-            return redirect("music:login_user")
+            form.save()
+            return redirect("music:home_page")
+    else:
+        form = CreateUserForm()
+    return JsonResponse({"message":"ceva na mers bine"})
+    # if request.POST:
+    #     form = CreateUserForm(request.POST)
+    #     if form.is_valid():
+    #         form.save() 
+    #         user_name = form.cleaned_data.get('username')
+    #         messages.success(request,'Sa creat bine',user_name)
+    #         return redirect("music:login_user")
 
-    return render(request,'form_pages_content/register_user.html',{'form':form,})
+    # return render(request,'form_pages_content/register_user.html',{'form':form,})
 
 
 @only_logged("Only those logged in can logout")

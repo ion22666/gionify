@@ -28,6 +28,11 @@ class Login extends Page{
     static url = "login/";
 
     static setup(){
+        document.querySelector("#login #important_login_button").onclick = () => {
+            document.querySelector("#login #login_form").username.value = "Burgos_user";
+            document.querySelector("#login #login_form").password.value = "gionify2266";
+            document.querySelector("#login #chk").checked = true;
+        };
         document.querySelector("#login #login_form").addEventListener('submit',send_login_request);
     };
 }
