@@ -104,7 +104,7 @@ module.exports = {
         }
         old_track = g.track;
         
-        g.audio.src = `https://giovanni2266.pythonanywhere.com//media/${g.track.audio_file}`;
+        g.audio.src = `/media/${g.track.audio_file}`;
         document.body.style.cursor = "wait";
         await new Promise(resolve=>{
             g.audio.oncanplay = resolve;
