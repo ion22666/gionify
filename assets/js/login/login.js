@@ -1,4 +1,4 @@
-const Page = require("../core/page")
+const Page = require("../core/page");
 
 // pentru a realiza un post request cu fetch api , lucrand cu un form se procedeaza astfel:
 // 1. avem nevoie de elementul 'form' (tagul)
@@ -7,35 +7,34 @@ const Page = require("../core/page")
 // 3.1 django va crea un csrf token doar daca templateul este render-at cu referinta la un request
 // 4. cream functia fetch
 
-async function send_login_request(event){
+async function send_login_request(event) {
     event.preventDefault();
-    let form_data = new FormData(this)
-    let http_respose = await fetch('login/',{
-        method:'POST',
+    let form_data = new FormData(this);
+    let http_respose = await fetch("login/", {
+        method: "POST",
         headers: {
-            'X-CSRFToken': csrftoken,
+            "X-CSRFToken": csrftoken,
         },
-        body:form_data
+        body: form_data,
     });
-    if(http_respose.status == 200){
+    if (http_respose.status == 200) {
         window.app.switch();
         return;
     }
 }
 
-class Login extends Page{
+class Login extends Page {
     static div = document.getElementById("login");
     static url = "login/";
 
-    static setup(){
+    static setup() {
         document.querySelector("#login #important_login_button").onclick = () => {
             document.querySelector("#login #login_form").username.value = "Burgos_user";
             document.querySelector("#login #login_form").password.value = "gionify2266";
             document.querySelector("#login #chk").checked = true;
         };
-        document.querySelector("#login #login_form").addEventListener('submit',send_login_request);
-    };
+        document.querySelector("#login #login_form").addEventListener("submit", send_login_request);
+    }
 }
 
 module.exports = Login;
-
