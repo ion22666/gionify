@@ -104,14 +104,14 @@ module.exports = {
         }
         old_track = g.track;
         
-        g.audio.src = `/media/${g.track.audio_file}`;
+        g.audio.src = `media/${g.track.audio_file}`;
         document.body.style.cursor = "wait";
         await new Promise(resolve=>{
             g.audio.oncanplay = resolve;
         })
         document.body.style.cursor = "auto";
 
-
+        
         if(!was_paused) g.audio.play();
         
         // fetch(`/media/${g.track.audio_file}`)
@@ -148,12 +148,13 @@ module.exports = {
         // .catch(error=>{alert(error)})
         
         document.querySelector("#app #player #title").textContent = g.track.title;
-        document.querySelector("#app #player #artist").textContent = g.track.artiste ;
+        document.querySelector("#app #player #artist").textContent = g.track.artist.name ;
         
         document.querySelector("#app #menu #picture img").src = `/media/${ g.track.cover_image }`;
         document.querySelector("#app #player #mini_picture img").src = `/media/${ g.track.cover_image }`;
 
         // if( g.playlist.active) g.playlist.update_active();
+
         g.playlist.update_active();
         update_player_heart();
     },
@@ -471,12 +472,12 @@ function setup(){
             }
         }
         menu.row("#user_profile").onclick = _=>{
-            window.app.profile.switch(element=document.querySelector("#app #menu #block #profile"));
+            window.app.profile.switch(with_fetch=true,element=document.querySelector("#app #menu #block #profile"));
             document.querySelector("#app #menu #dots").classList.remove("open");
             document.querySelector("#app #menu #options").classList.add("close");
         }
         menu.row("#artist_profile").onclick = _=>{
-            window.app.artist.switch(element=document.querySelector("#app #menu #block #profile"));
+            window.app.artist.switch(with_fetch=true,element=document.querySelector("#app #menu #block #profile"));
             document.querySelector("#app #menu #dots").classList.remove("open");
             document.querySelector("#app #menu #options").classList.add("close");
         }
@@ -792,6 +793,7 @@ module.exports = View;
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 const View = __webpack_require__(/*! ../util/view */ "./assets/js/app/util/view.js");
+const g = window.app;
 
 class Artist extends View{
     static div = document.querySelector("#app #body #artist");
@@ -801,30 +803,38 @@ class Artist extends View{
 
     static async setup(){
         const artist_view = this.div;
+        const artist_songs = await (await fetch(window.app.urls.artist+artist_view.querySelector("meta[name=artist_id]").content,{headers:{"Accept":"application/json"}})).json();
 
         artist_view.querySelector("main section #follow").onclick = function(){
             this.classList.toggle("followed")
         }
         
+
         let [play,pause]= artist_view.querySelectorAll("main section .icon")
 
         play.onclick = function(){
+            g.trackq = artist_songs;
+            g.track = artist_songs[0];
+            g.change_track(false);
             play.classList.add("hidden");
             pause.classList.remove("hidden");
         }
 
         pause.onclick = function(){
             play.classList.remove("hidden");
-            pause.classList.add("hidden");
+            pause.classList.add("hidden");   
         }
 
         let selected_category = artist_view.querySelector("#block1 #content #categories .category.active");
-        console.log(selected_category);
         artist_view.querySelectorAll("#block1 #content #categories .category").forEach(category=>{
             category.onclick = function(){
                 selected_category&&selected_category.classList.remove("active");
+                artist_view.querySelector("#block1 #content #categories_body #"+selected_category.id).classList.add("hide");
+
                 selected_category=category;
+
                 category.classList.add("active");
+                artist_view.querySelector("#block1 #content #categories_body #"+category.id).classList.remove("hide");
             }
         })
 
@@ -1081,11 +1091,14 @@ class Profile extends View{
         edit_div.onclick = create_profile_edit_form;
 
         this.div.querySelector("#head #go_to_artist").onclick = async function(){
-            console.log(this);
+            
             if(this.dataset.is_artist=="False"){
+                document.body.style.cursor = "wait";
                 let r = await fetch(window.app.urls.artist+"?create=true");
+                document.body.style.cursor = "auto";
                 if(r.status>300)return;
             }
+            
             window.app.artist.switch(true,"",document.querySelector("#app #menu #block #profile"));
         }
     }
@@ -1246,12 +1259,14 @@ const block = document.querySelector("#app #body #search #results");
 
 Results_Category_Setup = {
     "song":function(songs){
-
-        const songs_block = block.querySelector("#songs");
+        const songs_block = document.querySelector("#app #body #search #results #songs");
+        console.log("songs", songs, songs_block);
         const counter = window.app.counter();
+        console.log("1111", songs_block);
         if(!songs.length){
             songs_block.innerHTML = `<div id="empty">Nothing found&nbsp;<svg class="icon" id="sad" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16"> <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/> <path d="M4.285 12.433a.5.5 0 0 0 .683-.183A3.498 3.498 0 0 1 8 10.5c1.295 0 2.426.703 3.032 1.75a.5.5 0 0 0 .866-.5A4.498 4.498 0 0 0 8 9.5a4.5 4.5 0 0 0-3.898 2.25.5.5 0 0 0 .183.683zM7 6.5C7 7.328 6.552 8 6 8s-1-.672-1-1.5S5.448 5 6 5s1 .672 1 1.5zm4 0c0 .828-.448 1.5-1 1.5s-1-.672-1-1.5S9.448 5 10 5s1 .672 1 1.5z"/> </svg></div>`;
         }else{
+            console.log("2222", songs_block);
             songs_block.innerHTML = `
                 <div id="head" class="row">
                     <div id="counter">#</div>
@@ -1269,6 +1284,7 @@ Results_Category_Setup = {
             window.app.audio.addEventListener("play",full_search_rows_update);
             window.app.audio.addEventListener("pause",full_search_rows_update);
             // sa modifice paused, active, sa stearga active
+            console.log("3333", songs_block);
         }
 
         function insert_song(song){
@@ -1282,8 +1298,8 @@ Results_Category_Setup = {
                 
                 <img src="media/${song.cover_image}" alt="">
                 <div>${song.title}</div>
-                <div>${song.artiste}</div>
-                <div>${song.album_name}</div>
+                <div>${song.artist.name}</div>
+                <div>${song.album?.name??"Single"}</div>
 
                 <svg class="icon hide" id="full_heart" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16"> <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/> </svg>
                 <svg class="icon" id="empty_heart" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16"> <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/> </svg>
@@ -1420,7 +1436,7 @@ module.exports = Page;
   \**********************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-const Page = __webpack_require__(/*! ../core/page */ "./assets/js/core/page.js")
+const Page = __webpack_require__(/*! ../core/page */ "./assets/js/core/page.js");
 
 // pentru a realiza un post request cu fetch api , lucrand cu un form se procedeaza astfel:
 // 1. avem nevoie de elementul 'form' (tagul)
@@ -1429,33 +1445,37 @@ const Page = __webpack_require__(/*! ../core/page */ "./assets/js/core/page.js")
 // 3.1 django va crea un csrf token doar daca templateul este render-at cu referinta la un request
 // 4. cream functia fetch
 
-async function send_login_request(event){
+async function send_login_request(event) {
     event.preventDefault();
-    let form_data = new FormData(this)
-    let http_respose = await fetch('login/',{
-        method:'POST',
+    let form_data = new FormData(this);
+    let http_respose = await fetch("login/", {
+        method: "POST",
         headers: {
-            'X-CSRFToken': csrftoken,
+            "X-CSRFToken": csrftoken,
         },
-        body:form_data
+        body: form_data,
     });
-    if(http_respose.status == 200){
+    if (http_respose.status == 200) {
         window.app.switch();
         return;
     }
 }
 
-class Login extends Page{
+class Login extends Page {
     static div = document.getElementById("login");
     static url = "login/";
 
-    static setup(){
-        document.querySelector("#login #login_form").addEventListener('submit',send_login_request);
-    };
+    static setup() {
+        document.querySelector("#login #important_login_button").onclick = () => {
+            document.querySelector("#login #login_form").username.value = "Burgos_user";
+            document.querySelector("#login #login_form").password.value = "gionify2266";
+            document.querySelector("#login #chk").checked = true;
+        };
+        document.querySelector("#login #login_form").addEventListener("submit", send_login_request);
+    }
 }
 
 module.exports = Login;
-
 
 
 /***/ })
